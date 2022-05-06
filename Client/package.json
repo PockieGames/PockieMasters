@@ -1,0 +1,11 @@
+{
+  "name": "Client",
+  "uuid": "f370f693-cad1-411d-9584-f5ffd0382ca4",
+  "version": "3.5.0",
+  "creator": {
+    "version": "3.5.0"
+  },
+  "dependencies": {
+    "tsrpc-browser": "^3.3.0"
+  }
+}
