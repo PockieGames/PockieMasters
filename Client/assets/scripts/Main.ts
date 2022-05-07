@@ -19,7 +19,7 @@ export class Main extends Component {
 
         await client.connect();
 
-        let ret = await this.client.callApi('Auth', { username: "test", password: "" });
+        let ret = await client.callApi('Auth', { username: "test", password: "" });
 
         if (!ret.isSucc) {
             console.log(ret.err)
