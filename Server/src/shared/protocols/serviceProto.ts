@@ -1,9 +1,9 @@
 import { ServiceProto } from 'tsrpc-proto';
-import { ReqAuth, ResAuth } from './api/PtlAuth';
+import { ReqAuth, ResAuth } from './PtlAuth';
 
 export interface ServiceType {
     api: {
-        "api/Auth": {
+        "Auth": {
             req: ReqAuth,
             res: ResAuth
         }
@@ -17,12 +17,12 @@ export const serviceProto: ServiceProto<ServiceType> = {
     "services": [
         {
             "id": 0,
-            "name": "api/Auth",
+            "name": "Auth",
             "type": "api"
         }
     ],
     "types": {
-        "api/PtlAuth/ReqAuth": {
+        "PtlAuth/ReqAuth": {
             "type": "Interface",
             "properties": [
                 {
@@ -41,7 +41,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                 }
             ]
         },
-        "api/PtlAuth/ResAuth": {
+        "PtlAuth/ResAuth": {
             "type": "Interface",
             "properties": [
                 {
