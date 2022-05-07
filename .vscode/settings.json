@@ -1,7 +1,9 @@
 {
     "files.exclude": {
         "**/.creator": true,
+        "**/Client/library": true,
         "**/node_modules": true,
+        "**/package-lock.json": true,
         "**/profiles": true,
         "**/temp": true
     }
