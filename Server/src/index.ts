@@ -3,7 +3,7 @@ import { WsConnection, WsServer } from "tsrpc";
 import { serviceProto } from "./shared/protocols/serviceProto";
 
 export const server = new WsServer(serviceProto, {
-    port: 3000,
+    port: 3001,
     json: true
 });
 
