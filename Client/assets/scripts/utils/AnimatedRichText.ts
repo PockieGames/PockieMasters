@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, RichText, removeProperty, TerrainBlock, TERRAIN_BLOCK_VERTEX_SIZE } from 'cc';
+import { _decorator, Component, Node, RichText, removeProperty, TerrainBlock, TERRAIN_BLOCK_VERTEX_SIZE, Enum } from 'cc';
 const { ccclass, property, requireComponent } = _decorator;
 
 interface TagModifier {
@@ -20,7 +20,7 @@ export class AnimatedRichText extends Component {
 
     onFinish?: () => any
 
-    @property()
+    @property({type: Enum(RevealType)})
     revealType: RevealType = RevealType.CHAR_BY_CHAR
     @property("number")
     speed: number = 1
