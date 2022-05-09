@@ -27,7 +27,9 @@ export default class NetworkManager {
     async callApi<T extends keyof ServiceType['api']>(apiName: T, req: ServiceType['api'][T]['req']): Promise<ApiReturn<ServiceType['api'][T]['res']>>{
         return new Promise<ApiReturn<ServiceType['api'][T]['res']>>(async (resolve) => {
             let res = await this.client.callApi(apiName, req)
-            console.log("resolve :)")
+            if(res.err){
+                // Erorr Popup and potentially close connection.
+            }
             resolve(res)
         })
     }
