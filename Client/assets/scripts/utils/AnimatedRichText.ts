@@ -65,7 +65,9 @@ export class AnimatedRichText extends Component {
         if(currentChar == "<"){
             let tagClosed = false
             let isClosingTag = false
+            let hasValue = false
             let tagName = ""
+            let tagValue = ""
             while(!tagClosed){
                 currentChar = this.cursorUp()
                 if(currentChar == "/"){
@@ -77,7 +79,15 @@ export class AnimatedRichText extends Component {
                     tagClosed = true
                     continue
                 }
-                tagName += currentChar
+                if(currentChar == "="){
+                    hasValue = true
+                    continue
+                }
+                if(hasValue) {
+                    tagValue += currentChar
+                } else {
+                    tagName += currentChar
+                }
             }
             if(isClosingTag){
                 this.lastClosingTag = null
