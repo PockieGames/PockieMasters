@@ -271,8 +271,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -38.627,
-      "y": 26.871,
+      "x": -296.537,
+      "y": -56.641,
       "z": 0
     },
     "_lrot": {
@@ -308,13 +308,13 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 233.42,
-      "height": 50.4
+      "width": 322.38,
+      "height": 170.39999999999998
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
-      "y": 0.5
+      "x": 0,
+      "y": 1
     },
     "_id": "3cyww6UolBz7FurecvimL7"
   },
@@ -327,8 +327,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "cursor": 0,
-    "speed": 0.1,
+    "speed": 0.2,
     "_id": "0ayTR2NEVCgYCTlzP/aXQ1"
   },
   {
@@ -341,9 +340,9 @@
     "_enabled": true,
     "__prefab": null,
     "_lineHeight": 40,
-    "_string": "Lorem Ipsum",
+    "_string": "<b>Lasdeasdasdasd</b>\n<color=#ff00>red</color>\n<color=#00ff>green</color>\n<color=#0000ff>blue</color>",
     "_horizontalAlign": 0,
-    "_verticalAlign": 1,
+    "_verticalAlign": 0,
     "_fontSize": 40,
     "_maxWidth": 0,
     "_fontFamily": "Arial",
