@@ -1,5 +1,15 @@
-import { _decorator, Component, Node, RichText, removeProperty, TerrainBlock } from 'cc';
+import { _decorator, Component, Node, RichText, removeProperty, TerrainBlock, TERRAIN_BLOCK_VERTEX_SIZE } from 'cc';
 const { ccclass, property, requireComponent } = _decorator;
+
+interface TagModifier {
+    tagName: string,
+    tagValue: string | number
+}
+
+enum RevealType {
+    CHAR_BY_CHAR,
+    WORD_BY_WORD
+}
 
 @ccclass('AnimatedRichText')
 @requireComponent(RichText)
@@ -10,14 +20,14 @@ export class AnimatedRichText extends Component {
 
     onFinish?: () => any
 
-    cursor: number = 0
-
+    @property()
+    revealType: RevealType = RevealType.CHAR_BY_CHAR
     @property("number")
     speed: number = 1
+    cursor: number = 0
 
-    timer: number
-
-    lastClosingTag: string
+    currentModifiers: TagModifier[] = []
+    lastClosingTags: string[] = []
  
     start() {
         this.richText = this.getComponent(RichText)
@@ -25,38 +35,93 @@ export class AnimatedRichText extends Component {
         this.richText.string = ""
         this.cursor = 0
 
-        this.timer = setInterval(() => {
+        this.startReading()
+    }
 
-            if(this.cursor >= this.originalText.length)
-                return
-            
-            let currentChar = this.cursorUp()
+    startReading(){
+        setTimeout(() => { this.readCharByChar(this) }, 1000 /  this.speed )
+    }
 
-            currentChar = this.tagCheck(currentChar)
+    readWordByWord(self: AnimatedRichText){
 
-            while(this.isSkippble(currentChar)){
-                currentChar = this.cursorUp()
-            }
+        let _this = self;
 
-            currentChar = this.tagCheck(currentChar)
+        let words = _this.originalText.split(' ')
 
-            this.richText.string = this.originalText.substring(0, this.cursor)
-            if(this.lastClosingTag){
-                this.richText.string += this.lastClosingTag
-            }
+        if(_this.cursor >= words.length)
+            return
 
-            if(this.cursor >= this.originalText.length){
-                clearInterval(this.timer)
-                this.onFinish?.()
-            }
+        let currentWord = words[_this.cursor]
 
-        }, this.speed * 1000)
+        if(currentWord.startsWith("<")){
+            _this.wordTagCheck(currentWord)
+        }
+
+        this.richText.string += ""
+
+    }
+
+    readCharByChar(self: AnimatedRichText){
+
+        let _this = self;
+
+        if(_this.cursor >= _this.originalText.length)
+        return
+    
+        let currentChar = _this.cursorUp()
+
+        currentChar = _this.tagCheck(currentChar)
+
+        while(_this.isSkippble(currentChar)){
+            currentChar = _this.cursorUp()
+        }
+
+        currentChar = _this.tagCheck(currentChar)
+
+        _this.richText.string = _this.originalText.substring(0, _this.cursor)
+
+        _this.lastClosingTags.forEach((closingTag: string) => {
+            _this.richText.string += "<" + closingTag + "/>"
+        })
+
+
+        if(_this.cursor >= _this.originalText.length){
+            _this.onFinish?.()
+            return
+        }
+
+        // speedCheck
+        let speedModifier = this.currentModifiers.find(x => x.tagName == "speed")
+        let modifiedSpeed = speedModifier ? speedModifier.tagValue : _this.speed
+
+        setTimeout(() => { _this.readCharByChar(_this) }, 1000 /  Number.parseFloat(modifiedSpeed.toString()))
+        
     }
 
     // Repetitive calls for interval start, tagCheck and isSkippable
     cursorUp(): string{
         this.cursor++
         return this.originalText.charAt(this.cursor - 1)
+    }
+
+
+    wordTagCheck(word: string){
+
+        let _tagName = ""
+        let _tagValue = ""
+
+        for(let i = 0; i <= word.length; i++){
+            let char = word.charAt(i)
+            if(char == "<")
+                continue
+            if(char == ">"){
+                console.log("Added speed modifier")
+                this.currentModifiers.push({ tagName: _tagName, tagValue: _tagValue })
+                return
+            }
+            word.charAt(i)
+        }
+
     }
 
     // Print opening and closing tag to display RichText correctly
@@ -77,7 +142,17 @@ export class AnimatedRichText extends Component {
                 if(currentChar == ">"){
                     currentChar = this.cursorUp()
                     tagClosed = true
-                    continue
+                    if(!isClosingTag){
+                        if(tagName == "speed"){
+                            this.currentModifiers.push({tagName: tagName, tagValue: tagValue})
+                        }
+                    } else {
+                        this.currentModifiers.forEach((modifier, index) => {
+                            if(modifier.tagName == tagName){
+                                this.currentModifiers.splice(index, 1)
+                            }
+                        })
+                    }
                 }
                 if(currentChar == "="){
                     hasValue = true
@@ -86,14 +161,16 @@ export class AnimatedRichText extends Component {
                 if(hasValue) {
                     tagValue += currentChar
                 } else {
-                    tagName += currentChar
+                    if(currentChar != "<")
+                        tagName += currentChar
                 }
             }
             if(isClosingTag){
-                this.lastClosingTag = null
+                this.lastClosingTags.splice(this.lastClosingTags.findIndex(t => t = tagName), 1)
             } else {
-                this.lastClosingTag = "</" + tagName + ">"
+                this.lastClosingTags.push(tagName)
             }
+            this.tagCheck(currentChar)
         }
         return currentChar
     }
