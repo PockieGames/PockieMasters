@@ -330,6 +330,7 @@
     },
     "_enabled": true,
     "__prefab": null,
+    "revealType": 0,
     "speed": 1,
     "_id": "0ayTR2NEVCgYCTlzP/aXQ1"
   },
@@ -436,6 +437,7 @@
     },
     "_enabled": true,
     "__prefab": null,
+    "revealType": 1,
     "speed": 1,
     "_id": "7dXU2iC3JLpqhH15BKF0x7"
   },

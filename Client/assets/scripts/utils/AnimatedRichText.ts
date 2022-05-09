@@ -39,14 +39,19 @@ export class AnimatedRichText extends Component {
     }
 
     startReading(){
-        setTimeout(() => { this.readCharByChar(this) }, 1000 /  this.speed )
+        if(this.revealType == RevealType.CHAR_BY_CHAR)
+            setTimeout(() => { this.readCharByChar(this) }, 1000 /  this.speed )
+        else
+        //WIP: Fix this :)
+            setTimeout(() => { this.readWordByWord(this) }, 1000 /  this.speed )
+
     }
 
     readWordByWord(self: AnimatedRichText){
 
         let _this = self;
 
-        let words = _this.originalText.split(' ')
+        let words = _this.originalText.split(' ').join('\n').split('\n')
 
         if(_this.cursor >= words.length)
             return
@@ -57,7 +62,14 @@ export class AnimatedRichText extends Component {
             _this.wordTagCheck(currentWord)
         }
 
-        this.richText.string += ""
+        _this.cursor++; 
+        this.richText.string += currentWord
+
+        // speedCheck
+        let speedModifier = this.currentModifiers.find(x => x.tagName == "speed")
+        let modifiedSpeed = speedModifier ? speedModifier.tagValue : _this.speed
+
+        setTimeout(() => { _this.readWordByWord(_this) }, 1000 /  Number.parseFloat(modifiedSpeed.toString()))
 
     }
 
@@ -109,17 +121,40 @@ export class AnimatedRichText extends Component {
 
         let _tagName = ""
         let _tagValue = ""
+        let startTag = false
+        let closingTag = false
+        let hasValue = false
 
         for(let i = 0; i <= word.length; i++){
             let char = word.charAt(i)
-            if(char == "<")
+            if(char == "<") {
+                startTag = true
                 continue
+            }
+            if(char == "/"){
+                closingTag = true
+                continue
+            }
+            if(char == "="){
+                hasValue = true
+                continue
+            }
             if(char == ">"){
-                console.log("Added speed modifier")
-                this.currentModifiers.push({ tagName: _tagName, tagValue: _tagValue })
+                if(!closingTag){
+                    console.log("Added "+ _tagName + " modifier: " + _tagValue)
+                    this.currentModifiers.push({ tagName: _tagName, tagValue: _tagValue })
+                } else {
+                    this.lastClosingTags.splice(this.lastClosingTags.findIndex(t => t = _tagName), 1)
+                }
                 return
             }
-            word.charAt(i)
+            if(startTag) {
+                if(!hasValue) {
+                    _tagName += word.charAt(i)
+                } else {
+                    _tagValue += word.charAt(i)
+                }
+            }
         }
 
     }
