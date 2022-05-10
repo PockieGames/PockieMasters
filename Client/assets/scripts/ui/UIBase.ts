@@ -13,7 +13,9 @@ export default class UIBase extends Component{
     }
 
     hide(){
-        UIManager.Instance<UIManager>().HideUI(this)
+        if(!UIManager.Instance<UIManager>().HideUI(this)){
+            this.node.destroy()
+        }
     }
 
 }
