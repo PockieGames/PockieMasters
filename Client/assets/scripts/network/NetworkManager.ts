@@ -4,25 +4,16 @@ import Singleton from "../utils/Singleton";
 
 export default class NetworkManager extends Singleton{
 
-    client: WsClient<ServiceType>;
+    client: WsClient<ServiceType>
 
-    constructor(wsUrl: string = "ws://localhost:3001") {
-        
-        super()
+    async connect(wsUrl: string = "ws://localhost:3001"): Promise<{ isSucc: true; errMsg?: undefined; } | { isSucc: false; errMsg: string; }>{
 
         this.client = new WsClient(serviceProto, {
             server: wsUrl,
-            json: true,
-            //logger: console
-        });
-
-        this.client.connect().then((res) => {
-            console.log(res.errMsg)
-
-            this.callApi("Auth", { username: "t", password: "t" } ).then((res) => {
-                console.log(res)
-            })
+            json: true
         })
+
+        return await this.client.connect()
 
     }
 
