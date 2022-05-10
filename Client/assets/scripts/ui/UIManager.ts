@@ -30,7 +30,7 @@ export default class UIManager extends Singleton<UIManager>{
         }
     }
 
-    async OpenUI(uiBase: { new(): UIBase }): Promise<UIBase>{
+    async OpenUI(uiBase: { new(): UIBase }, uiData: {data: any} = null): Promise<UIBase>{
         return new Promise<UIBase>(async (resolve, reject) => {
             if(!this.uiDict.containsKey(uiBase.name)){
                 try{
@@ -41,7 +41,8 @@ export default class UIManager extends Singleton<UIManager>{
                     uiNode.parent = this.getCanvas().node
                     let uiBaseComponent = uiNode.getComponent(UIBase);
                     this.uiDict.add(uiBase.name, uiBaseComponent)
-        
+                    uiBaseComponent.setUIData(uiData)
+
                     Logger.Info("Open UI: " + uiBase.name)
                     resolve(uiBaseComponent)
                  } catch(e){

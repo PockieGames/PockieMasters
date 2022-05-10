@@ -21,11 +21,11 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 11
+      "__id__": 16
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 12
+      "__id__": 17
     },
     "_id": "49145103-8e4c-4230-8179-af302639ea0a"
   },
@@ -42,18 +42,21 @@
       },
       {
         "__id__": 5
+      },
+      {
+        "__id__": 8
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 8
+        "__id__": 13
       },
       {
-        "__id__": 9
+        "__id__": 14
       },
       {
-        "__id__": 10
+        "__id__": 15
       }
     ],
     "_prefab": null,
@@ -248,6 +251,180 @@
     "_id": "d0e9VNYR5BQYG+GiTvy6y1"
   },
   {
+    "__type__": "cc.Node",
+    "_name": "MessageBox",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 2
+    },
+    "_children": [
+      {
+        "__id__": 9
+      }
+    ],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 12
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "35FjkZyQBDn6f8jkLVxBh7"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "Sprite",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 8
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 10
+      },
+      {
+        "__id__": 11
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "cbQBTmE3lLSo8Svb7uR6bx"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 9
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 100,
+      "height": 100
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_id": "4cC+LbBvhNE5Zl7wY4KXH5"
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 9
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_visFlags": 0,
+    "_customMaterial": null,
+    "_srcBlendFactor": 2,
+    "_dstBlendFactor": 4,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255
+    },
+    "_spriteFrame": {
+      "__uuid__": "20fd408c-2a57-42dc-b458-a065fb22473d@f9941",
+      "__expectedType__": "cc.SpriteFrame"
+    },
+    "_type": 0,
+    "_fillType": 0,
+    "_sizeMode": 0,
+    "_fillCenter": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    },
+    "_fillStart": 0,
+    "_fillRange": 0,
+    "_isTrimmedMode": true,
+    "_useGrayscale": false,
+    "_atlas": null,
+    "_id": "71Yl+tiV5DQYS/QIxdR0Gn"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 8
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 100,
+      "height": 100
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_id": "7fywEz1R9D9o8bGR53mjCd"
+  },
+  {
     "__type__": "cc.UITransform",
     "_name": "",
     "_objFlags": 0,
@@ -319,19 +496,19 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 13
+      "__id__": 18
     },
     "shadows": {
-      "__id__": 14
+      "__id__": 19
     },
     "_skybox": {
-      "__id__": 15
+      "__id__": 20
     },
     "fog": {
-      "__id__": 16
+      "__id__": 21
     },
     "octree": {
-      "__id__": 17
+      "__id__": 22
     }
   },
   {
