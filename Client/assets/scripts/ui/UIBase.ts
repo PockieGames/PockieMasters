@@ -7,7 +7,7 @@ const { ccclass, property } = _decorator;
 export default class UIBase extends Component{
 
     hide(){
-        UIManager.Instance(UIManager).HideUI(this)
+        UIManager.Instance<UIManager>().HideUI(this)
     }
 
 }
