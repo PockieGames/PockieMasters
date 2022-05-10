@@ -1,11 +1,14 @@
 import { ApiReturn, WsClient } from "tsrpc-browser";
 import { serviceProto, ServiceType } from "../shared/protocols/serviceProto";
+import Singleton from "../utils/Singleton";
 
-export default class NetworkManager {
+export default class NetworkManager extends Singleton<NetworkManager>{
 
     client: WsClient<ServiceType>;
 
     constructor(wsUrl: string = "ws://localhost:3001") {
+        
+        super()
 
         this.client = new WsClient(serviceProto, {
             server: wsUrl,
@@ -16,7 +19,7 @@ export default class NetworkManager {
         this.client.connect().then((res) => {
             console.log(res.errMsg)
 
-            this.callApi("Auth", {username: "t", password: "t"}).then((res) => {
+            this.callApi("Auth", { username: "t", password: "t" } ).then((res) => {
                 console.log(res)
             })
         })

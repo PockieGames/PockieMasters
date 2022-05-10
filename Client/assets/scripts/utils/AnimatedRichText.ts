@@ -1,14 +1,9 @@
-import { _decorator, Component, Node, RichText, removeProperty, TerrainBlock, TERRAIN_BLOCK_VERTEX_SIZE, Enum } from 'cc';
+import { _decorator, Component, RichText } from 'cc';
 const { ccclass, property, requireComponent } = _decorator;
 
 interface TagModifier {
     tagName: string,
     tagValue: string | number
-}
-
-enum RevealType {
-    CHAR_BY_CHAR,
-    WORD_BY_WORD
 }
 
 @ccclass('AnimatedRichText')
@@ -20,14 +15,14 @@ export class AnimatedRichText extends Component {
 
     onFinish?: () => any
 
-    @property({type: Enum(RevealType)})
-    revealType: RevealType = RevealType.CHAR_BY_CHAR
     @property("number")
     speed: number = 1
     cursor: number = 0
 
     currentModifiers: TagModifier[] = []
     lastClosingTags: string[] = []
+
+    finishEarly = false
  
     start() {
         this.richText = this.getComponent(RichText)
@@ -39,74 +34,51 @@ export class AnimatedRichText extends Component {
     }
 
     startReading(){
-        if(this.revealType == RevealType.CHAR_BY_CHAR)
-            setTimeout(() => { this.readCharByChar(this) }, 1000 /  this.speed )
-        else
-        //WIP: Fix this :)
-            setTimeout(() => { this.readWordByWord(this) }, 1000 /  this.speed )
-
+        this.scheduleOnce(() => { this.readText() }, 1 / this.speed)
     }
 
-    readWordByWord(self: AnimatedRichText){
+    // Finish early, for example through click on the dialogue box
+    finishNow(){
+        this.finishEarly = true
+        this.richText.string = this.originalText
+        this.onFinish?.()
+    }
 
-        let _this = self;
+    readText(){
 
-        let words = _this.originalText.split(' ').join('\n').split('\n')
-
-        if(_this.cursor >= words.length)
+        if(this.finishEarly)
             return
 
-        let currentWord = words[_this.cursor]
-
-        if(currentWord.startsWith("<")){
-            _this.wordTagCheck(currentWord)
-        }
-
-        _this.cursor++; 
-        this.richText.string += currentWord
-
-        // speedCheck
-        let speedModifier = this.currentModifiers.find(x => x.tagName == "speed")
-        let modifiedSpeed = speedModifier ? speedModifier.tagValue : _this.speed
-
-        setTimeout(() => { _this.readWordByWord(_this) }, 1000 /  Number.parseFloat(modifiedSpeed.toString()))
-
-    }
-
-    readCharByChar(self: AnimatedRichText){
-
-        let _this = self;
-
-        if(_this.cursor >= _this.originalText.length)
+        if(this.cursor >= this.originalText.length)
         return
     
-        let currentChar = _this.cursorUp()
+        let currentChar = this.cursorUp()
 
-        currentChar = _this.tagCheck(currentChar)
+        currentChar = this.tagCheck(currentChar)
 
-        while(_this.isSkippble(currentChar)){
-            currentChar = _this.cursorUp()
+        while(this.isSkippble(currentChar)){
+            currentChar = this.cursorUp()
         }
 
-        currentChar = _this.tagCheck(currentChar)
+        currentChar = this.tagCheck(currentChar)
 
-        _this.richText.string = _this.originalText.substring(0, _this.cursor)
+        this.richText.string = this.originalText.substring(0, this.cursor)
 
-        _this.lastClosingTags.forEach((closingTag: string) => {
-            _this.richText.string += "<" + closingTag + "/>"
+        this.lastClosingTags.forEach((closingTag: string) => {
+            this.richText.string += "<" + closingTag + "/>"
         })
 
 
-        if(_this.cursor >= _this.originalText.length){
-            _this.onFinish?.()
+        if(this.cursor >= this.originalText.length){
+            this.onFinish?.()
             return
         }
 
-        // speedCheck
+        // Speed Modifier
         let speedModifier = this.currentModifiers.find(x => x.tagName == "speed")
-        let modifiedSpeed = speedModifier ? speedModifier.tagValue : _this.speed
+        let modifiedSpeed = speedModifier ? speedModifier.tagValue : this.speed
 
-        setTimeout(() => { _this.readCharByChar(_this) }, 1000 /  Number.parseFloat(modifiedSpeed.toString()))
+        this.scheduleOnce(() => { this.readText() }, 1 /  Number.parseFloat(modifiedSpeed.toString()))
         
     }
 
@@ -114,49 +86,6 @@ export class AnimatedRichText extends Component {
     cursorUp(): string{
         this.cursor++
         return this.originalText.charAt(this.cursor - 1)
-    }
-
-
-    wordTagCheck(word: string){
-
-        let _tagName = ""
-        let _tagValue = ""
-        let startTag = false
-        let closingTag = false
-        let hasValue = false
-
-        for(let i = 0; i <= word.length; i++){
-            let char = word.charAt(i)
-            if(char == "<") {
-                startTag = true
-                continue
-            }
-            if(char == "/"){
-                closingTag = true
-                continue
-            }
-            if(char == "="){
-                hasValue = true
-                continue
-            }
-            if(char == ">"){
-                if(!closingTag){
-                    console.log("Added "+ _tagName + " modifier: " + _tagValue)
-                    this.currentModifiers.push({ tagName: _tagName, tagValue: _tagValue })
-                } else {
-                    this.lastClosingTags.splice(this.lastClosingTags.findIndex(t => t = _tagName), 1)
-                }
-                return
-            }
-            if(startTag) {
-                if(!hasValue) {
-                    _tagName += word.charAt(i)
-                } else {
-                    _tagValue += word.charAt(i)
-                }
-            }
-        }
-
     }
 
     // Print opening and closing tag to display RichText correctly
@@ -210,7 +139,7 @@ export class AnimatedRichText extends Component {
         return currentChar
     }
 
-    // Skip spaces and line break
+    // Skip spaces and line break and print them instant
     isSkippble(char: string): boolean{
         if(char == " ") return true
         if(char == '\n') return true
