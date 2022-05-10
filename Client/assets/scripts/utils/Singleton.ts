@@ -1,4 +1,4 @@
-export default class Singleton<T> {
+export default class Singleton {
 
     private static _instance = null
 

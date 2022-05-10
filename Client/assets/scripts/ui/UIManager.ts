@@ -5,7 +5,7 @@ import Logger from "../utils/Logger";
 import Singleton from "../utils/Singleton";
 import UIBase from "./UIBase";
 
-export default class UIManager extends Singleton<UIManager>{
+export default class UIManager extends Singleton{
 
     private _canvas: Canvas
 

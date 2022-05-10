@@ -2,7 +2,7 @@ import { ApiReturn, WsClient } from "tsrpc-browser";
 import { serviceProto, ServiceType } from "../shared/protocols/serviceProto";
 import Singleton from "../utils/Singleton";
 
-export default class NetworkManager extends Singleton<NetworkManager>{
+export default class NetworkManager extends Singleton{
 
     client: WsClient<ServiceType>;
 
