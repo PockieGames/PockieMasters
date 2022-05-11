@@ -12,6 +12,10 @@ export default class UIBase extends Component{
         this.uiData = data
     }
 
+    start(){
+        console.log("Start from UIBASE")
+    }
+
     hide(){
         if(!UIManager.Instance<UIManager>().HideUI(this)){
             this.node.destroy()

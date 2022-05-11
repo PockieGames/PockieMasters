@@ -1,4 +1,4 @@
-import { Button, Label, _decorator } from "cc";
+import { Button, Label, tween, Vec3, _decorator, Node, Tween, easing } from "cc";
 import UIBase from "../UIBase";
 
 const { ccclass, property } = _decorator;
@@ -6,6 +6,8 @@ const { ccclass, property } = _decorator;
 @ccclass("MessageBox")
 export default class MessageBox extends UIBase{
     
+    @property({type: Node})
+    dialogue: Node
     @property({type: Label})
     title: Label
     @property({type: Label})
@@ -14,16 +16,33 @@ export default class MessageBox extends UIBase{
     closeBtn: Button
 
     start(){
-        console.log(this.uiData)
-        this.closeBtn.node.on(Button.EventType.CLICK, () => {
-            this.hide()
-        }, this)
+        super.start()
         this.setupUI()
     }
 
     setupUI(){
         this.title.string = this.uiData.title
         this.message.string = this.uiData.message
+        this.closeBtn.node.on(Button.EventType.CLICK, () => {
+            this.hide()
+        }, this)
+
+        tween(this.dialogue)
+            .set({ scale: new Vec3(0, 0, 1)})
+            .delay(0.1)
+            .to(0.3, {scale: new Vec3(1,1,1)}, {easing: "fade"} )
+            .start()
+    }
+
+    hide(){
+        tween(this.dialogue)
+            .delay(0.1)
+            .to(0.2, { scale: new Vec3(0, 0, 1)}, {
+                onComplete: () => {
+                    super.hide()
+                }
+            })
+            .start()
     }
 
 }
