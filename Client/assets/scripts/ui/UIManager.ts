@@ -34,7 +34,7 @@ export default class UIManager extends Singleton{
         }
     }
 
-    async OpenPopup<T extends UIBase>(c: { new(): T }, uiData: {data: any} = null): Promise<T>{
+    async OpenPopup<T extends UIBase>(c: { new(): T }, uiData: any = null): Promise<T>{
         return new Promise<T>(async (resolve, reject) => {
 
             let name = (new c() as T).name
@@ -59,7 +59,7 @@ export default class UIManager extends Singleton{
         })
     }
 
-    async OpenUI(uiBase: { new(): UIBase }, uiData: {data: any} = null): Promise<UIBase>{
+    async OpenUI(uiBase: { new(): UIBase }, uiData: any = null): Promise<UIBase>{
         return new Promise<UIBase>(async (resolve, reject) => {
             if(!this.uiDict.containsKey(uiBase.name)){
                 try{

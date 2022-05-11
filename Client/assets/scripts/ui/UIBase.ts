@@ -6,9 +6,9 @@ const { ccclass, property } = _decorator;
 @ccclass("UIBase")
 export default class UIBase extends Component{
 
-    protected uiData: {data: any}
+    protected uiData: any
 
-    setUIData(data: {data: any}){
+    setUIData(data: any){
         this.uiData = data
     }
 

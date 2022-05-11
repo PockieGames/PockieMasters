@@ -13,7 +13,10 @@ export default class TestUI extends UIBase{
 
     start(){
         this.closeBtn.node.on(Button.EventType.CLICK, () => {
-            UIManager.Instance<UIManager>().OpenPopup(MessageBox)
+            UIManager.Instance<UIManager>().OpenPopup(MessageBox, {
+                title: "Title",
+                message: "Message"
+            })
         }, this)
     }
 
