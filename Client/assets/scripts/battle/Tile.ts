@@ -22,7 +22,7 @@ export default class Tile extends Component {
         if(this.hoverFrame != null) { 
             this.hoverFrame.active = false
         }
-        this.showDebugPos()
+        this.debugPos.node.active = false
     }
     
     isOnTile(position: Vec2){
@@ -36,6 +36,7 @@ export default class Tile extends Component {
     }
 
     showDebugPos(){
+        this.debugPos.node.active = false
         this.debugPos.string = this.mapTile.x + "/" + this.mapTile.y
     }
 

@@ -130,7 +130,7 @@ export default class Battlefield extends Component{
                 let tile = tileNode.getComponent(Tile)
                 tile.setColor(TileColors.NORMAL)
                 tile.mapTile = this.map.tiles[x][y]
-                tile.showDebugPos()
+                //tile.showDebugPos()
 
                 this.tiles.push(tile)
 
