@@ -17,9 +17,9 @@ export default class Battlefield extends Component{
     
     selectedTile: Tile
 
-    @property(Number)
+    @property("number")
     width: number = 9;
-    @property(Number)
+    @property("number")
     height: number = 5;
     @property(Node)
     tileContainerNode: Node

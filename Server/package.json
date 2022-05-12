@@ -10,6 +10,8 @@
   },
   "author": "PockieGames",
   "dependencies": {
+    "@types/mysql": "^2.15.21",
+    "mysql": "^2.18.1",
     "tsrpc": "^3.3.0"
   },
   "devDependencies": {
