@@ -41,7 +41,7 @@ export default class UIManager extends Singleton{
             
             try{
                 let messageBox = await 
-                ResourceManager.Instance<ResourceManager>().loadPrefab<Prefab>("ui/" + name)
+                ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("ui/" + name)
 
                 let uiNode = instantiate(messageBox)
                 uiNode.name = messageBox.name
@@ -63,7 +63,7 @@ export default class UIManager extends Singleton{
         return new Promise<UIBase>(async (resolve, reject) => {
             if(!this.uiDict.containsKey(uiBase.name)){
                 try{
-                    let asset = await ResourceManager.Instance<ResourceManager>().loadPrefab<Prefab>("ui/" + uiBase.name)
+                    let asset = await ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("ui/" + uiBase.name)
 
                     let uiNode = instantiate(asset)
                     uiNode.name = uiBase.name

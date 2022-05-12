@@ -12,9 +12,9 @@ export class Main extends Component {
 
     async start() {
 
-        let networkManager = new NetworkManager()
+        //let networkManager = new NetworkManager()
 
-        let uiManager = UIManager.Instance<UIManager>().OpenUI(TestUI)
+        //let uiManager = UIManager.Instance<UIManager>().OpenUI(TestUI)
 
     }
 

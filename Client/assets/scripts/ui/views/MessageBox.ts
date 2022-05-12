@@ -29,15 +29,13 @@ export default class MessageBox extends UIBase{
 
         tween(this.dialogue)
             .set({ scale: new Vec3(0, 0, 1)})
-            .delay(0.1)
-            .to(0.3, {scale: new Vec3(1,1,1)}, {easing: "fade"} )
+            .to(0.2, {scale: new Vec3(1,1,1)}, {easing: "fade"} )
             .start()
     }
 
     hide(){
         tween(this.dialogue)
-            .delay(0.1)
-            .to(0.2, { scale: new Vec3(0, 0, 1)}, {
+            .to(0.05, { scale: new Vec3(0, 0, 1)}, {
                 onComplete: () => {
                     super.hide()
                 }
