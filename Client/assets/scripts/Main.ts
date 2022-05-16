@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, sys } from 'cc';
+import { _decorator, Component, Node, sys, gfx } from 'cc';
 import NetworkManager from './network/NetworkManager';
 import { serviceProto, ServiceType } from "./shared/protocols/serviceProto";
 import UIManager from './ui/UIManager';
@@ -17,6 +17,13 @@ export class Main extends Component {
         //let networkManager = new NetworkManager()
 
         let uiManager = UIManager.Instance<UIManager>().OpenUI(LoginUI)
+
+        console.log(sys.dump())
+        console.log(sys.language)
+        console.log(sys.languageCode)
+        console.log(sys.osVersion)
+        console.log(sys.osMainVersion)
+        console.log(sys.os)
 
     }
 
