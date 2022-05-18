@@ -14,6 +14,7 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
+    "version": 1,
     "services": [
         {
             "id": 0,
@@ -45,10 +46,24 @@ export const serviceProto: ServiceProto<ServiceType> = {
             "type": "Interface",
             "properties": [
                 {
-                    "id": 0,
-                    "name": "success",
+                    "id": 1,
+                    "name": "account",
                     "type": {
-                        "type": "Boolean"
+                        "type": "Reference",
+                        "target": "../types/Account/Account"
+                    }
+                }
+            ]
+        },
+        "../types/Account/Account": {
+            "type": "Interface",
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "id",
+                    "type": {
+                        "type": "Number",
+                        "scalarType": "uint"
                     }
                 }
             ]
