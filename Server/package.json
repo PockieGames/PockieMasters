@@ -12,10 +12,13 @@
   "dependencies": {
     "@types/mysql": "^2.15.21",
     "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.19.1",
     "tsrpc": "^3.3.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.31",
+    "sequelize-cli": "^6.4.1",
     "tsrpc-cli": "^2.4.3",
     "typescript": "^4.6.4"
   }

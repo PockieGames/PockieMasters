@@ -1,4 +1,5 @@
 import { ApiReturn, WsClient } from "tsrpc-browser";
+import { resolve } from "../../../extensions/i18n/@types/editor/utils/source/path";
 import { serviceProto, ServiceType } from "../shared/protocols/serviceProto";
 import Singleton from "../utils/Singleton";
 

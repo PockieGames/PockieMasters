@@ -10,7 +10,7 @@
   },
   {
     "__type__": "cc.Scene",
-    "_name": "main",
+    "_name": "Home",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -20,14 +20,12 @@
     ],
     "_active": true,
     "_components": [],
-    "_prefab": {
-      "__id__": 11
-    },
+    "_prefab": null,
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 12
+      "__id__": 11
     },
-    "_id": "49145103-8e4c-4230-8179-af302639ea0a"
+    "_id": "9a9c301e-821c-4526-a26c-0bf3911ec21f"
   },
   {
     "__type__": "cc.Node",
@@ -59,8 +57,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 480.00000000000006,
-      "y": 320,
+      "x": 480,
+      "y": 320.00000000000006,
       "z": 0
     },
     "_lrot": {
@@ -171,7 +169,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Main",
+    "_name": "Home",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -213,7 +211,7 @@
       "y": 0,
       "z": 0
     },
-    "_id": "b5UaMO8KdI2LfeBrktPy6X"
+    "_id": "0b6nEx4BhAWbhLJsXpLJTT"
   },
   {
     "__type__": "cc.UITransform",
@@ -234,10 +232,10 @@
       "x": 0.5,
       "y": 0.5
     },
-    "_id": "c9PYmuYcVOl5D0Tx9I5kii"
+    "_id": "67vep1TlZFTr6u7yN3Z7Ic"
   },
   {
-    "__type__": "d01c5LBkQ1Dd7N7/D/W3Zi0",
+    "__type__": "524bf+GryhChoXMzG/a6UU+",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -245,7 +243,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "_id": "d0e9VNYR5BQYG+GiTvy6y1"
+    "_id": "c1y7sm7VJKsqaqsrLgGGtd"
   },
   {
     "__type__": "cc.UITransform",
@@ -294,10 +292,10 @@
     "__prefab": null,
     "_alignFlags": 45,
     "_target": null,
-    "_left": 5.684341886080802e-14,
-    "_right": 5.684341886080802e-14,
-    "_top": 0,
-    "_bottom": 0,
+    "_left": 0,
+    "_right": 0,
+    "_top": 5.684341886080802e-14,
+    "_bottom": 5.684341886080802e-14,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
@@ -313,25 +311,21 @@
     "_id": "c5V1EV8IpMtrIvY1OE9t2u"
   },
   {
-    "__type__": "cc.PrefabInfo",
-    "fileId": "49145103-8e4c-4230-8179-af302639ea0a"
-  },
-  {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 13
+      "__id__": 12
     },
     "shadows": {
-      "__id__": 14
+      "__id__": 13
     },
     "_skybox": {
-      "__id__": 15
+      "__id__": 14
     },
     "fog": {
-      "__id__": 16
+      "__id__": 15
     },
     "octree": {
-      "__id__": 17
+      "__id__": 16
     }
   },
   {
