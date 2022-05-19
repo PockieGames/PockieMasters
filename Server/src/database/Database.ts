@@ -1,5 +1,6 @@
 import MySQL from 'mysql'
 import { Sequelize } from 'sequelize'
+import Logger from '../logger'
 
 export default class Database {
 
@@ -13,17 +14,18 @@ export default class Database {
                 host: 'localhost',
                 username: 'root',
                 password: '',
-                database: 'pockie'
-            });
+                database: 'pockie',
+                logging: false
+            })
 
             Database.connection.authenticate()
-            .then(() => {
-                console.log('Connected to Database');
-                resolve(true);
-            })
-            .catch((err) => {
-                reject(err);
-            });
+                .then(() => {
+                    Logger.log('Connected to Database')
+                    resolve(true)
+                })
+                .catch((err) => {
+                    reject(err)
+                })
         })
     }
 
@@ -31,3 +33,12 @@ export default class Database {
         Database.connection.query(queryString, options)
     }
 }
+
+export const sequelize = new Sequelize({
+    dialect: 'mysql',
+    host: 'localhost',
+    username: 'root',
+    password: '',
+    database: 'pockie',
+    logging: false
+})

@@ -2,8 +2,9 @@ import * as path from "path";
 import { exit } from "process";
 import { WsConnection, WsServer } from "tsrpc";
 import Logger from "./logger";
-import Database from "./models/Database";
+import Database from "./database/Database";
 import { serviceProto } from "./shared/protocols/serviceProto";
+import User from "./database/models/User";
 
 export const server = new WsServer(serviceProto, {
     port: 3001,
@@ -15,9 +16,13 @@ async function init() {
 
     await Database.connect().catch(() => {
         Logger.error("Couldn't connect to Database")
+
         exit();
     })
 
+    
+    User.sync({alter: true})
+    
     // TODO
     // Prepare something... (e.g. connect the db)
 };
