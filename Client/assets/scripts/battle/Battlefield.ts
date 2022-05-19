@@ -1,6 +1,6 @@
 import { Color, Component, EventMouse, EventTouch, instantiate, Node, Prefab, Sprite, tween, UITransform, Vec3, _decorator } from "cc";
 import TileColors from "../Constants";
-import ResourceManager from "../resources/ResourceManager";
+import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
 import Map from "../shared/game/battle/Map"
 import Tile from "./Tile";

@@ -4,7 +4,7 @@ import UIManager from '../UIManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('HomeUI')
-export class HomeUI extends UIBase {
+export default class HomeUI extends UIBase {
     start() {
         console.log('Home ui');
     }
