@@ -1,3 +1,4 @@
+import { director } from "cc";
 import { ApiReturn, WsClient } from "tsrpc-browser";
 import { resolve } from "../../../extensions/i18n/@types/editor/utils/source/path";
 import { serviceProto, ServiceType } from "../shared/protocols/serviceProto";
@@ -18,6 +19,18 @@ export default class NetworkManager extends Singleton{
                     json: true
                 })
             }
+
+            this.client.flows.postDisconnectFlow.push(v => {
+                    // HANDLE DISCONNECT
+                    UIManager.Instance<UIManager>().OpenPopup(MessageBox, {
+                        title: "Disconnected",
+                        message: "You have been disconnected from the server.",
+                        onClose: () => {
+                            director.loadScene("main")
+                        }
+                    })
+                return v;
+            })
 
             if(this.client.isConnected)
                 resolve(this.client)

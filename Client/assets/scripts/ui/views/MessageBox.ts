@@ -15,6 +15,8 @@ export default class MessageBox extends UIBase{
     @property({type: Button})
     closeBtn: Button
 
+    onClose: () => any
+
     start(){
         super.start()
         this.setupUI()
@@ -23,8 +25,11 @@ export default class MessageBox extends UIBase{
     setupUI(){
         this.title.string = this.uiData.title
         this.message.string = this.uiData.message
+        this.onClose = this.uiData.onClose
         this.closeBtn.node.on(Button.EventType.CLICK, () => {
             this.hide()
+            if(this.uiData.onClose)
+                this.onClose() 
         }, this)
 
         tween(this.dialogue)
