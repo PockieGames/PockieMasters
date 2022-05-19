@@ -11,6 +11,7 @@ interface UserFields {
     language: string
     createdAt?: Date
     updatedAt?: Date
+    deletedAt?: Date
 }
 
 export interface UserInput extends Optional<UserFields, 'id'> {}
@@ -28,6 +29,7 @@ class User extends Model<UserFields, UserInput> implements UserFields{
 
     public readonly createdAt!: Date
     public readonly updatedAt!: Date
+    public readonly deletedAt!: Date
 
 }
 

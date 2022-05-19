@@ -1,13 +1,27 @@
 import { ApiCall } from "tsrpc";
+import User from "../../database/models/User";
 import { ReqReg, ResReg } from "../../shared/protocols/user/PtlReg";
 
 export async function ApiReg(call: ApiCall<ReqReg, ResReg>) {
 
-    function generateId() {
+    async function generateId(): Promise<string> {
         function rndNbr() {
             return Math.floor(Math.random() * 9 + 0.5).toString()
         }
-        return rndNbr() + rndNbr() + rndNbr() + rndNbr() + rndNbr() + rndNbr() + rndNbr() + rndNbr() + rndNbr()
+        async function idExists(id: string) {
+            return await User.findAll({
+                where: {
+                    identifier: id
+                }
+            })
+        }
+        let id = rndNbr() + rndNbr() + rndNbr() + rndNbr() + rndNbr() + rndNbr() + rndNbr() + rndNbr() + rndNbr()
+        let exists = await idExists(id)
+        if (exists.length > 0) {
+            // recursive generate id until we found one :)
+            id = await generateId()
+        }
+        return id
     }
 
     function generatePassword() {
@@ -20,8 +34,19 @@ export async function ApiReg(call: ApiCall<ReqReg, ResReg>) {
         return password
     }
 
-    let id = generateId()
+    let id = await generateId()
+    let pass = generatePassword()
 
-    call.succ({ identifier: id, password: generatePassword() })
+    // Add User TO Database
+    await User.create({
+        uuid: call.req.uuid,
+        identifier: id,
+        password: pass,
+        os: call.req.osInfos.os,
+        osVersion: call.req.osInfos.osVersion,
+        language: call.req.osInfos.language
+    })
+
+    call.succ({ identifier: id, password: pass })
 
 }
