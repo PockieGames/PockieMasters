@@ -1,11 +1,16 @@
 import { ServiceProto } from 'tsrpc-proto';
-import { ReqAuth, ResAuth } from './PtlAuth';
+import { ReqAuth, ResAuth } from './user/PtlAuth';
+import { ReqReg, ResReg } from './user/PtlReg';
 
 export interface ServiceType {
     api: {
-        "Auth": {
+        "user/Auth": {
             req: ReqAuth,
             res: ResAuth
+        },
+        "user/Reg": {
+            req: ReqReg,
+            res: ResReg
         }
     },
     msg: {
@@ -14,16 +19,21 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 1,
+    "version": 3,
     "services": [
         {
-            "id": 0,
-            "name": "Auth",
+            "id": 1,
+            "name": "user/Auth",
+            "type": "api"
+        },
+        {
+            "id": 2,
+            "name": "user/Reg",
             "type": "api"
         }
     ],
     "types": {
-        "PtlAuth/ReqAuth": {
+        "user/PtlAuth/ReqAuth": {
             "type": "Interface",
             "properties": [
                 {
@@ -42,11 +52,11 @@ export const serviceProto: ServiceProto<ServiceType> = {
                 }
             ]
         },
-        "PtlAuth/ResAuth": {
+        "user/PtlAuth/ResAuth": {
             "type": "Interface",
             "properties": [
                 {
-                    "id": 1,
+                    "id": 0,
                     "name": "account",
                     "type": {
                         "type": "Reference",
@@ -64,6 +74,71 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "type": {
                         "type": "Number",
                         "scalarType": "uint"
+                    }
+                }
+            ]
+        },
+        "user/PtlReg/ReqReg": {
+            "type": "Interface",
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "uuid",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "osInfos",
+                    "type": {
+                        "type": "Reference",
+                        "target": "../types/UserSystemInfos/UserSystemInfos"
+                    }
+                }
+            ]
+        },
+        "../types/UserSystemInfos/UserSystemInfos": {
+            "type": "Interface",
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "language",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "os",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 2,
+                    "name": "osVersion",
+                    "type": {
+                        "type": "String"
+                    }
+                }
+            ]
+        },
+        "user/PtlReg/ResReg": {
+            "type": "Interface",
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "identifier",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "password",
+                    "type": {
+                        "type": "String"
                     }
                 }
             ]

@@ -1,4 +1,5 @@
 import * as path from "path";
+import { exit } from "process";
 import { WsConnection, WsServer } from "tsrpc";
 import Logger from "./logger";
 import Database from "./models/Database";
@@ -14,6 +15,7 @@ async function init() {
 
     await Database.connect().catch(() => {
         Logger.error("Couldn't connect to Database")
+        exit();
     })
 
     // TODO
@@ -22,7 +24,7 @@ async function init() {
 
 async function main() {
     await init()
-    if(Database.connection.state != "disconnected")
-        await server.start()
+    await server.start()
+    Database.connection.sync({force:true})
 }
 main();

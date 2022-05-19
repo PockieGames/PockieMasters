@@ -1,4 +1,4 @@
-import { Account } from "../types/Account"
+import { Account } from "../../types/Account"
 
 export interface ReqAuth {
     username: string,
