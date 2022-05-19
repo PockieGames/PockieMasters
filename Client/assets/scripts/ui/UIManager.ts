@@ -29,7 +29,6 @@ export default class UIManager extends Singleton{
             this.uiDict.delete(uiBase.node.name)
             return true
         } else {
-            Logger.Info("Couldn't Hide UI: " + uiBase.node.name)
             return false
         }
     }
