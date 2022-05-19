@@ -15,16 +15,39 @@ export default class LoginUI extends UIBase{
     @property(Button)
     loginBtn: Button
 
+    @property(Button)
+    logoutBtn: Button
+
+    @property(Button)
+    testBtn: Button
+
     start(){
+
+        this.testBtn.node.on(Button.EventType.CLICK, async () => {
+            let res = await NetworkManager.Instance<NetworkManager>().callApi("Test", {})
+            console.log(res)
+        })
+
+        this.logoutBtn.node.on(Button.EventType.CLICK, async() => {
+            let res = await NetworkManager.Instance<NetworkManager>().callApi("user/Logout", {})
+            console.log(res)
+        })
+
         this.loginBtn.node.on(Button.EventType.CLICK, async () => {
 
-            await NetworkManager.Instance<NetworkManager>().connect();
+            //await NetworkManager.Instance<NetworkManager>().connect();
 
             let userManager = UserManager.Instance<UserManager>()
 
             if(userManager.getIdentifier() && userManager.getPassword()){
 
                 // Identifier, login!
+
+                let res = await NetworkManager.Instance<NetworkManager>().callApi("user/Auth", {
+                    uuid: userManager.getUUID(),
+                    identifier: userManager.getIdentifier(),
+                    password: userManager.getPassword()
+                })
 
             } else {
 

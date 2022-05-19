@@ -1,15 +1,19 @@
 import * as path from "path";
 import { exit } from "process";
-import { WsConnection, WsServer } from "tsrpc";
+import { HttpServer, WsConnection, WsServer } from "tsrpc";
 import Logger from "./logger";
 import Database from "./database/Database";
 import { serviceProto } from "./shared/protocols/serviceProto";
 import User from "./database/models/User";
+import { enableAuthentication, parseCurrentUser } from "./models/UserUtil";
 
-export const server = new WsServer(serviceProto, {
+export const server = new HttpServer(serviceProto, {
     port: 3001,
     json: true
-});
+})
+
+parseCurrentUser(server)
+enableAuthentication(server)
 
 async function init() {
     await server.autoImplementApi(path.resolve(__dirname, 'api'));
@@ -19,12 +23,8 @@ async function init() {
 
         exit();
     })
-
     
     User.sync({alter: true})
-    
-    // TODO
-    // Prepare something... (e.g. connect the db)
 };
 
 async function main() {
@@ -32,4 +32,5 @@ async function main() {
     await server.start()
     Database.connection.sync({force:true})
 }
+
 main();

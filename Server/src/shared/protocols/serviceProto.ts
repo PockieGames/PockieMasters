@@ -1,12 +1,22 @@
 import { ServiceProto } from 'tsrpc-proto';
+import { ReqTest, ResTest } from './PtlTest';
 import { ReqAuth, ResAuth } from './user/PtlAuth';
+import { ReqLogout, ResLogout } from './user/PtlLogout';
 import { ReqReg, ResReg } from './user/PtlReg';
 
 export interface ServiceType {
     api: {
+        "Test": {
+            req: ReqTest,
+            res: ResTest
+        },
         "user/Auth": {
             req: ReqAuth,
             res: ResAuth
+        },
+        "user/Logout": {
+            req: ReqLogout,
+            res: ResLogout
         },
         "user/Reg": {
             req: ReqReg,
@@ -19,11 +29,27 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 3,
+    "version": 5,
     "services": [
+        {
+            "id": 3,
+            "name": "Test",
+            "type": "api",
+            "conf": {
+                "needLogin": true
+            }
+        },
         {
             "id": 1,
             "name": "user/Auth",
+            "type": "api",
+            "conf": {
+                "needLogin": false
+            }
+        },
+        {
+            "id": 4,
+            "name": "user/Logout",
             "type": "api"
         },
         {
@@ -33,12 +59,78 @@ export const serviceProto: ServiceProto<ServiceType> = {
         }
     ],
     "types": {
-        "user/PtlAuth/ReqAuth": {
+        "PtlTest/ReqTest": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseRequest"
+                    }
+                }
+            ]
+        },
+        "base/BaseRequest": {
             "type": "Interface",
             "properties": [
                 {
                     "id": 0,
-                    "name": "username",
+                    "name": "__ssoToken",
+                    "type": {
+                        "type": "String"
+                    },
+                    "optional": true
+                }
+            ]
+        },
+        "PtlTest/ResTest": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseResponse"
+                    }
+                }
+            ]
+        },
+        "base/BaseResponse": {
+            "type": "Interface",
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "__ssoToken",
+                    "type": {
+                        "type": "String"
+                    },
+                    "optional": true
+                }
+            ]
+        },
+        "user/PtlAuth/ReqAuth": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseRequest"
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "id": 2,
+                    "name": "uuid",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 3,
+                    "name": "identifier",
                     "type": {
                         "type": "String"
                     }
@@ -54,32 +146,60 @@ export const serviceProto: ServiceProto<ServiceType> = {
         },
         "user/PtlAuth/ResAuth": {
             "type": "Interface",
-            "properties": [
+            "extends": [
                 {
                     "id": 0,
-                    "name": "account",
                     "type": {
                         "type": "Reference",
-                        "target": "../types/Account/Account"
+                        "target": "base/BaseResponse"
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "id": 1,
+                    "name": "__ssoToken",
+                    "type": {
+                        "type": "String"
                     }
                 }
             ]
         },
-        "../types/Account/Account": {
+        "user/PtlLogout/ReqLogout": {
             "type": "Interface",
-            "properties": [
+            "extends": [
                 {
                     "id": 0,
-                    "name": "id",
                     "type": {
-                        "type": "Number",
-                        "scalarType": "uint"
+                        "type": "Reference",
+                        "target": "base/BaseRequest"
+                    }
+                }
+            ]
+        },
+        "user/PtlLogout/ResLogout": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseResponse"
                     }
                 }
             ]
         },
         "user/PtlReg/ReqReg": {
             "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseRequest"
+                    }
+                }
+            ],
             "properties": [
                 {
                     "id": 0,
@@ -126,6 +246,15 @@ export const serviceProto: ServiceProto<ServiceType> = {
         },
         "user/PtlReg/ResReg": {
             "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseRequest"
+                    }
+                }
+            ],
             "properties": [
                 {
                     "id": 0,

@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.31",
+    "@types/uuid": "^8.3.4",
     "sequelize-cli": "^6.4.1",
     "tsrpc-cli": "^2.4.3",
     "typescript": "^4.6.4"
