@@ -1,6 +1,6 @@
 import { _decorator, Component, Node } from 'cc';
-import UIManager from '../UIManager';
-import { HomeUI } from '../views/HomeUI';
+import UIManager from '../ui/UIManager';
+import HomeUI from '../ui/views/HomeUI';
 const { ccclass, property } = _decorator;
 
 @ccclass('HomeScene')
