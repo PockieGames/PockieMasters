@@ -11,37 +11,6 @@ export default class NetworkManager extends Singleton {
 
     client: HttpClient<ServiceType>
 
-    /*async connect(wsUrl: string = "ws://localhost:3001"): Promise<{ isSucc: true; errMsg?: undefined; } | { isSucc: false; errMsg: string; } | WsClient<ServiceType>>{
-        return new Promise<{ isSucc: true; errMsg?: undefined; } | { isSucc: false; errMsg: string; } | WsClient<ServiceType>>((resolve) => {
-
-            if(!this.client) {
-                this.client = new HttpClient(serviceProto, {
-                    server: wsUrl,
-                    json: true
-                })
-            }
-
-            this.client.flows.postDisconnectFlow.push(v => {
-                    // HANDLE DISCONNECT
-                    UIManager.Instance<UIManager>().OpenPopup(MessageBox, {
-                        title: "Disconnected",
-                        message: "You have been disconnected from the server.",
-                        onClose: () => {
-                            //TODO: Doesn't load LoginUI?
-                            director.loadScene("main")
-                        }
-                    })
-                return v;
-            })
-
-            if(this.client.isConnected)
-                resolve(this.client)
-
-            resolve(this.client.connect())
-
-        })
-    }*/
-
     // Extend callApi, to log and for example show error window
     async callApi<T extends keyof ServiceType['api']>(apiName: T, req: ServiceType['api'][T]['req']): Promise<ApiReturn<ServiceType['api'][T]['res']>> {
         return new Promise<ApiReturn<ServiceType['api'][T]['res']>>(async (resolve) => {

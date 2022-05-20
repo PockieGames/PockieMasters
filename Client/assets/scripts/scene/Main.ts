@@ -17,8 +17,6 @@ export class Main extends Component {
 
         let uiManager = UIManager.Instance<UIManager>().OpenUI(LoginUI)
 
-        console.log(UserManager.Instance<UserManager>().getUUID())
-
     }
 
     update(deltaTime: number) {

@@ -18,8 +18,8 @@ export default class UserManager extends Singleton{
         return StorageUtils.readData("sys.password")
     }
 
-    setPassword(id: string){
-        StorageUtils.saveData("sys.password", id)
+    setPassword(password: string){
+        StorageUtils.saveData("sys.password", password)
     }
 
     // Generate a UUID that persists

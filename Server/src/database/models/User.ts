@@ -9,6 +9,9 @@ interface UserFields {
     os: string
     osVersion: string
     language: string
+    tutorialStep: number
+    currencyFree: number
+    currencyPremium: number
     createdAt?: Date
     updatedAt?: Date
     deletedAt?: Date
@@ -26,6 +29,9 @@ class User extends Model<UserFields, UserInput> implements UserFields{
     os!: string
     osVersion!: string
     language!: string
+    tutorialStep!: number
+    currencyFree!: number
+    currencyPremium!: number
 
     public readonly createdAt!: Date
     public readonly updatedAt!: Date
@@ -61,6 +67,18 @@ User.init({
     },
     language: {
       type: DataTypes.STRING
+    },
+    tutorialStep: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },  
+    currencyFree: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
+    currencyPremium: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
     }
   }, {
     timestamps: true,

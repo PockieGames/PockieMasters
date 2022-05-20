@@ -35,19 +35,22 @@ export default class LoginUI extends UIBase{
 
         this.loginBtn.node.on(Button.EventType.CLICK, async () => {
 
-            //await NetworkManager.Instance<NetworkManager>().connect();
-
             let userManager = UserManager.Instance<UserManager>()
 
             if(userManager.getIdentifier() && userManager.getPassword()){
-
-                // Identifier, login!
 
                 let res = await NetworkManager.Instance<NetworkManager>().callApi("user/Auth", {
                     uuid: userManager.getUUID(),
                     identifier: userManager.getIdentifier(),
                     password: userManager.getPassword()
                 })
+
+                if(res.isSucc){
+                    // Sucessfully logged in. Handle login.
+                    // Probably check if Tutorial is done, etc.
+                    // Change Scenes
+                    director.loadScene("Home")
+                }
 
             } else {
 

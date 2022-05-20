@@ -35,6 +35,9 @@ export class UserUtil {
 
             // Token not exists or expired
             if (!info || info.expiredTime < Date.now()) {
+                if(info != undefined)
+                    if(info.expiredTime < Date.now())
+                        this.destroySsoToken(ssoToken)
                 resolve(undefined)
             }
     
@@ -62,7 +65,6 @@ export function enableAuthentication(server: HttpServer) {
 
         // NeedLogin
         if (conf?.needLogin && !call.currentUser) {
-            console.log(call.currentUser)
             call.error('You need login before do this', { code: 'NEED_LOGIN' });
             return undefined;
         }
@@ -77,7 +79,6 @@ export function parseCurrentUser(server: HttpServer) {
         let req = call.req as BaseRequest
         if (req.__ssoToken) {
             call.currentUser = await UserUtil.parseSSO(req.__ssoToken)
-            console.log(call.currentUser)
         }
         return call
     })

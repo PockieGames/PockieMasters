@@ -141,7 +141,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 320,
+    "_orthoHeight": 345.59999999999997,
     "_near": 0,
     "_far": 2000,
     "_color": {
@@ -237,7 +237,7 @@
     "_id": "c9PYmuYcVOl5D0Tx9I5kii"
   },
   {
-    "__type__": "d01c5LBkQ1Dd7N7/D/W3Zi0",
+    "__type__": "b66f1cn/v9FhqM/Ce9S/aUy",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -245,7 +245,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "_id": "d0e9VNYR5BQYG+GiTvy6y1"
+    "_id": "07mlB6ZZROU6WWSesFqGat"
   },
   {
     "__type__": "cc.UITransform",

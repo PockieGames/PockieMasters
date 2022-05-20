@@ -16,7 +16,10 @@ export default class UIManager extends Singleton{
 
     getCanvas(): Canvas{
         if(this._canvas == null){
-            this._canvas = find('Canvas').getComponent(Canvas);
+            this._canvas = find('Canvas').getComponent(Canvas)
+            this._canvas.onDestroy = () => {
+                this._canvas = null
+            }
         }
         return this._canvas;
     }
