@@ -12,4 +12,8 @@ export default class ResourceManager extends Singleton{
         })
     }
 
+    releaseAsset(path: string){
+        resources.release(path)
+    }
+
 }

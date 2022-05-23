@@ -4,8 +4,8 @@ import { resolve } from "../../../extensions/i18n/@types/editor/utils/source/pat
 import { BaseResponse } from "../shared/protocols/base";
 import { serviceProto, ServiceType } from "../shared/protocols/serviceProto";
 import UIManager from "../ui/UIManager";
-import MessageBox from "../ui/views/MessageBox";
 import Singleton from "../utils/Singleton";
+import MessageBox from "../ui/views/MessageBox";
 
 export default class NetworkManager extends Singleton {
 

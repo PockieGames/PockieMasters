@@ -21,6 +21,18 @@
     "_exoticAnimation": null,
     "_events": [
       {
+        "frame": 0,
+        "func": "",
+        "params": []
+      },
+      {
+        "frame": 0,
+        "func": "playMusic",
+        "params": [
+          "audio/bgm/bgm_liyuan"
+        ]
+      },
+      {
         "frame": 2.4166666666666665,
         "func": "",
         "params": []
