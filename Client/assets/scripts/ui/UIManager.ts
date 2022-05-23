@@ -19,6 +19,9 @@ export default class UIManager extends Singleton{
             this._canvas = find('Canvas').getComponent(Canvas)
             this._canvas.onDestroy = () => {
                 this._canvas = null
+                // If Canvas get's destroyed, clear uiDict
+                this.uiDict.clear()
+                this.popupDict.clear()
             }
         }
         return this._canvas;

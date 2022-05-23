@@ -19,19 +19,21 @@ export default class Database {
             })
 
             Database.connection.authenticate()
-                .then(() => {
-                    Logger.log('Connected to Database')
-                    resolve(true)
-                })
-                .catch((err) => {
-                    reject(err)
-                })
+            .then(() => {
+                Logger.log('Connected to Database')
+                resolve(true)
+            })
+            .catch((err) => {
+                reject(err)
+            })
+
         })
     }
 
     static query(queryString: string, options: any){
         Database.connection.query(queryString, options)
     }
+    
 }
 
 export const sequelize = new Sequelize({

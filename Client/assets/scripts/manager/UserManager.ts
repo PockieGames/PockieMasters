@@ -1,10 +1,13 @@
 import { sys } from "cc";
+import { User } from "../shared/types/User";
 import { UserSystemInfos } from "../shared/types/UserSystemInfos";
 import Singleton from "../utils/Singleton";
 import StorageUtils from "../utils/StorageUtils";
 import { generateUUID } from "../utils/UUID";
 
 export default class UserManager extends Singleton{
+
+    currentUser?: User
 
     getIdentifier(): string{
         return StorageUtils.readData("sys.identifier")

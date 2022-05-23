@@ -4,6 +4,7 @@ import Database, { sequelize } from "../Database";
 interface UserFields {
     id: number
     uuid: string
+    username?: string
     identifier: string
     password: string
     os: string
@@ -24,6 +25,7 @@ class User extends Model<UserFields, UserInput> implements UserFields{
 
     id!: number
     uuid!: string
+    username!: string
     identifier!: string
     password!: string
     os!: string
@@ -48,6 +50,11 @@ User.init({
     uuid: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: true,
       unique: true
     },
     identifier: {

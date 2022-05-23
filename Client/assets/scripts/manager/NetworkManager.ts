@@ -12,7 +12,7 @@ export default class NetworkManager extends Singleton {
     client: HttpClient<ServiceType>
 
     // Extend callApi, to log and for example show error window
-    async callApi<T extends keyof ServiceType['api']>(apiName: T, req: ServiceType['api'][T]['req']): Promise<ApiReturn<ServiceType['api'][T]['res']>> {
+    async callApi<T extends keyof ServiceType['api']>(apiName: T, req: ServiceType['api'][T]['req'] = {}): Promise<ApiReturn<ServiceType['api'][T]['res']>> {
         return new Promise<ApiReturn<ServiceType['api'][T]['res']>>(async (resolve) => {
 
             if (!this.client) {

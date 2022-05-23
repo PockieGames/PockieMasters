@@ -1,11 +1,13 @@
-import { Button, director, EditBox, EventHandler, _decorator } from "cc";
+import { Button, director, EditBox, EventHandler, sys, _decorator } from "cc";
 import NetworkManager from "../../manager/NetworkManager";
 import UserManager from "../../manager/UserManager";
 import { ResReg } from "../../shared/protocols/user/PtlReg";
+import { ServiceType } from "../../shared/protocols/serviceProto";
 import Logger from "../../utils/Logger";
 import UIBase from "../UIBase";
 import UIManager from "../UIManager";
 import MessageBox from "./MessageBox";
+import { TutorialUI } from "./TutorialUI";
 
 const { ccclass, property } = _decorator;
 
@@ -48,18 +50,28 @@ export default class LoginUI extends UIBase{
                 if(res.isSucc){
                     // Sucessfully logged in. Handle login.
                     // Probably check if Tutorial is done, etc.
-                    // Change Scenes
-                    director.loadScene("Home")
+
+                    // Get and Set User Infos
+                    let user = await NetworkManager.Instance<NetworkManager>().callApi("user/User")
+                    userManager.currentUser = user.res
+
+                    if(userManager.currentUser.tutorialStep > 10){
+                        director.loadScene("Home")
+                    } else {
+                        Logger.Info("Go-to-Tutorial")
+                        UIManager.Instance<UIManager>().OpenUI(TutorialUI).then(() => {
+                            UIManager.Instance<UIManager>().HideUI(this)
+                        })
+                    }
                 }
 
-            } else {
-
-                // NO Identifier, register!
+            } else { // NO Identifier, register!
 
                 let res = await NetworkManager.Instance<NetworkManager>().callApi("user/Reg", {
                     uuid: userManager.getUUID(),
                     osInfos: userManager.getSystemInfo(),
                 })
+
     
                 if(!res.isSucc)
                     return
