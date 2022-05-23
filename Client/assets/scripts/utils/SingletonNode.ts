@@ -1,4 +1,4 @@
-import { Node } from "cc"
+import { game, Node } from "cc"
 import UIManager from "../ui/UIManager"
 
 export default class SingletonNode extends Node{
@@ -8,6 +8,7 @@ export default class SingletonNode extends Node{
     public static Instance<T extends Node>(): T {
         if (this._instance == null) {
             this._instance = new this() as T
+            game.addPersistRootNode(this._instance)
         }
         return this._instance as T
     }
