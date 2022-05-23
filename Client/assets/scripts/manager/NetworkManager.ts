@@ -46,7 +46,9 @@ export default class NetworkManager extends Singleton {
                 })
             }
 
-            let res = await this.client.callApi(apiName, req)
+            let res = await this.client.callApi(apiName, req, {
+                
+            })
             if (res.err) {
                 UIManager.Instance<UIManager>().OpenPopup(MessageBox, {
                     title: "Connection Error",
