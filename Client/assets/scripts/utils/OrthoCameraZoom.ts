@@ -2,8 +2,8 @@ import { Camera, Component, tween, Vec3, _decorator } from "cc";
 
 const { ccclass, requireComponent } = _decorator;
 
-@requireComponent(Camera)
 @ccclass("OrthoCameraZoom")
+@requireComponent(Camera)
 export default class OrthoCameraZoom extends Component
 {
     private defaultCenter: Vec3
@@ -15,6 +15,7 @@ export default class OrthoCameraZoom extends Component
     {
         this.camera = this.getComponent(Camera)
         this.defaultCenter = this.camera.node.position
+        console.log(this.camera.orthoHeight)
         this.defaultHeight = 2 * this.camera.orthoHeight
     }
 
