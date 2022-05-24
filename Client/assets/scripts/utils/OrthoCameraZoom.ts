@@ -1,12 +1,13 @@
 import { Camera, Component, tween, Vec3, _decorator } from "cc";
 
-const { ccclass } = _decorator;
+const { ccclass, requireComponent } = _decorator;
 
+@requireComponent(Camera)
 @ccclass("OrthoCameraZoom")
 export default class OrthoCameraZoom extends Component
 {
     private defaultCenter: Vec3
-    private defaultHeight: number // height of orthographic viewport in world units
+    private defaultHeight: number = 320
 
     private camera: Camera
 
@@ -17,14 +18,14 @@ export default class OrthoCameraZoom extends Component
         this.defaultHeight = 2 * this.camera.orthoHeight
     }
 
-    orthoZoom(center: Vec3, regionHeight: number)
+    orthoZoom(center: Vec3, regionHeight: number, offsets: {x: number, y: number} = {x: 0, y: 0}, duration: number = 0.2)
     {
         tween(this.node)
-        .to(0.5, {position: new Vec3(center.x, center.y, this.defaultCenter.z)})
+        .to(duration, {position: new Vec3(center.x + offsets.x, center.y + offsets.y, this.defaultCenter.z)})
         .start()
 
         tween(this.camera)
-        .to(0.5, {orthoHeight: regionHeight / 2})
+        .to(duration, {orthoHeight: regionHeight / 2})
         .start()
     }
 }
