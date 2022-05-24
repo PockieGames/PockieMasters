@@ -1,4 +1,5 @@
 import MapTile from "./MapTile"
+import AttackableObject from "./stats/AttackableObject"
 
 export default class Map{
 

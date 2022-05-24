@@ -27,28 +27,26 @@ export default class NetworkManager extends Singleton {
                     if (v.return.isSucc) {
                         let res = v.return.res as BaseResponse;
                         if (res.__ssoToken !== undefined) {
-                            sys.localStorage.setItem('SSO_TOKEN', res.__ssoToken);
+                            sys.localStorage.setItem('SSO_TOKEN', res.__ssoToken)
                         }
                     }
                     else if (v.return.err.code === 'NEED_LOGIN') {
-                        sys.localStorage.removeItem('SSO_TOKEN');
+                        sys.localStorage.removeItem('SSO_TOKEN')
                     }
-                    return v;
-                });
+                    return v
+                })
                 
                 // Append "__ssoToken" to request automatically
                 this.client.flows.preCallApiFlow.push(v => {
-                    let ssoToken = sys.localStorage.getItem('SSO_TOKEN');
+                    let ssoToken = sys.localStorage.getItem('SSO_TOKEN')
                     if (ssoToken) {
-                        v.req.__ssoToken = ssoToken;
+                        v.req.__ssoToken = ssoToken
                     }
-                    return v;
+                    return v
                 })
             }
 
-            let res = await this.client.callApi(apiName, req, {
-                
-            })
+            let res = await this.client.callApi(apiName, req, {})
             if (res.err) {
                 UIManager.Instance<UIManager>().OpenPopup(MessageBox, {
                     title: "Connection Error",

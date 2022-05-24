@@ -1,4 +1,4 @@
-import { Color, Component, Label, Node, Sprite, UITransform, Vec2, _decorator } from "cc";
+import { Color, Component, EventMouse, Label, Node, Sprite, UITransform, Vec2, _decorator } from "cc";
 import MapTile from "../shared/game/battle/MapTile";
 
 const { ccclass, property } = _decorator;

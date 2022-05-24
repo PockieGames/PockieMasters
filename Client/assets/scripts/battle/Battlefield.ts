@@ -1,4 +1,4 @@
-import { Color, Component, director, EventMouse, EventTouch, instantiate, Node, Prefab, Sprite, tween, UITransform, Vec3, _decorator } from "cc";
+import { Camera, Color, Component, director, EventMouse, EventTouch, instantiate, Node, Prefab, Sprite, tween, UITransform, Vec3, _decorator } from "cc";
 import TileColors from "../Constants";
 import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
@@ -25,6 +25,8 @@ export default class Battlefield extends Component{
     height: number = 5;
     @property(Node)
     tileContainerNode: Node
+    @property(Camera)
+    battlefieldCamera: Camera
 
     animate: boolean = true
     offlineFight: boolean = true
@@ -40,7 +42,7 @@ export default class Battlefield extends Component{
         if(this.animate)
             await this.animateTiles()
 
-        this.registerInputs()
+        //this.registerInputs()
 
         if(!this.offlineFight){
             // Connect to WS, listen to events, etc.
@@ -51,7 +53,7 @@ export default class Battlefield extends Component{
     }
 
     initializeOfflineMapData(){
-        if(!this.offlineMapData)
+        /*if(!this.offlineMapData)
         {
             UIManager.Instance<UIManager>().OpenPopup(MessageBox, {
                 title: "BattleMap Error",
@@ -61,7 +63,8 @@ export default class Battlefield extends Component{
                 }
             })
             return
-        }
+        }*/
+        // Initialize
     }
 
     registerInputs(){
@@ -155,6 +158,17 @@ export default class Battlefield extends Component{
                 tile.setColor(TileColors.NORMAL)
                 tile.mapTile = this.map.tiles[x][y]
                 //tile.showDebugPos()
+
+                tileNode.on(Node.EventType.TOUCH_START || Node.EventType.MOUSE_DOWN, (event: EventTouch | EventMouse) => {
+                    console.log("CLICKED ON: " + tile.mapTile.x + " / " + tile.mapTile.y)
+                })
+
+                tileNode.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {
+                    tile.hoverFrame.active = true
+                })
+                tileNode.on(Node.EventType.MOUSE_LEAVE, (event: EventMouse) => {
+                    tile.hoverFrame.active = false
+                })
 
                 this.tiles.push(tile)
 
