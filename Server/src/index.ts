@@ -6,6 +6,7 @@ import Database from "./database/Database";
 import { serviceProto } from "./shared/protocols/serviceProto";
 import User from "./database/models/User";
 import { enableAuthentication, parseCurrentUser } from "./models/UserUtil";
+import AttackableObject from "./shared/game/battle/stats/AttackableObject";
 
 export const server = new HttpServer(serviceProto, {
     port: 3001,

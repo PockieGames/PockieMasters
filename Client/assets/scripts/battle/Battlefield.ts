@@ -1,10 +1,12 @@
-import { Color, Component, EventMouse, EventTouch, instantiate, Node, Prefab, Sprite, tween, UITransform, Vec3, _decorator } from "cc";
+import { Color, Component, director, EventMouse, EventTouch, instantiate, Node, Prefab, Sprite, tween, UITransform, Vec3, _decorator } from "cc";
 import TileColors from "../Constants";
 import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
 import Map from "../shared/game/battle/Map"
 import Tile from "./Tile";
 import UIManager from "../ui/UIManager";
+import MapData from "./MapData";
+import MessageBox from "../ui/views/MessageBox";
 
 const { ccclass, property } = _decorator;
 
@@ -25,6 +27,8 @@ export default class Battlefield extends Component{
     tileContainerNode: Node
 
     animate: boolean = true
+    offlineFight: boolean = true
+    offlineMapData: MapData
 
     async start(){
 
@@ -38,6 +42,26 @@ export default class Battlefield extends Component{
 
         this.registerInputs()
 
+        if(!this.offlineFight){
+            // Connect to WS, listen to events, etc.
+        } else {
+            this.initializeOfflineMapData()
+        }
+
+    }
+
+    initializeOfflineMapData(){
+        if(!this.offlineMapData)
+        {
+            UIManager.Instance<UIManager>().OpenPopup(MessageBox, {
+                title: "BattleMap Error",
+                message: "No Offline Map Data Initialized",
+                onClose: () => {
+                    director.loadScene("home")
+                }
+            })
+            return
+        }
     }
 
     registerInputs(){

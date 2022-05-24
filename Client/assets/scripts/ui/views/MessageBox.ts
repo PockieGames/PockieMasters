@@ -18,7 +18,6 @@ export default class MessageBox extends UIBase{
     onClose: () => any
 
     start(){
-        super.start()
         this.setupUI()
     }
 

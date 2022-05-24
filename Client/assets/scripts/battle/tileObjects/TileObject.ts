@@ -1,4 +1,4 @@
-import MapObject from '../shared/game/battle/MapObject'
+import MapObject from '../../shared/game/battle/MapObject'
 import { _decorator, Component, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
