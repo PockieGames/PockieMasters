@@ -7,6 +7,7 @@ import Tile from "./Tile";
 import UIManager from "../ui/UIManager";
 import MapData from "./MapData";
 import MessageBox from "../ui/views/MessageBox";
+import OrthoCameraZoom from "../utils/OrthoCameraZoom";
 
 const { ccclass, property } = _decorator;
 
@@ -160,6 +161,7 @@ export default class Battlefield extends Component{
                 //tile.showDebugPos()
 
                 tileNode.on(Node.EventType.TOUCH_START || Node.EventType.MOUSE_DOWN, (event: EventTouch | EventMouse) => {
+                    this.battlefieldCamera.getComponent(OrthoCameraZoom).orthoZoom(tileNode.position, 280)
                     console.log("CLICKED ON: " + tile.mapTile.x + " / " + tile.mapTile.y)
                 })
 
