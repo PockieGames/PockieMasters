@@ -1,4 +1,4 @@
-import { Camera, Color, Component, director, EventMouse, EventTouch, instantiate, Node, Prefab, Sprite, tween, UITransform, Vec3, _decorator } from "cc";
+import { Camera, Color, Component, director, EventMouse, EventTouch, instantiate, Layers, Node, Prefab, Sprite, tween, UITransform, Vec3, _decorator } from "cc";
 import TileColors from "../Constants";
 import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
@@ -8,6 +8,10 @@ import UIManager from "../ui/UIManager";
 import MapData from "./MapData";
 import MessageBox from "../ui/views/MessageBox";
 import OrthoCameraZoom from "../utils/OrthoCameraZoom";
+import { Team } from "../shared/game/SharedConstants";
+import { TileObject } from "./tileObjects/TileObject";
+import AttackableObject from "../shared/game/battle/stats/AttackableObject";
+import TileAttackableObject from "./tileObjects/TileAttackableObject";
 
 const { ccclass, property } = _decorator;
 
@@ -32,6 +36,11 @@ export default class Battlefield extends Component{
     animate: boolean = true
     offlineFight: boolean = true
     offlineMapData: MapData
+
+    units: {
+        team: Team,
+        unit: TileObject
+    }[] = []
 
     async start(){
 
@@ -66,6 +75,16 @@ export default class Battlefield extends Component{
             return
         }*/
         // Initialize
+        let tilePlacement = this.getTile(0,2)
+        let newNode = new Node("Character")
+        let taOjbect = newNode.addComponent(TileAttackableObject)
+        newNode.parent = tilePlacement.node
+        newNode.layer = Layers.BitMask.UI_3D
+        taOjbect.render()
+    }
+
+    getTile(x: number, y: number): Tile{
+        return this.tiles.find(tile => tile.mapTile.x == x && tile.mapTile.y == y)
     }
 
     registerInputs(){
