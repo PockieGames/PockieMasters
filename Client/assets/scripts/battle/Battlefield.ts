@@ -75,7 +75,13 @@ export default class Battlefield extends Component{
             return
         }*/
         // Initialize
-        let tilePlacement = this.getTile(0,2)
+        this.tiles.forEach((tile: Tile) => {
+            this.placeCharacter({x: tile.mapTile.x, y: tile.mapTile.y})
+        })
+    }
+
+    placeCharacter(position: {x: number, y: number}){
+        let tilePlacement = this.getTile(position.x, position.y)
         let newNode = new Node("Character")
         let taOjbect = newNode.addComponent(TileAttackableObject)
         newNode.parent = tilePlacement.node
