@@ -16,7 +16,18 @@ export default class OrthoCameraZoom extends Component
         this.camera = this.getComponent(Camera)
         this.defaultCenter = this.camera.node.position
         console.log(this.camera.orthoHeight)
-        this.defaultHeight = 2 * this.camera.orthoHeight
+        this.defaultHeight = this.camera.orthoHeight
+    }
+    
+    zoomBack(duration: number = 0)
+    {
+        tween(this.node)
+        .to(duration, {position: new Vec3()})
+        .start()
+
+        tween(this.camera)
+        .to(duration, {orthoHeight: this.defaultHeight})
+        .start()
     }
 
     orthoZoom(center: Vec3, regionHeight: number, offsets: {x: number, y: number} = {x: 0, y: 0}, duration: number = 0.2)

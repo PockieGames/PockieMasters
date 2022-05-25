@@ -161,7 +161,11 @@ export default class Battlefield extends Component{
                 //tile.showDebugPos()
 
                 tileNode.on(Node.EventType.TOUCH_START || Node.EventType.MOUSE_DOWN, (event: EventTouch | EventMouse) => {
-                    this.battlefieldCamera.getComponent(OrthoCameraZoom).orthoZoom(tileNode.position, 280)
+                    if(tile.mapTile.x >= 2){
+                        this.battlefieldCamera.getComponent(OrthoCameraZoom).orthoZoom(tileNode.position, 280)
+                    } else {
+                        this.battlefieldCamera.getComponent(OrthoCameraZoom).zoomBack(0.1)
+                    }
                     console.log("CLICKED ON: " + tile.mapTile.x + " / " + tile.mapTile.y)
                 })
 
