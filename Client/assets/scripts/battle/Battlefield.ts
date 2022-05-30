@@ -281,12 +281,13 @@ export default class Battlefield extends Component {
             let animationSpeed = 0.1
             let delay = Math.abs(Math.round((tile.mapTile.x) - (target.mapTile.x))) * animationSpeed
             delay += Math.abs(Math.round((tile.mapTile.y) - (target.mapTile.y))) * animationSpeed
+            console.log(delay)
             if (longestDelay < delay)
                 longestDelay = delay
             
             let curColor = tile.background.getComponent(Sprite).color
             let outColor = new Color()
-            tween(tile.background.node.getComponent(Sprite)).delay(delay).to(0.1, { }, {
+            tween(tile.background.node.getComponent(Sprite)).delay(delay - animationSpeed).to(0.1, { }, {
                 onUpdate: (target, ratio: number) => {
                     tile.background.color = Color.lerp(outColor, curColor, color, ratio)
                 }
