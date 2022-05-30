@@ -1,27 +1,25 @@
+import { Vec2 } from "cc"
+import HeroData from "../shared/game/data/HeroData"
 import IStat from "../shared/game/battle/stats/IStat"
+
 
 export enum MapObjectType {
     
+    HERO,
     STATIC,
-    AI_BEGINNER,
-    AI_STANDARD,
-    AI_EXPERT,
+    ATTACKABLE,
+
+}
+
+export default interface MapObject {
+    type: MapObjectType,
+    objectData: HeroData,
+    position: Vec2
 
 }
 
 export default interface MapData {
 
-    mapObjects: {
-        type: MapObjectType,
-        objectData: {
-            name: string,
-            skin: string,
-            stats: IStat[]
-        },
-        position: {
-            x:number,
-            y: number
-        }
-    }[]
+    mapObjects: MapObject[]
 
 }

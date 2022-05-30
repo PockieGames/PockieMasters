@@ -1,27 +1,31 @@
-import { Camera, Color, Component, director, EventMouse, EventTouch, instantiate, Layers, Node, Prefab, Sprite, tween, UITransform, Vec3, _decorator } from "cc";
+import { Camera, Color, Component, director, EventMouse, EventTouch, instantiate, Layers, Node, Prefab, Sprite, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
 import TileColors from "../Constants";
 import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
 import Map from "../shared/game/battle/Map"
 import Tile from "./Tile";
 import UIManager from "../ui/UIManager";
-import MapData from "./MapData";
+import MapData, { MapObjectType } from "./MapData";
 import MessageBox from "../ui/views/MessageBox";
 import OrthoCameraZoom from "../utils/OrthoCameraZoom";
 import { Team } from "../shared/game/SharedConstants";
 import { TileObject } from "./tileObjects/TileObject";
-import AttackableObject from "../shared/game/battle/stats/AttackableObject";
-import TileAttackableObject from "./tileObjects/TileAttackableObject";
+import GameData from "../manager/GameData";
+import HeroData from "../shared/game/data/HeroData";
+import MapObject from "./MapData";
+import AttackableObject from "../shared/game/battle/MapAttackableObject";
+import MapAttackableObject from "../shared/game/battle/MapAttackableObject";
+import MapTile from "../shared/game/battle/MapTile";
 
 const { ccclass, property } = _decorator;
 
 @ccclass("Battlefield")
-export default class Battlefield extends Component{
+export default class Battlefield extends Component {
 
     map: Map
     tiles: Tile[] = []
     coloredTiles: Tile[] = []
-    
+
     selectedTile: Tile
 
     @property("number")
@@ -42,29 +46,43 @@ export default class Battlefield extends Component{
         unit: TileObject
     }[] = []
 
-    async start(){
+    async start() {
 
-        this.map = new Map(this.width, this.height) 
+        this.map = new Map(this.width, this.height)
 
         this.map.buildTiles()
 
         await this.drawMap()
-        if(this.animate)
+        if (this.animate)
             await this.animateTiles()
 
         //this.registerInputs()
 
-        if(!this.offlineFight){
+        if (!this.offlineFight) {
             // Connect to WS, listen to events, etc.
         } else {
+
+            let testHeroes = GameData.Instance<GameData>().heroData
+
+            this.offlineMapData = {
+                mapObjects: []
+            } as MapData
+
+            testHeroes.forEach((hero) => {
+                this.offlineMapData.mapObjects.push({
+                    objectData: hero,
+                    position: new Vec2(0, 0),
+                    type: MapObjectType.HERO
+                } as MapObject)
+            })
+
             this.initializeOfflineMapData()
         }
 
     }
 
-    initializeOfflineMapData(){
-        /*if(!this.offlineMapData)
-        {
+    initializeOfflineMapData() {
+        if (!this.offlineMapData) {
             UIManager.Instance<UIManager>().OpenPopup(MessageBox, {
                 title: "BattleMap Error",
                 message: "No Offline Map Data Initialized",
@@ -73,98 +91,118 @@ export default class Battlefield extends Component{
                 }
             })
             return
-        }*/
+        }
+
         // Initialize
-        this.tiles.forEach((tile: Tile) => {
-            this.placeCharacter({x: tile.mapTile.x, y: tile.mapTile.y})
+        this.offlineMapData.mapObjects.forEach((mapObject) => {
+            this.placeCharacter(mapObject.objectData, { x: mapObject.position.x, y: mapObject.position.y })
         })
     }
 
-    placeCharacter(position: {x: number, y: number}){
+    placeCharacter(object: HeroData, position: { x: number, y: number }) {
         let tilePlacement = this.getTile(position.x, position.y)
+
         let newNode = new Node("Character")
-        let taOjbect = newNode.addComponent(TileAttackableObject)
         newNode.parent = tilePlacement.node
         newNode.layer = Layers.BitMask.UI_3D
-        taOjbect.render()
+
+        let tileObjectComponent = newNode.addComponent(TileObject)
+        tilePlacement.tileObject = tileObjectComponent
+        tilePlacement.mapTile.mapObject = new MapAttackableObject(object)
+        tileObjectComponent.render()
     }
 
-    getTile(x: number, y: number): Tile{
+    getTile(x: number, y: number): Tile {
         return this.tiles.find(tile => tile.mapTile.x == x && tile.mapTile.y == y)
     }
 
-    registerInputs(){
-        
-        UIManager.Instance<UIManager>().getCanvas().node.on(Node.EventType.TOUCH_START || Node.EventType.MOUSE_DOWN, (event: EventTouch | EventMouse) => {
-            this.tiles.forEach((tile: Tile) => {
-                tile.hoverFrame.active = false
-                if(tile.isOnTile(event.getUILocation())){
-                    tile.hoverFrame.active = true
-                }
-            })
-        })
-        
-        UIManager.Instance<UIManager>().getCanvas().node.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {
-            this.tiles.forEach((tile: Tile) => {
-                tile.hoverFrame.active = false
-                if(tile.isOnTile(event.getUILocation())){
-                    tile.hoverFrame.active = true
-                }
-            })
-        })
+    getTilesByDistance(target: Tile, distance: number, clear = false): Tile[]{
 
-        UIManager.Instance<UIManager>().getCanvas().node.on(Node.EventType.TOUCH_END || Node.EventType.MOUSE_UP, (event: EventTouch | EventMouse) => {
-            this.tiles.forEach((tile: Tile) => {
-                tile.hoverFrame.active = false
-                if(tile.isOnTile(event.getUILocation())){
-                    tile.hoverFrame.active = true
-                    if(this.selectedTile == null){
-                            //if(tile.tileObject)
-                              //  this.selectedTile = tile
-                        }
-                        if(this.selectedTile){
-                            if(this.coloredTiles.indexOf(tile) > -1){
-                                if(this.selectedTile != null){
-                                    if(this.selectedTile != tile){
-                                        //let tileObject = this.selectedTile.tileObject
-                                        //this.selectedTile.tileObject = null
-                                        //tileObject.moveTo(tile, ()=>{
-                                        //    this.updateZIndex()
-                                        //})
-                                        this.clearTiles()
-                                    }
-                                }
-                            }
+        distance = distance+1 
+        let queue: Tile[] = []
+        let returns: Tile[] = []
 
-                            /*if(tile.tileObject){
-                                this.selectedTile = tile
-                                tile.setColor(TileColors.MOVEMENT)
-    
-                                let distance = 3
-                                let tiles: Tile[] = this.getTilesByDistance(this.selectedTile, distance, true);
-    
-                                this.coloredTiles = tiles
-    
-                                tiles.forEach((tile: Tile) => {
-                                    tile.setColor(TileColors.MOVEMENT);
-                                })
-                            }*/
-                        }
+        queue.push(target)
+
+        let i = 0
+        while(i < distance){
+            queue.forEach((tile: Tile) => {
+                tile.mapTile.adjacencyList.forEach((_neighbour: MapTile) => {
+                    let tileOnMap = this.getTile(_neighbour.x, _neighbour.y)
+                    if((i + 1) < distance && tileOnMap.tileObject == null && !_neighbour.visited){
+                        _neighbour.visited = true
+                        _neighbour.parent = tile.mapTile
+                        queue.push(tileOnMap)
                     }
+                })
             })
+            i++
+        }
+
+        if(clear){
+            this.clearTiles()
+        }
+
+
+        queue.forEach((tile: Tile) => {
+            if(tile != target){
+                if(!(returns.indexOf(tile) > -1)){
+                    returns.push(tile)
+                }
+            }
         })
 
+        return returns;
     }
 
-    clearTiles(){
+    clearTiles() {
         this.coloredTiles = [];
         this.tiles.forEach((tile: Tile) => {
             tile.setColor(TileColors.NORMAL)
-            tile.visited = false
+            tile.mapTile.visited = false
         })
     }
 
-    async drawMap(){
+    clickOnTile(position: Vec2) {
+        let tile = this.getTile(position.x, position.y)
+        if(this.selectedTile == null){
+            if(tile.mapTile.mapObject){
+                let ao = tile.mapTile.mapObject as AttackableObject
+                console.log("CLICKED ON: " + ao.displayName + " with MP: " + ao.heroData.baseMovement)
+                let tiles = this.getTilesByDistance(tile, ao.heroData.baseMovement, true)
+                this.coloredTiles = tiles
+                this.animateColorTiles(tile, TileColors.MOVEMENT)
+                this.selectedTile = tile
+            }
+        } else {
+            if(this.coloredTiles.find(x => x == tile)){
+                // MOVE
+                console.log("LOL")
+                this.moveObject(this.selectedTile, tile)
+            } else {
+                this.selectedTile = null
+                this.clearTiles()
+                console.log("Lul")
+            }
+        }
+    }
+
+    moveObject(from: Tile, to: Tile){
+
+        to.tileObject = from.tileObject
+        to.mapTile.mapObject = from.mapTile.mapObject
+
+        to.tileObject.node.parent = to.node
+
+        from.tileObject = null
+        from.mapTile.mapObject = null
+
+        this.selectedTile = null
+        this.clearTiles()
+
+    }
+
+    async drawMap() {
         let offsetX = 0;
         let offsetY = -5
 
@@ -175,8 +213,8 @@ export default class Battlefield extends Component{
 
         let tileTestNode = instantiate(tilePrefab)
 
-        for(let x: number = this.map.width - 1; x >= 0; x--){
-            for(let y: number = this.height - 1; y >= 0; y--){
+        for (let x: number = this.map.width - 1; x >= 0; x--) {
+            for (let y: number = this.height - 1; y >= 0; y--) {
 
                 let tileNode = instantiate(tileTestNode)
 
@@ -186,12 +224,13 @@ export default class Battlefield extends Component{
                 //tile.showDebugPos()
 
                 tileNode.on(Node.EventType.TOUCH_START || Node.EventType.MOUSE_DOWN, (event: EventTouch | EventMouse) => {
-                    if(tile.mapTile.x >= 2){
+                    /*if(tile.mapTile.x >= 2){
                         this.battlefieldCamera.getComponent(OrthoCameraZoom).orthoZoom(tileNode.position, 280)
                     } else {
                         this.battlefieldCamera.getComponent(OrthoCameraZoom).zoomBack(0.1)
                     }
-                    console.log("CLICKED ON: " + tile.mapTile.x + " / " + tile.mapTile.y)
+                    */
+                    this.clickOnTile(new Vec2(tile.mapTile.x, tile.mapTile.y))
                 })
 
                 tileNode.on(Node.EventType.MOUSE_MOVE, (event: EventMouse) => {
@@ -208,12 +247,12 @@ export default class Battlefield extends Component{
                 let newPosX = x * (tileComponent.width + spacingX) - ((this.map.width - 1) * (tileComponent.width + spacingX) / 2) + offsetX;
                 let newPosY = y * (tileComponent.height + spacingY) - ((this.map.height - 1) * (tileComponent.height + spacingY) / 2) + offsetY;
 
-                if(this.animate){
+                if (this.animate) {
                     newPosY - 10
                 }
 
-                if(this.animate)
-                    tile.getComponent(Sprite).color = new Color(0,0,0,0)
+                if (this.animate)
+                    tile.getComponent(Sprite).color = new Color(0, 0, 0, 0)
 
                 tileNode.setPosition(new Vec3(newPosX, newPosY))
 
@@ -235,21 +274,40 @@ export default class Battlefield extends Component{
         tileTestNode.destroy()
     }
 
-    
-    async animateTiles(){
+    async animateColorTiles(target: Tile, _color: number[]){
+        let color = new Color(_color[0], _color[1], _color[2], _color[3])
+        let longestDelay = 0
+        this.coloredTiles.forEach((tile: Tile) => {
+            let animationSpeed = 0.1
+            let delay = Math.abs(Math.round((tile.mapTile.x) - (target.mapTile.x))) * animationSpeed
+            delay += Math.abs(Math.round((tile.mapTile.y) - (target.mapTile.y))) * animationSpeed
+            if (longestDelay < delay)
+                longestDelay = delay
+            
+            let curColor = tile.background.getComponent(Sprite).color
+            let outColor = new Color()
+            tween(tile.background.node.getComponent(Sprite)).delay(delay).to(0.1, { }, {
+                onUpdate: (target, ratio: number) => {
+                    tile.background.color = Color.lerp(outColor, curColor, color, ratio)
+                }
+              }).start()
+        })
+    }
+
+    async animateTiles() {
         let longestDelay = 0
         this.tiles.forEach((tile: Tile) => {
-                let animationSpeed = 0.1
-                let delay = Math.abs(Math.round((tile.mapTile.x) - (this.width / 2))) * animationSpeed
-                delay += Math.abs(Math.round((tile.mapTile.y) - (this.height / 2))) * animationSpeed
-                if(longestDelay < delay)
-                    longestDelay = delay
-                tween(tile.node.getComponent(Sprite)).delay(delay).to(0.2, {
-                    color: new Color(0,0,0,255)
-                }).start()
-                tween(tile.node).delay(delay).to(0.2, {
-                    position: new Vec3(tile.node.position.x, tile.node.position.y + 5, tile.node.position.z)
-                }).start()
+            let animationSpeed = 0.1
+            let delay = Math.abs(Math.round((tile.mapTile.x) - (this.width / 2))) * animationSpeed
+            delay += Math.abs(Math.round((tile.mapTile.y) - (this.height / 2))) * animationSpeed
+            if (longestDelay < delay)
+                longestDelay = delay
+            tween(tile.node.getComponent(Sprite)).delay(delay).to(0.2, {
+                color: new Color(0, 0, 0, 255)
+            }).start()
+            tween(tile.node).delay(delay).to(0.2, {
+                position: new Vec3(tile.node.position.x, tile.node.position.y + 5, tile.node.position.z)
+            }).start()
         })
         return await new Promise(f => setTimeout(f, longestDelay * 1000))
     }

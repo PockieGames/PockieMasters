@@ -1,13 +1,10 @@
-import MapObject from '../../shared/game/battle/MapObject'
+import MapObject from '../../shared/game/battle/MapTileObject'
 import { _decorator, Component, Node, dragonBones, Vec3, Color, Tween } from 'cc';
 import ResourceManager from '../../manager/ResourceManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('TileObject')
 export class TileObject extends Component {
-
-    displayName: string = "UNKNOWN"
-    mapObject: MapObject
 
     spriteId: string = "11014"
     sprite: dragonBones.ArmatureDisplay
@@ -17,7 +14,6 @@ export class TileObject extends Component {
     }
 
     start(){
-        this.mapObject = new MapObject()
         if(this.sprite == null){
             this.sprite = this.node.addComponent(dragonBones.ArmatureDisplay);
         }

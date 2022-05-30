@@ -8,6 +8,7 @@ import UIBase from "../UIBase";
 import UIManager from "../UIManager";
 import MessageBox from "./MessageBox";
 import { TutorialUI } from "./TutorialUI";
+import GameData from "../../manager/GameData";
 
 const { ccclass, property } = _decorator;
 
@@ -24,6 +25,8 @@ export default class LoginUI extends UIBase{
     testBtn: Button
 
     start(){
+
+        GameData.Instance<GameData>().loadData()
 
         this.testBtn.node.on(Button.EventType.CLICK, async () => {
             let res = await NetworkManager.Instance<NetworkManager>().callApi("Test", {})

@@ -1,0 +1,8 @@
+[
+    {
+        "id": 1,
+        "name": "Test Hero",
+        "sprite": "11014",
+        "baseMovement": 3
+    }
+]

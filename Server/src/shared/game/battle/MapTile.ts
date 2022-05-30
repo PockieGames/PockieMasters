@@ -1,4 +1,5 @@
-import MapObject from "./MapObject"
+import MapTileObject from "./MapTileObject"
+import AttackableObject from "./MapAttackableObject"
 
 export default class MapTile {
     
@@ -8,7 +9,7 @@ export default class MapTile {
     adjacencyList: MapTile[] = []
     visited: boolean = false
     parent: MapTile
-    object: MapObject
+    mapObject: MapTileObject
     
     constructor(_x: number, _y: number){
         this.x = _x

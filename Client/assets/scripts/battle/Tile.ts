@@ -1,5 +1,6 @@
 import { Color, Component, EventMouse, Label, Node, Sprite, UITransform, Vec2, _decorator } from "cc";
 import MapTile from "../shared/game/battle/MapTile";
+import { TileObject } from "./tileObjects/TileObject";
 
 const { ccclass, property } = _decorator;
 
@@ -7,9 +8,7 @@ const { ccclass, property } = _decorator;
 export default class Tile extends Component {
 
     mapTile: MapTile
-
-    visited: boolean = false
-    parent: Tile
+    tileObject: TileObject
 
     @property(Node)
     hoverFrame: Node

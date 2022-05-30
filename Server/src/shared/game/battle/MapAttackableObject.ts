@@ -1,12 +1,19 @@
-import Logger from "../../../../logger";
-import MapObject from "../MapObject";
-import IStat from "./IStat";
+import HeroData from "../data/HeroData";
+import MapObject from "./MapTileObject";
+import IStat from "./stats/IStat";
 
-export default class AttackableObject extends MapObject {
+export default class MapAttackableObject extends MapObject {
 
+    heroData: HeroData
+    
     healthPoints: IStat = new IStat(300)
     movementPoints: IStat = new IStat(3)
     attackPoints: IStat = new IStat(50)
+
+    constructor(heroData: HeroData){
+        super()
+        this.heroData = heroData
+    }
 
     setDefaultStats(stats: { name: string, base: number }[]) {
         stats.forEach((stat) => {
@@ -24,7 +31,7 @@ export default class AttackableObject extends MapObject {
         })
     }
 
-    onDie(source: AttackableObject) {
+    onDie(source: MapAttackableObject) {
     }
 
     increaseStats(stats: { name: string, flat?: number, percent?: number }[]) {
