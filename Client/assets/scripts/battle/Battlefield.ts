@@ -103,7 +103,8 @@ export default class Battlefield extends Component {
         let tilePlacement = this.getTile(position.x, position.y)
 
         let newNode = new Node("Character")
-        newNode.parent = tilePlacement.node
+        newNode.parent = this.tileContainerNode
+        newNode.position = tilePlacement.node.position
         newNode.layer = Layers.BitMask.UI_3D
 
         let tileObjectComponent = newNode.addComponent(TileObject)
@@ -168,7 +169,6 @@ export default class Battlefield extends Component {
         if(this.selectedTile == null){
             if(tile.mapTile.mapObject){
                 let ao = tile.mapTile.mapObject as AttackableObject
-                console.log("CLICKED ON: " + ao.displayName + " with MP: " + ao.heroData.baseMovement)
                 let tiles = this.getTilesByDistance(tile, ao.heroData.baseMovement, true)
                 this.coloredTiles = tiles
                 this.animateColorTiles(tile, TileColors.MOVEMENT)
@@ -176,23 +176,58 @@ export default class Battlefield extends Component {
             }
         } else {
             if(this.coloredTiles.find(x => x == tile)){
-                // MOVE
-                console.log("LOL")
                 this.moveObject(this.selectedTile, tile)
             } else {
                 this.selectedTile = null
                 this.clearTiles()
-                console.log("Lul")
             }
         }
     }
 
-    moveObject(from: Tile, to: Tile){
+    async moveObject(from: Tile, to: Tile){
+
+        let waypoints: Tile[] = []
+        let movedObject = from.tileObject
+        let _tile = to.mapTile
+
+        waypoints.push(to)
+
+        while(_tile != null){
+            if(_tile.parent != null){
+                if(from.mapTile.x != _tile.x && from.mapTile.y != _tile.y)
+                    waypoints.push(this.getTile(_tile.parent.x, _tile.parent.y))
+            }
+            _tile = _tile.parent
+        }
+
+        let counts = waypoints.length
+
+        async function asyncTween(toTween: Node, to: Vec3) : Promise<boolean>{
+            return new Promise<boolean>((resolve, reject) => {
+                tween(toTween).to(0.2, {position: to})
+                .call(
+                    () => { resolve(true) }
+                )
+                .start()
+            })
+        }
+
+        async function moveToWayPoint(): Promise<any>{
+            return new Promise(async (resolve) => {
+                let tile = waypoints.pop()
+                await asyncTween(movedObject.node, tile.node.position)
+                tile.mapTile.parent = null
+                resolve(true)
+                if(waypoints.length > 0){
+                    await moveToWayPoint()
+                }
+            })
+        }
+
+        moveToWayPoint()
 
         to.tileObject = from.tileObject
         to.mapTile.mapObject = from.mapTile.mapObject
-
-        to.tileObject.node.parent = to.node
 
         from.tileObject = null
         from.mapTile.mapObject = null
@@ -281,7 +316,7 @@ export default class Battlefield extends Component {
             let animationSpeed = 0.1
             let delay = Math.abs(Math.round((tile.mapTile.x) - (target.mapTile.x))) * animationSpeed
             delay += Math.abs(Math.round((tile.mapTile.y) - (target.mapTile.y))) * animationSpeed
-            console.log(delay)
+
             if (longestDelay < delay)
                 longestDelay = delay
             

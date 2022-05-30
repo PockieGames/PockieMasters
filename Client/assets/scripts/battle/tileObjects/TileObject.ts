@@ -1,5 +1,5 @@
 import MapObject from '../../shared/game/battle/MapTileObject'
-import { _decorator, Component, Node, dragonBones, Vec3, Color, Tween } from 'cc';
+import { _decorator, Component, Node, dragonBones, Vec3, Color, Tween, tween } from 'cc';
 import ResourceManager from '../../manager/ResourceManager';
 const { ccclass, property } = _decorator;
 
@@ -31,8 +31,8 @@ export class TileObject extends Component {
         this.sprite.color = new Color(255, 255, 255, 0);
         let color = new Color(255, 255, 255, 0);
         let curColor = new Color()
-        let tween = new Tween(this.sprite)
-        tween
+        
+        tween(this.sprite)
           .to(0.5, {}, {
             onUpdate: (target, ratio: number) => {
                 this.sprite.color = Color.lerp(curColor, color, Color.WHITE, ratio)
