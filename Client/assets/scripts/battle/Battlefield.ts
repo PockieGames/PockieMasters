@@ -67,20 +67,20 @@ export default class Battlefield extends Component {
     turnTimeLabel: Label
 
 
-    startBattle(){
+    startBattle() {
         this.changeTurn()
     }
 
-    changeTurn(){
-        
+    changeTurn() {
+
         this.unscheduleAllCallbacks()
         this.clearTiles()
         this.selectedTile = null
 
         // Change Team
-        if(this.turnTeam == Team.TEAM_BLUE)
+        if (this.turnTeam == Team.TEAM_BLUE)
             this.turnTeam = Team.TEAM_RED
-        else if(this.turnTeam == Team.TEAM_RED)
+        else if (this.turnTeam == Team.TEAM_RED)
             this.turnTeam = Team.TEAM_BLUE
 
         // Reset Values and Add +1 to Turn
@@ -96,36 +96,36 @@ export default class Battlefield extends Component {
             unit.moved = false
             unit.unit.changeAnimation("wait")
         })
-        
+
         // Schedule the Countdown
         this.schedule(() => {
-            if(this.turnTimerStopped)
+            if (this.turnTimerStopped)
                 return
             this.turnTimeLeft -= 1
             this.turnTimeLabel.string = this.turnTimeLeft.toString()
-            if(this.turnTimeLeft < 0){
+            if (this.turnTimeLeft < 0) {
                 this.changeTurn()
             }
         }, 1)
-        
+
     }
 
-    showActionBar(){
-        ResourceManager.Instance<ResourceManager>().loadAsset<ImageAsset>("textures/characters/icons/hero"  + this.selectedTile.tileObject.spriteId)
-        .then((iconAsset) => {
-            let spriteFrame = new SpriteFrame()
-            let tex = new Texture2D()
-            tex.image = iconAsset
-            spriteFrame.texture = tex
-            this.actionBar.getChildByName("Icon").getComponent(Sprite).spriteFrame = spriteFrame       
-            this.actionBar.active = true
-        }).catch(() =>{
-            this.actionBar.active = true
-        })
+    showActionBar() {
+        ResourceManager.Instance<ResourceManager>().loadAsset<ImageAsset>("textures/characters/icons/hero" + this.selectedTile.tileObject.spriteId)
+            .then((iconAsset) => {
+                let spriteFrame = new SpriteFrame()
+                let tex = new Texture2D()
+                tex.image = iconAsset
+                spriteFrame.texture = tex
+                this.actionBar.getChildByName("Icon").getComponent(Sprite).spriteFrame = spriteFrame
+                this.actionBar.active = true
+            }).catch(() => {
+                this.actionBar.active = true
+            })
         this.actionBar.getChildByName("Name").getComponent(Label).string = (this.selectedTile.mapTile.mapObject as MapAttackableObject).heroData.name
     }
 
-    hideActionBar(){
+    hideActionBar() {
         this.actionBar.active = false
     }
 
@@ -185,9 +185,9 @@ export default class Battlefield extends Component {
         myHero.name = "Maufeat"
         myHero.sprite = "24026"
         myHero.baseMovement = 1
-        this.placeCharacter(myHero, {x: 2, y: 2}, Team.TEAM_BLUE)
+        this.placeCharacter(myHero, { x: 2, y: 2 }, Team.TEAM_BLUE)
 
-        this.scheduleOnce(() => {this.startBattle() }, 1)
+        this.scheduleOnce(() => { this.startBattle() }, 1)
     }
 
     placeCharacter(object: HeroData, position: { x: number, y: number }, team: Team) {
@@ -216,7 +216,7 @@ export default class Battlefield extends Component {
         tileObjectComponent.spriteId = object.sprite
         tileObjectComponent.render(team)
 
-        this.units.push({id: tileObjectComponent.id, team: team, unit: tileObjectComponent, moved: false, attacked: false})
+        this.units.push({ id: tileObjectComponent.id, team: team, unit: tileObjectComponent, moved: false, attacked: false })
 
         this.updateZIndex()
     }
@@ -275,19 +275,25 @@ export default class Battlefield extends Component {
     clickOnTile(position: Vec2) {
 
         // Do not just return, show selected character stats maybe
-        if(this.turnTeam != Team.TEAM_BLUE)
-            return
 
         let tile = this.getTile(position.x, position.y)
         if (this.selectedTile == null) {
             if (tile.mapTile.mapObject) {
 
-            
                 let unit = this.units.find(x => x.id == tile.tileObject.id)
-                if(unit == null)
+                if (unit == null)
                     return
-                if(unit.moved)
+
+                if (unit.team != Team.TEAM_BLUE) {
+                    this.selectedTile = tile
+                    this.showActionBar()
                     return
+                }
+                if (unit.moved) {
+                    this.selectedTile = tile
+                    this.showActionBar()
+                    return
+                }
 
                 let ao = tile.mapTile.mapObject as AttackableObject
                 let tiles = this.getTilesByDistance(tile, ao.heroData.baseMovement, true)
@@ -297,13 +303,13 @@ export default class Battlefield extends Component {
                 this.showActionBar()
             }
         } else {
-            
+
             let unit = this.units.find(x => x.id == this.selectedTile.tileObject.id)
-            if(unit == null)
+            if (unit == null)
                 return
-            
+
             if (this.coloredTiles.find(x => x == tile)) {
-                if(!unit.moved){
+                if (!unit.moved) {
                     this.moveObject(this.selectedTile, tile)
                     this.hideActionBar()
                 } else {
@@ -491,12 +497,12 @@ export default class Battlefield extends Component {
         return await new Promise(f => setTimeout(f, longestDelay * 1000))
     }
 
-    updateZIndex(){
-        let tilePriority: {gameObject: Node, priority: number}[] = []
+    updateZIndex() {
+        let tilePriority: { gameObject: Node, priority: number }[] = []
 
         this.tiles.forEach((_tile) => {
-            if(_tile.tileObject){
-                tilePriority.push({gameObject: _tile.tileObject.node, priority: _tile.mapTile.x + _tile.mapTile.y})
+            if (_tile.tileObject) {
+                tilePriority.push({ gameObject: _tile.tileObject.node, priority: _tile.mapTile.x + _tile.mapTile.y })
             }
         })
 
@@ -504,15 +510,15 @@ export default class Battlefield extends Component {
             if (x.priority < b.priority) {
                 return 1;
             }
-        
+
             if (x.priority > b.priority) {
                 return -1;
             }
-        
+
             return 0;
         })
 
-        tilePriority.forEach((tile: {gameObject: Node, priority: number}, index: number) => {
+        tilePriority.forEach((tile: { gameObject: Node, priority: number }, index: number) => {
             tile.gameObject.setSiblingIndex(index)
         })
     }
