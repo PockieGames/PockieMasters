@@ -5,7 +5,7 @@ export default class IStat{
     percentageBonus: number = 0
 
     total(){
-		return this.baseValue + this.flatBonus + (this.baseValue * this.percentageBonus / 100)
+		  return this.baseValue + this.flatBonus + (this.baseValue * this.percentageBonus / 100)
     }
 
     constructor(_base: number){

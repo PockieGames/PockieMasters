@@ -6,6 +6,7 @@ const { ccclass, property } = _decorator;
 @ccclass('TileObject')
 export class TileObject extends Component {
 
+    id: number 
     spriteId: string = "11014"
     sprite: dragonBones.ArmatureDisplay
 
@@ -17,6 +18,10 @@ export class TileObject extends Component {
         if(this.sprite == null){
             this.sprite = this.node.addComponent(dragonBones.ArmatureDisplay);
         }
+    }
+
+    changeAnimation(name: string, timesPlayed: number = 0){
+        this.sprite.playAnimation(name, timesPlayed)
     }
 
     async render(){

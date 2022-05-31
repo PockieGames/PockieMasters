@@ -1,5 +1,5 @@
 import { JsonAsset } from "cc";
-import HeroData from "../data/HeroData";
+import HeroData from "../shared/game/data/HeroData";
 import Singleton from "../utils/Singleton";
 import ResourceManager from "./ResourceManager";
 

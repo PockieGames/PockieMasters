@@ -1,4 +1,4 @@
-import { Camera, Color, Component, director, EventMouse, EventTouch, instantiate, Layers, Node, Prefab, Sprite, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
+import { Camera, Color, Component, director, EventMouse, EventTouch, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
 import TileColors from "../Constants";
 import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
@@ -34,6 +34,8 @@ export default class Battlefield extends Component {
     height: number = 5;
     @property(Node)
     tileContainerNode: Node
+    @property(Node)
+    goContainerNode: Node
     @property(Camera)
     battlefieldCamera: Camera
 
@@ -42,9 +44,65 @@ export default class Battlefield extends Component {
     offlineMapData: MapData
 
     units: {
+        id: number
         team: Team,
-        unit: TileObject
+        unit: TileObject,
+        moved: boolean,
+        attacked: boolean
     }[] = []
+
+    // BattleFunctions
+    turn: number = 0
+    turnTimerStopped = false
+    turnTeam: Team = Team.TEAM_RED
+    turnTimeTotal: number = 30
+    turnTimeLeft: number = 0
+    @property(Label)
+    turnTimeLabel: Label
+
+
+    startBattle(){
+        this.changeTurn()
+    }
+
+    changeTurn(){
+        
+        this.unscheduleAllCallbacks()
+        this.clearTiles()
+        this.selectedTile = null
+
+        // Change Team
+        if(this.turnTeam == Team.TEAM_BLUE)
+            this.turnTeam = Team.TEAM_RED
+        else if(this.turnTeam == Team.TEAM_RED)
+            this.turnTeam = Team.TEAM_BLUE
+
+        // Reset Values and Add +1 to Turn
+        this.turn++
+        this.turnTimeLeft = this.turnTimeTotal
+        this.turnTimeLabel.string = this.turnTimeLeft.toString()
+
+        console.log("Turn: " + this.turn + " (" + this.turnTeam.toString() + ")")
+
+        // Reset Units moved and attacked state
+        this.units.forEach((unit) => {
+            unit.attacked = false
+            unit.moved = false
+            unit.unit.changeAnimation("wait")
+        })
+        
+        // Schedule the Countdown
+        this.schedule(() => {
+            if(this.turnTimerStopped)
+                return
+            this.turnTimeLeft -= 1
+            this.turnTimeLabel.string = this.turnTimeLeft.toString()
+            if(this.turnTimeLeft < 0){
+                this.changeTurn()
+            }
+        }, 1)
+        
+    }
 
     async start() {
 
@@ -55,8 +113,6 @@ export default class Battlefield extends Component {
         await this.drawMap()
         if (this.animate)
             await this.animateTiles()
-
-        //this.registerInputs()
 
         if (!this.offlineFight) {
             // Connect to WS, listen to events, etc.
@@ -93,44 +149,59 @@ export default class Battlefield extends Component {
             return
         }
 
-        // Initialize
+        // Initialize MapData - Enemies and Obstacles(Tree, Walls, idk)
         this.offlineMapData.mapObjects.forEach((mapObject) => {
-            this.placeCharacter(mapObject.objectData, { x: mapObject.position.x, y: mapObject.position.y })
+            this.placeCharacter(mapObject.objectData, { x: mapObject.position.x, y: mapObject.position.y }, Team.TEAM_RED)
         })
+
+        // Initialize our characters
+        let myHero = new HeroData()
+        myHero.id = 1
+        myHero.name = "Maufeat"
+        myHero.sprite = "11014"
+        myHero.baseMovement = 1
+        this.placeCharacter(myHero, {x: 2, y: 2}, Team.TEAM_BLUE)
+
+        this.scheduleOnce(() => {this.startBattle() }, 1)
     }
 
-    placeCharacter(object: HeroData, position: { x: number, y: number }) {
+    placeCharacter(object: HeroData, position: { x: number, y: number }, team: Team) {
         let tilePlacement = this.getTile(position.x, position.y)
 
         let newNode = new Node("Character")
-        newNode.parent = this.tileContainerNode
+        newNode.parent = this.goContainerNode
         newNode.position = tilePlacement.node.position
         newNode.layer = Layers.BitMask.UI_3D
 
         let tileObjectComponent = newNode.addComponent(TileObject)
         tilePlacement.tileObject = tileObjectComponent
         tilePlacement.mapTile.mapObject = new MapAttackableObject(object)
+        tileObjectComponent.id = this.units.length + 1
         tileObjectComponent.render()
+
+        this.units.push({id: tileObjectComponent.id, team: team, unit: tileObjectComponent, moved: false, attacked: false})
+
+        this.updateZIndex()
     }
 
     getTile(x: number, y: number): Tile {
         return this.tiles.find(tile => tile.mapTile.x == x && tile.mapTile.y == y)
     }
 
-    getTilesByDistance(target: Tile, distance: number, clear = false): Tile[]{
+    getTilesByDistance(target: Tile, distance: number, clear = false): Tile[] {
 
-        distance = distance+1 
+        distance = distance + 1
         let queue: Tile[] = []
         let returns: Tile[] = []
 
         queue.push(target)
 
         let i = 0
-        while(i < distance){
+        while (i < distance) {
             queue.forEach((tile: Tile) => {
                 tile.mapTile.adjacencyList.forEach((_neighbour: MapTile) => {
                     let tileOnMap = this.getTile(_neighbour.x, _neighbour.y)
-                    if((i + 1) < distance && tileOnMap.tileObject == null && !_neighbour.visited){
+                    if ((i + 1) < distance && tileOnMap.tileObject == null && !_neighbour.visited) {
                         _neighbour.visited = true
                         _neighbour.parent = tile.mapTile
                         queue.push(tileOnMap)
@@ -140,14 +211,14 @@ export default class Battlefield extends Component {
             i++
         }
 
-        if(clear){
+        if (clear) {
             this.clearTiles()
         }
 
 
-        queue.forEach((tile: Tile) => {
-            if(tile != target){
-                if(!(returns.indexOf(tile) > -1)){
+        queue.forEach((tile: Tile) => {
+            if (tile != target) {
+                if (!(returns.indexOf(tile) > -1)) {
                     returns.push(tile)
                 }
             }
@@ -165,9 +236,22 @@ export default class Battlefield extends Component {
     }
 
     clickOnTile(position: Vec2) {
+
+        // Do not just return, show selected character stats maybe
+        if(this.turnTeam != Team.TEAM_BLUE)
+            return
+
         let tile = this.getTile(position.x, position.y)
-        if(this.selectedTile == null){
-            if(tile.mapTile.mapObject){
+        if (this.selectedTile == null) {
+            if (tile.mapTile.mapObject) {
+
+            
+                let unit = this.units.find(x => x.id == tile.tileObject.id)
+                if(unit == null)
+                    return
+                if(unit.moved)
+                    return
+
                 let ao = tile.mapTile.mapObject as AttackableObject
                 let tiles = this.getTilesByDistance(tile, ao.heroData.baseMovement, true)
                 this.coloredTiles = tiles
@@ -175,8 +259,17 @@ export default class Battlefield extends Component {
                 this.selectedTile = tile
             }
         } else {
-            if(this.coloredTiles.find(x => x == tile)){
-                this.moveObject(this.selectedTile, tile)
+            
+            let unit = this.units.find(x => x.id == this.selectedTile.tileObject.id)
+            if(unit == null)
+                return
+            
+            if (this.coloredTiles.find(x => x == tile)) {
+                if(!unit.moved){
+                    this.moveObject(this.selectedTile, tile)
+                } else {
+                    console.log("Unit: " + unit.id + " already moved")
+                }
             } else {
                 this.selectedTile = null
                 this.clearTiles()
@@ -184,7 +277,9 @@ export default class Battlefield extends Component {
         }
     }
 
-    async moveObject(from: Tile, to: Tile){
+    async moveObject(from: Tile, to: Tile) {
+
+        let _this = this
 
         let waypoints: Tile[] = []
         let movedObject = from.tileObject
@@ -192,9 +287,9 @@ export default class Battlefield extends Component {
 
         waypoints.push(to)
 
-        while(_tile != null){
-            if(_tile.parent != null){
-                if(from.mapTile.x != _tile.x && from.mapTile.y != _tile.y)
+        while (_tile != null) {
+            if (_tile.parent != null) {
+                if (from.mapTile.x != _tile.x && from.mapTile.y != _tile.y)
                     waypoints.push(this.getTile(_tile.parent.x, _tile.parent.y))
             }
             _tile = _tile.parent
@@ -202,24 +297,27 @@ export default class Battlefield extends Component {
 
         let counts = waypoints.length
 
-        async function asyncTween(toTween: Node, to: Vec3) : Promise<boolean>{
+        async function asyncTween(toTween: Node, to: Vec3): Promise<boolean> {
             return new Promise<boolean>((resolve, reject) => {
-                tween(toTween).to(0.2, {position: to})
-                .call(
-                    () => { resolve(true) }
-                )
-                .start()
+                tween(toTween).to(0.2, { position: to })
+                    .call(
+                        () => { resolve(true) }
+                    )
+                    .start()
             })
         }
 
-        async function moveToWayPoint(): Promise<any>{
+        async function moveToWayPoint(): Promise<any> {
             return new Promise(async (resolve) => {
                 let tile = waypoints.pop()
                 await asyncTween(movedObject.node, tile.node.position)
                 tile.mapTile.parent = null
                 resolve(true)
-                if(waypoints.length > 0){
+                if (waypoints.length > 0) {
                     await moveToWayPoint()
+                } else {
+                    movedObject.getComponent(TileObject).changeAnimation("shihua")
+                    _this.units.find(x => x.id == movedObject.getComponent(TileObject).id).moved = true
                 }
             })
         }
@@ -234,6 +332,7 @@ export default class Battlefield extends Component {
 
         this.selectedTile = null
         this.clearTiles()
+        this.updateZIndex()
 
     }
 
@@ -309,7 +408,7 @@ export default class Battlefield extends Component {
         tileTestNode.destroy()
     }
 
-    async animateColorTiles(target: Tile, _color: number[]){
+    async animateColorTiles(target: Tile, _color: number[]) {
         let color = new Color(_color[0], _color[1], _color[2], _color[3])
         let longestDelay = 0
         this.coloredTiles.forEach((tile: Tile) => {
@@ -319,14 +418,14 @@ export default class Battlefield extends Component {
 
             if (longestDelay < delay)
                 longestDelay = delay
-            
+
             let curColor = tile.background.getComponent(Sprite).color
             let outColor = new Color()
-            tween(tile.background.node.getComponent(Sprite)).delay(delay - animationSpeed).to(0.1, { }, {
+            tween(tile.background.node.getComponent(Sprite)).delay(delay - animationSpeed).to(0.1, {}, {
                 onUpdate: (target, ratio: number) => {
                     tile.background.color = Color.lerp(outColor, curColor, color, ratio)
                 }
-              }).start()
+            }).start()
         })
     }
 
@@ -348,20 +447,15 @@ export default class Battlefield extends Component {
         return await new Promise(f => setTimeout(f, longestDelay * 1000))
     }
 
-    /*
     updateZIndex(){
-        let tilePriority: [{tile: Tile, priority: number}]
-        this.tileMap.forEach((tileXRow: Tile[], index: number) => {
-            tileXRow.forEach((tile: Tile, index: number) => {
-                if(tile.tileObject){
-                    if(!tilePriority){
-                        tilePriority = [{tile, priority: tile.x + tile.y}]
-                    } else {
-                        tilePriority.push({tile, priority: tile.x + tile.y})
-                    }
-                }
-            })
+        let tilePriority: {gameObject: Node, priority: number}[] = []
+
+        this.tiles.forEach((_tile) => {
+            if(_tile.tileObject){
+                tilePriority.push({gameObject: _tile.tileObject.node, priority: _tile.mapTile.x + _tile.mapTile.y})
+            }
         })
+
         tilePriority.sort((x, b) => {
             if (x.priority < b.priority) {
                 return 1;
@@ -373,8 +467,9 @@ export default class Battlefield extends Component {
         
             return 0;
         })
-        tilePriority.forEach((tile: {tile: Tile, priority: number}, index: number) => {
-            tile.tile.tileObject.node.setSiblingIndex(index)
+
+        tilePriority.forEach((tile: {gameObject: Node, priority: number}, index: number) => {
+            tile.gameObject.setSiblingIndex(index)
         })
-    }*/
+    }
 }

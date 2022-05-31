@@ -15,7 +15,6 @@ export default interface MapObject {
     type: MapObjectType,
     objectData: HeroData,
     position: Vec2
-
 }
 
 export default interface MapData {
