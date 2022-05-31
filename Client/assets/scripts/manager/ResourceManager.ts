@@ -1,4 +1,4 @@
-import { Asset, resources } from "cc"
+import { Asset, ImageAsset, JsonAsset, resources, SpriteFrame, Texture2D } from "cc"
 import Singleton from "../utils/Singleton"
 
 export default class ResourceManager extends Singleton{

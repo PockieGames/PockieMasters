@@ -1,4 +1,4 @@
-import { Camera, Color, Component, director, Enum, EventMouse, EventTouch, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
+import { Camera, Color, Component, director, Enum, EventMouse, EventTouch, ImageAsset, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, SpriteFrame, Texture2D, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
 import TileColors from "../Constants";
 import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
@@ -43,6 +43,8 @@ export default class Battlefield extends Component {
     offlineFight: boolean = true
     offlineMapData: MapData
 
+    yCharOffset = -10
+
     units: {
         id: number
         team: Team,
@@ -50,6 +52,10 @@ export default class Battlefield extends Component {
         moved: boolean,
         attacked: boolean
     }[] = []
+
+    // ActionBar
+    @property(Node)
+    actionBar: Node
 
     // BattleFunctions
     turn: number = 0
@@ -104,6 +110,25 @@ export default class Battlefield extends Component {
         
     }
 
+    showActionBar(){
+        ResourceManager.Instance<ResourceManager>().loadAsset<ImageAsset>("textures/characters/icons/hero"  + this.selectedTile.tileObject.spriteId)
+        .then((iconAsset) => {
+            let spriteFrame = new SpriteFrame()
+            let tex = new Texture2D()
+            tex.image = iconAsset
+            spriteFrame.texture = tex
+            this.actionBar.getChildByName("Icon").getComponent(Sprite).spriteFrame = spriteFrame       
+            this.actionBar.active = true
+        }).catch(() =>{
+            this.actionBar.active = true
+        })
+        this.actionBar.getChildByName("Name").getComponent(Label).string = (this.selectedTile.mapTile.mapObject as MapAttackableObject).heroData.name
+    }
+
+    hideActionBar(){
+        this.actionBar.active = false
+    }
+
     async start() {
 
         this.map = new Map(this.width, this.height)
@@ -127,7 +152,7 @@ export default class Battlefield extends Component {
             testHeroes.forEach((hero) => {
                 this.offlineMapData.mapObjects.push({
                     objectData: hero,
-                    position: new Vec2(0, 0),
+                    position: new Vec2(7, 2),
                     type: MapObjectType.HERO
                 } as MapObject)
             })
@@ -158,7 +183,7 @@ export default class Battlefield extends Component {
         let myHero = new HeroData()
         myHero.id = 1
         myHero.name = "Maufeat"
-        myHero.sprite = "11014"
+        myHero.sprite = "24026"
         myHero.baseMovement = 1
         this.placeCharacter(myHero, {x: 2, y: 2}, Team.TEAM_BLUE)
 
@@ -170,14 +195,26 @@ export default class Battlefield extends Component {
 
         let newNode = new Node("Character")
         newNode.parent = this.goContainerNode
-        newNode.position = tilePlacement.node.position
+        let newPos = new Vec3(tilePlacement.node.position)
+        newPos.y += this.yCharOffset
+        newNode.position = newPos
         newNode.layer = Layers.BitMask.UI_3D
 
         let tileObjectComponent = newNode.addComponent(TileObject)
         tilePlacement.tileObject = tileObjectComponent
         tilePlacement.mapTile.mapObject = new MapAttackableObject(object)
         tileObjectComponent.id = this.units.length + 1
-        tileObjectComponent.render()
+        tileObjectComponent.spellSlots.push({
+            spellData: {
+                name: "Base Attack",
+                description: "Huehue",
+                icon: "",
+                range: 3,
+                dmg: 2
+            }
+        })
+        tileObjectComponent.spriteId = object.sprite
+        tileObjectComponent.render(team)
 
         this.units.push({id: tileObjectComponent.id, team: team, unit: tileObjectComponent, moved: false, attacked: false})
 
@@ -257,6 +294,7 @@ export default class Battlefield extends Component {
                 this.coloredTiles = tiles
                 this.animateColorTiles(tile, TileColors.MOVEMENT)
                 this.selectedTile = tile
+                this.showActionBar()
             }
         } else {
             
@@ -267,12 +305,14 @@ export default class Battlefield extends Component {
             if (this.coloredTiles.find(x => x == tile)) {
                 if(!unit.moved){
                     this.moveObject(this.selectedTile, tile)
+                    this.hideActionBar()
                 } else {
                     console.log("Unit: " + unit.id + " already moved")
                 }
             } else {
                 this.selectedTile = null
                 this.clearTiles()
+                this.hideActionBar()
             }
         }
     }
@@ -299,7 +339,11 @@ export default class Battlefield extends Component {
 
         async function asyncTween(toTween: Node, to: Vec3): Promise<boolean> {
             return new Promise<boolean>((resolve, reject) => {
-                tween(toTween).to(0.2, { position: to })
+
+                let newPos = new Vec3(to)
+                newPos.y += _this.yCharOffset
+
+                tween(toTween).to(0.2, { position: newPos })
                     .call(
                         () => { resolve(true) }
                     )

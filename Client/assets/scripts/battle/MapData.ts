@@ -3,12 +3,10 @@ import HeroData from "../shared/game/data/HeroData"
 import IStat from "../shared/game/battle/stats/IStat"
 
 
-export enum MapObjectType {
-    
+export enum MapObjectType {  
     HERO,
     STATIC,
     ATTACKABLE,
-
 }
 
 export default interface MapObject {
