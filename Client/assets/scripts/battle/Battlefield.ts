@@ -1,4 +1,4 @@
-import { Camera, Color, Component, director, EventMouse, EventTouch, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
+import { Camera, Color, Component, director, Enum, EventMouse, EventTouch, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
 import TileColors from "../Constants";
 import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
