@@ -1,4 +1,4 @@
-import { Camera, Color, Component, director, Enum, EventMouse, EventTouch, ImageAsset, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, SpriteFrame, Texture2D, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
+import { AnimationComponent, Camera, Color, Component, director, Enum, EventMouse, EventTouch, ImageAsset, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, SpriteFrame, Texture2D, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
 import TileColors from "../Constants";
 import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
@@ -36,6 +36,8 @@ export default class Battlefield extends Component {
     tileContainerNode: Node
     @property(Node)
     goContainerNode: Node
+    @property(Node)
+    turnNoticeNode: Node
     @property(Camera)
     battlefieldCamera: Camera
 
@@ -78,10 +80,16 @@ export default class Battlefield extends Component {
         this.selectedTile = null
 
         // Change Team
-        if (this.turnTeam == Team.TEAM_BLUE)
+        if (this.turnTeam == Team.TEAM_BLUE){
             this.turnTeam = Team.TEAM_RED
-        else if (this.turnTeam == Team.TEAM_RED)
+            this.turnNoticeNode.getComponentInChildren(Label).string = "Enemy Turn"
+            this.turnNoticeNode.getComponent(AnimationComponent).play()
+        }
+        else if (this.turnTeam == Team.TEAM_RED){
             this.turnTeam = Team.TEAM_BLUE
+            this.turnNoticeNode.getComponentInChildren(Label).string = "Your Turn"
+            this.turnNoticeNode.getComponent(AnimationComponent).play()
+        }
 
         // Reset Values and Add +1 to Turn
         this.turn++
@@ -274,9 +282,8 @@ export default class Battlefield extends Component {
 
     clickOnTile(position: Vec2) {
 
-        // Do not just return, show selected character stats maybe
-
         let tile = this.getTile(position.x, position.y)
+
         if (this.selectedTile == null) {
             if (tile.mapTile.mapObject) {
 
@@ -289,6 +296,13 @@ export default class Battlefield extends Component {
                     this.showActionBar()
                     return
                 }
+
+                if(this.turnTeam != Team.TEAM_BLUE){
+                    this.selectedTile = tile
+                    this.showActionBar()
+                    return
+                }
+
                 if (unit.moved) {
                     this.selectedTile = tile
                     this.showActionBar()
