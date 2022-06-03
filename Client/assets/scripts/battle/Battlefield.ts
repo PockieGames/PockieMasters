@@ -1,4 +1,4 @@
-import { AnimationComponent, Camera, Color, Component, director, Enum, EventMouse, EventTouch, ImageAsset, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, SpriteFrame, Texture2D, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
+import { AnimationComponent, Camera, Color, Component, director, Enum, EventMouse, EventTouch, ImageAsset, input, Input, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, SpriteFrame, Texture2D, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
 import TileColors from "../Constants";
 import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
@@ -67,6 +67,8 @@ export default class Battlefield extends Component {
     turnTimeLeft: number = 0
     @property(Label)
     turnTimeLabel: Label
+    @property(Label)
+    turnCountLabel: Label
 
 
     startBattle() {
@@ -95,6 +97,7 @@ export default class Battlefield extends Component {
         // Reset Values and Add +1 to Turn
         this.turn++
         this.turnTimeLeft = this.turnTimeTotal
+        this.turnCountLabel.string = "Turn " + this.turn
         this.turnTimeLabel.string = this.turnTimeLeft.toString()
 
         console.log("Turn: " + this.turn + " (" + this.turnTeam.toString() + ")")
@@ -465,6 +468,18 @@ export default class Battlefield extends Component {
                 tileNode.on(Node.EventType.MOUSE_LEAVE, (event: EventMouse) => {
                     tile.hoverFrame.active = false
                 })
+                
+                tileNode.on(Input.EventType.MOUSE_WHEEL, (eventMouse: EventMouse) => {
+                    let orthoCameraZoom = this.battlefieldCamera.getComponent(OrthoCameraZoom)
+                    let newHeight = orthoCameraZoom.getCurrentOrtho() + (eventMouse.getScrollY() / 5)
+                    if(newHeight >= orthoCameraZoom.defaultHeight){
+                        newHeight = orthoCameraZoom.defaultHeight
+                    }
+                    if(newHeight <= 120){
+                        newHeight = 120
+                    }
+                    this.battlefieldCamera.getComponent(OrthoCameraZoom).orthoZoom(tileNode.position, newHeight)
+                }, UIManager.Instance<UIManager>().getCanvas().node)
 
                 this.tiles.push(tile)
 
