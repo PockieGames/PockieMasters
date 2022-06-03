@@ -79,6 +79,7 @@ export default class Battlefield extends Component {
         this.clearTiles()
         this.selectedTile = null
 
+        this.turnNoticeNode.active = true
         // Change Team
         if (this.turnTeam == Team.TEAM_BLUE){
             this.turnTeam = Team.TEAM_RED
@@ -192,8 +193,8 @@ export default class Battlefield extends Component {
         myHero.id = 1
         myHero.name = "Maufeat"
         myHero.sprite = "24026"
-        myHero.baseMovement = 1
-        this.placeCharacter(myHero, { x: 2, y: 2 }, Team.TEAM_BLUE)
+        myHero.baseMovement = 5
+        this.placeCharacter(myHero, { x: 1, y: 2 }, Team.TEAM_BLUE)
 
         this.scheduleOnce(() => { this.startBattle() }, 1)
     }
@@ -319,8 +320,6 @@ export default class Battlefield extends Component {
         } else {
 
             let unit = this.units.find(x => x.id == this.selectedTile.tileObject.id)
-            if (unit == null)
-                return
 
             if (this.coloredTiles.find(x => x == tile)) {
                 if (!unit.moved) {
@@ -330,6 +329,35 @@ export default class Battlefield extends Component {
                     console.log("Unit: " + unit.id + " already moved")
                 }
             } else {
+
+                if(tile.tileObject){
+                    
+                    unit = this.units.find(x => x.id == tile.tileObject.id)
+                    
+                    if(unit.unit == this.selectedTile.tileObject){
+                        return
+                    }
+
+                    if(unit){
+
+                        if((!unit.moved && unit.team == Team.TEAM_BLUE) && this.turnTeam == Team.TEAM_BLUE){
+
+                            let ao = tile.mapTile.mapObject as AttackableObject
+                            let tiles = this.getTilesByDistance(tile, ao.heroData.baseMovement, true)
+                            this.coloredTiles = tiles
+                            this.animateColorTiles(tile, TileColors.MOVEMENT)
+
+                        } else {
+                            this.clearTiles()
+                        }
+
+                        this.selectedTile = tile
+                        this.showActionBar()
+                        return
+                    }
+
+                }
+
                 this.selectedTile = null
                 this.clearTiles()
                 this.hideActionBar()
