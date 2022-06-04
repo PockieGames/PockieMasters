@@ -7,11 +7,11 @@ const { ccclass, property } = _decorator;
 export default class HomeUI extends UIBase {
 
     @property(Button)
-    storyBtn: Button
+    chapterButton: Button
 
     start() {
-        this.storyBtn.node.on(Button.EventType.CLICK, () => {
-            director.loadScene("battle")
+        this.chapterButton.node.on(Button.EventType.CLICK, () => {
+            director.loadScene("chapter")
         }, this)
     }
 
