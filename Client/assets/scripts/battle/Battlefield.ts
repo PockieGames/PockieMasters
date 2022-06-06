@@ -8,7 +8,7 @@ import UIManager from "../ui/UIManager";
 import MapData, { MapObjectType } from "./MapData";
 import MessageBox from "../ui/views/MessageBox";
 import OrthoCameraZoom from "../utils/OrthoCameraZoom";
-import { Team } from "../shared/game/SharedConstants";
+import { spells, Team } from "../shared/game/SharedConstants";
 import { TileObject } from "./tileObjects/TileObject";
 import GameData from "../manager/GameData";
 import HeroData from "../shared/game/data/HeroData";
@@ -16,6 +16,8 @@ import MapObject from "./MapData";
 import AttackableObject from "../shared/game/battle/MapAttackableObject";
 import MapAttackableObject from "../shared/game/battle/MapAttackableObject";
 import MapTile from "../shared/game/battle/MapTile";
+import Spell from "../shared/game/battle/spells/Spell";
+import SpellData from "../shared/game/data/SpellData";
 
 const { ccclass, property } = _decorator;
 
@@ -51,6 +53,7 @@ export default class Battlefield extends Component {
         id: number
         team: Team,
         unit: TileObject,
+        currentState: string,
         moved: boolean,
         attacked: boolean
     }[] = []
@@ -83,12 +86,12 @@ export default class Battlefield extends Component {
 
         this.turnNoticeNode.active = true
         // Change Team
-        if (this.turnTeam == Team.TEAM_BLUE){
+        if (this.turnTeam == Team.TEAM_BLUE) {
             this.turnTeam = Team.TEAM_RED
             this.turnNoticeNode.getComponentInChildren(Label).string = "Enemy Turn"
             this.turnNoticeNode.getComponent(AnimationComponent).play()
         }
-        else if (this.turnTeam == Team.TEAM_RED){
+        else if (this.turnTeam == Team.TEAM_RED) {
             this.turnTeam = Team.TEAM_BLUE
             this.turnNoticeNode.getComponentInChildren(Label).string = "Your Turn"
             this.turnNoticeNode.getComponent(AnimationComponent).play()
@@ -106,6 +109,7 @@ export default class Battlefield extends Component {
         this.units.forEach((unit) => {
             unit.attacked = false
             unit.moved = false
+            unit.currentState = "NONE"
             unit.unit.changeAnimation("wait")
         })
 
@@ -134,6 +138,53 @@ export default class Battlefield extends Component {
             }).catch(() => {
                 this.actionBar.active = true
             })
+        let spells = this.actionBar.getChildByName("Spells")
+        this.selectedTile.tileObject.spellSlots.forEach((spellData: SpellData, index) => {
+            index += 1
+            let spellNode = spells.getChildByName("Spell" + index)
+            console.log(spells)
+            if (!spellNode)
+                return
+
+            spellNode.off(Node.EventType.MOUSE_DOWN)
+            spellNode.off(Node.EventType.MOUSE_LEAVE)
+            spellNode.off(Node.EventType.MOUSE_UP)
+            spellNode.off(Node.EventType.TOUCH_END)
+            spellNode.off(Node.EventType.TOUCH_START)
+            spellNode.off(Node.EventType.TOUCH_CANCEL)
+
+            spellNode.on(Node.EventType.MOUSE_LEAVE || Node.EventType.TOUCH_CANCEL, () => {
+
+                let spriteComponent = spellNode.getComponent(Sprite)
+                let hoverColor = new Color(spriteComponent.color)
+                hoverColor.a = 255
+                spellNode.getComponent(Sprite).color = hoverColor
+
+            })
+            spellNode.on(Node.EventType.MOUSE_DOWN || Node.EventType.TOUCH_START, () => {
+
+                let spriteComponent = spellNode.getComponent(Sprite)
+                let hoverColor = new Color(spriteComponent.color)
+                hoverColor.a = 100
+                spellNode.getComponent(Sprite).color = hoverColor
+
+            }, spellNode)
+            spellNode.on(Node.EventType.MOUSE_UP || Node.EventType.TOUCH_END, (mouse) => {
+
+                let spriteComponent = spellNode.getComponent(Sprite)
+                let hoverColor = new Color(spriteComponent.color)
+                hoverColor.a = 255
+                spellNode.getComponent(Sprite).color = hoverColor
+
+                let unit = this.units.find(x => x.unit == this.selectedTile.tileObject)
+                unit.currentState = "ATTACK"
+                this.coloredTiles = this.getTilesByDistance(this.selectedTile, spellData.range, true, true)
+                this.animateColorTiles(this.selectedTile, TileColors.ATTACK)
+                console.log(spellData.name)
+
+            }, spellNode)
+
+        })
         this.actionBar.getChildByName("Name").getComponent(Label).string = (this.selectedTile.mapTile.mapObject as MapAttackableObject).heroData.name
     }
 
@@ -216,19 +267,12 @@ export default class Battlefield extends Component {
         tilePlacement.tileObject = tileObjectComponent
         tilePlacement.mapTile.mapObject = new MapAttackableObject(object)
         tileObjectComponent.id = this.units.length + 1
-        tileObjectComponent.spellSlots.push({
-            spellData: {
-                name: "Base Attack",
-                description: "Huehue",
-                icon: "",
-                range: 3,
-                dmg: 2
-            }
-        })
         tileObjectComponent.spriteId = object.sprite
         tileObjectComponent.render(team)
 
-        this.units.push({ id: tileObjectComponent.id, team: team, unit: tileObjectComponent, moved: false, attacked: false })
+        tileObjectComponent.spellSlots.push(spells.get("d"))
+
+        this.units.push({ id: tileObjectComponent.id, team: team, unit: tileObjectComponent, moved: false, attacked: false, currentState: "NONE" })
 
         this.updateZIndex()
     }
@@ -237,7 +281,7 @@ export default class Battlefield extends Component {
         return this.tiles.find(tile => tile.mapTile.x == x && tile.mapTile.y == y)
     }
 
-    getTilesByDistance(target: Tile, distance: number, clear = false): Tile[] {
+    getTilesByDistance(target: Tile, distance: number, clear = false, ignoreTileObject = false): Tile[] {
 
         distance = distance + 1
         let queue: Tile[] = []
@@ -250,10 +294,18 @@ export default class Battlefield extends Component {
             queue.forEach((tile: Tile) => {
                 tile.mapTile.adjacencyList.forEach((_neighbour: MapTile) => {
                     let tileOnMap = this.getTile(_neighbour.x, _neighbour.y)
-                    if ((i + 1) < distance && tileOnMap.tileObject == null && !_neighbour.visited) {
-                        _neighbour.visited = true
-                        _neighbour.parent = tile.mapTile
-                        queue.push(tileOnMap)
+                    if (!ignoreTileObject) {
+                        if ((i + 1) < distance && tileOnMap.tileObject == null && !_neighbour.visited) {
+                            _neighbour.visited = true
+                            _neighbour.parent = tile.mapTile
+                            queue.push(tileOnMap)
+                        }
+                    } else {
+                        if ((i + 1) < distance && !_neighbour.visited) {
+                            _neighbour.visited = true
+                            _neighbour.parent = tile.mapTile
+                            queue.push(tileOnMap)
+                        }
                     }
                 })
             })
@@ -301,7 +353,7 @@ export default class Battlefield extends Component {
                     return
                 }
 
-                if(this.turnTeam != Team.TEAM_BLUE){
+                if (this.turnTeam != Team.TEAM_BLUE) {
                     this.selectedTile = tile
                     this.showActionBar()
                     return
@@ -319,12 +371,71 @@ export default class Battlefield extends Component {
                 this.animateColorTiles(tile, TileColors.MOVEMENT)
                 this.selectedTile = tile
                 this.showActionBar()
+                unit.currentState = "MOVE"
             }
         } else {
 
             let unit = this.units.find(x => x.id == this.selectedTile.tileObject.id)
 
-            if (this.coloredTiles.find(x => x == tile)) {
+            switch (unit.currentState) {
+                case "MOVE":
+
+                    if (this.coloredTiles.find(x => x == tile)) {
+                        if (!unit.moved) {
+                            this.moveObject(this.selectedTile, tile)
+                            this.hideActionBar()
+                            return
+                        } else {
+                            console.log("Unit: " + unit.id + " already moved")
+                            return
+                        }
+                    }
+
+                    if (tile.tileObject) {
+                        unit = this.units.find(x => x.id == tile.tileObject.id)
+                        if (unit.unit == this.selectedTile.tileObject) {
+                            return
+                        }
+                        if (unit) {
+                            if ((!unit.moved && unit.team == Team.TEAM_BLUE) && this.turnTeam == Team.TEAM_BLUE) {
+                                let ao = tile.mapTile.mapObject as AttackableObject
+                                let tiles = this.getTilesByDistance(tile, ao.heroData.baseMovement, true)
+                                this.coloredTiles = tiles
+                                this.animateColorTiles(tile, TileColors.MOVEMENT)
+                                unit = this.units.find(x => x.unit == tile.tileObject)
+                                unit.currentState = "MOVE"
+                            } else {
+                                this.clearTiles()
+                            }
+                            this.selectedTile = tile
+                            this.showActionBar()
+                            return
+                        }
+
+                    } else {
+
+                        if (this.selectedTile.tileObject) {
+                            unit = this.units.find(x => x.unit == this.selectedTile.tileObject)
+                            unit.currentState == "NONE"
+                        }
+
+                        this.selectedTile = null
+                        this.clearTiles()
+                        this.hideActionBar()
+                    }
+
+                    break
+                case "ATTACK":
+                    console.log("AttACK")
+                    break
+                default:
+                    this.selectedTile = null
+                    this.clearTiles()
+                    this.hideActionBar()
+                    break
+            }
+
+            /*if (this.coloredTiles.find(x => x == tile)) {
                 if (!unit.moved) {
                     this.moveObject(this.selectedTile, tile)
                     this.hideActionBar()
@@ -333,38 +444,16 @@ export default class Battlefield extends Component {
                 }
             } else {
 
-                if(tile.tileObject){
-                    
-                    unit = this.units.find(x => x.id == tile.tileObject.id)
-                    
-                    if(unit.unit == this.selectedTile.tileObject){
-                        return
-                    }
-
-                    if(unit){
-
-                        if((!unit.moved && unit.team == Team.TEAM_BLUE) && this.turnTeam == Team.TEAM_BLUE){
-
-                            let ao = tile.mapTile.mapObject as AttackableObject
-                            let tiles = this.getTilesByDistance(tile, ao.heroData.baseMovement, true)
-                            this.coloredTiles = tiles
-                            this.animateColorTiles(tile, TileColors.MOVEMENT)
-
-                        } else {
-                            this.clearTiles()
-                        }
-
-                        this.selectedTile = tile
-                        this.showActionBar()
-                        return
-                    }
-
+                
+                if(this.selectedTile.tileObject){
+                    unit = this.units.find(x => x.unit == this.selectedTile.tileObject)
+                    unit.currentState == "NONE"
                 }
-
+        
                 this.selectedTile = null
                 this.clearTiles()
                 this.hideActionBar()
-            }
+            }*/
         }
     }
 
@@ -385,8 +474,6 @@ export default class Battlefield extends Component {
             }
             _tile = _tile.parent
         }
-
-        let counts = waypoints.length
 
         async function asyncTween(toTween: Node, to: Vec3): Promise<boolean> {
             return new Promise<boolean>((resolve, reject) => {
@@ -468,14 +555,14 @@ export default class Battlefield extends Component {
                 tileNode.on(Node.EventType.MOUSE_LEAVE, (event: EventMouse) => {
                     tile.hoverFrame.active = false
                 })
-                
+
                 tileNode.on(Input.EventType.MOUSE_WHEEL, (eventMouse: EventMouse) => {
                     let orthoCameraZoom = this.battlefieldCamera.getComponent(OrthoCameraZoom)
                     let newHeight = orthoCameraZoom.getCurrentOrtho() + (eventMouse.getScrollY() / 5)
-                    if(newHeight >= orthoCameraZoom.defaultHeight){
+                    if (newHeight >= orthoCameraZoom.defaultHeight) {
                         newHeight = orthoCameraZoom.defaultHeight
                     }
-                    if(newHeight <= 120){
+                    if (newHeight <= 120) {
                         newHeight = 120
                     }
                     this.battlefieldCamera.getComponent(OrthoCameraZoom).orthoZoom(tileNode.position, newHeight)

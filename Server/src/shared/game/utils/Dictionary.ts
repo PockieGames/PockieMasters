@@ -1,9 +1,14 @@
+
+interface IDictionary<TValue> {
+    [id: string]: TValue;
+}
+
 export default class Dictionary<T> {
 
-    private _dictionary = {};
+    private _dictionary: IDictionary<T>
 
-    constructor() {
-        this._dictionary = {};
+    constructor(populate = {}) {
+        this._dictionary = populate;
     }
 
     public containsKey(key: string): boolean {
@@ -22,7 +27,7 @@ export default class Dictionary<T> {
         return false;
     }
 
-    public get(key: string): T {
+    public get(key: string): T | undefined {
         return this.containsKey(key) ? this._dictionary[key] : undefined;
     }
 

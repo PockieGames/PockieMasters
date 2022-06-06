@@ -1,6 +1,6 @@
 import { Canvas, find, instantiate, Prefab, Node } from "cc";
 import ResourceManager from "../manager/ResourceManager";
-import Dictionary from "../utils/Dictionary";
+import Dictionary from "../shared/game/utils/Dictionary";
 import Logger from "../utils/Logger";
 import Singleton from "../utils/Singleton";
 import UIBase from "./UIBase";

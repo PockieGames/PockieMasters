@@ -23,6 +23,10 @@ export default class Tile extends Component {
         }
         this.debugPos.node.active = false
     }
+
+    onTileClick(){
+        
+    }
     
     isOnTile(position: Vec2){
         let uiTransform = this.node.getComponent(UITransform)
