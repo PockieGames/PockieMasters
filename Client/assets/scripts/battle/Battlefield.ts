@@ -44,6 +44,8 @@ export default class Battlefield extends Component {
     battlefieldCamera: Camera
     @property(Node)
     resultNode: Node
+    @property(Node)
+    spellTooltipNode: Node
 
     animate: boolean = true
     offlineFight: boolean = true
@@ -82,6 +84,7 @@ export default class Battlefield extends Component {
 
     setResult(win: boolean = false){
         this.resultNode.active = true
+        this.unscheduleAllCallbacks()
         if(!win){
             let resultContainer = this.resultNode.getChildByName("resultbg")
             resultContainer.getChildByName("light").active = false
@@ -91,9 +94,17 @@ export default class Battlefield extends Component {
             resultContainer.getChildByName("resultTitle").getComponent(Sprite).grayscale = true
             resultContainer.getChildByName("resultTitle").getChildByName("bannerleft").getComponent(Sprite).grayscale = true
             resultContainer.getChildByName("resultTitle").getChildByName("bannerright").getComponent(Sprite).grayscale = true
-            resultContainer.getChildByName("resultTitle").getChildByName("titleLable").getComponent(Label).string = "Lose"
+            resultContainer.getChildByName("resultTitle").getChildByName("titleLable").getComponent(Label).string = "DEFEAT"
+        } else {
+            this.units.forEach((unit) => {
+                unit.unit.changeAnimation("wait")
+                unit.unit.sprite.timeScale = 2
+            })
         }
+
         setTimeout(() => {
+            if(!this.resultNode)
+                return
             this.resultNode.getChildByName("bg").on(Node.EventType.MOUSE_UP || Node.EventType.TOUCH_END, () => {
                 director.loadScene("chapter")
             })
@@ -180,10 +191,12 @@ export default class Battlefield extends Component {
                 let tex = new Texture2D()
                 tex.image = iconAsset
                 spriteFrame.texture = tex
-                
+
                 spellNode.getComponent(Sprite).spriteFrame = spriteFrame
 
             })
+
+            this.setSpellTooltip(spellData)
 
             spellNode.on(Node.EventType.MOUSE_LEAVE || Node.EventType.TOUCH_CANCEL, () => {
 
@@ -191,6 +204,8 @@ export default class Battlefield extends Component {
                 let hoverColor = new Color(spriteComponent.color)
                 hoverColor.a = 255
                 spellNode.getComponent(Sprite).color = hoverColor
+                
+                this.spellTooltipNode.active = false
 
             })
             spellNode.on(Node.EventType.MOUSE_DOWN || Node.EventType.TOUCH_START, () => {
@@ -200,6 +215,8 @@ export default class Battlefield extends Component {
                 hoverColor.a = 100
                 spellNode.getComponent(Sprite).color = hoverColor
 
+                this.spellTooltipNode.active = true
+
             }, spellNode)
             spellNode.on(Node.EventType.MOUSE_UP || Node.EventType.TOUCH_END, (mouse) => {
 
@@ -207,6 +224,8 @@ export default class Battlefield extends Component {
                 let hoverColor = new Color(spriteComponent.color)
                 hoverColor.a = 255
                 spellNode.getComponent(Sprite).color = hoverColor
+
+                this.spellTooltipNode.active = false
 
                 let unit = this.units.find(x => x.unit == this.selectedTile.tileObject)
                 unit.currentState = "ATTACK"
@@ -220,6 +239,23 @@ export default class Battlefield extends Component {
         this.actionBar.getChildByName("Name").getComponent(Label).string = (this.selectedTile.mapTile.mapObject as MapAttackableObject).heroData.name
     }
 
+    setSpellTooltip(spell: SpellData){
+        
+        ResourceManager.Instance<ResourceManager>().loadAsset<ImageAsset>("textures/spells/" + spell.icon).then((iconAsset) => {
+
+            let spriteFrame = new SpriteFrame()
+            let tex = new Texture2D()
+            tex.image = iconAsset
+            spriteFrame.texture = tex
+            
+            this.spellTooltipNode.getChildByName("SpellIcon").getComponent(Sprite).spriteFrame = spriteFrame
+
+            this.spellTooltipNode.getChildByName("SpellName").getComponent(Label).string = spell.name
+            this.spellTooltipNode.getChildByName("Description").getComponent(Label).string = spell.description
+        })
+
+    }
+
     hideActionBar() {
         this.actionBar.active = false
     }
@@ -227,7 +263,9 @@ export default class Battlefield extends Component {
     async start() {
 
         this.turnNoticeNode.active = false
+        this.actionBar.active = false
         this.resultNode.active = false
+        this.spellTooltipNode.active = false
 
         this.map = new Map(this.width, this.height)
 
@@ -461,7 +499,7 @@ export default class Battlefield extends Component {
 
                     break
                 case "ATTACK":
-                    this.setResult()
+                    this.setResult(true)
                     console.log("AttACK")
                     break
                 default:

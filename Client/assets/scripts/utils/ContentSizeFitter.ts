@@ -1,4 +1,5 @@
-import { _decorator, Component, Node, UITransform, Layout, CCBoolean, CCInteger, CCFloat } from 'cc';
+import { _decorator, Component, Node, UITransform, Layout, CCBoolean, CCInteger, CCFloat, Widget } from 'cc';
+import { IgnoreContentSizeFitter } from './IgnoreContentSizeFitter';
 const { ccclass, property, executeInEditMode } = _decorator;
  
 @ccclass('ContentSizeFitter')
@@ -25,6 +26,8 @@ export class ContentSizeFitter extends Component {
 
         this.node.children.forEach((node: Node) => {
             if(!node.active)
+                return
+            if(node.getComponent(IgnoreContentSizeFitter))
                 return
             width += node.getComponent(UITransform).width
             height += node.getComponent(UITransform).height
