@@ -162,6 +162,17 @@ export default class Battlefield extends Component {
             spellNode.off(Node.EventType.TOUCH_END)
             spellNode.off(Node.EventType.TOUCH_START)
             spellNode.off(Node.EventType.TOUCH_CANCEL)
+            
+            ResourceManager.Instance<ResourceManager>().loadAsset<ImageAsset>("textures/spells/" + spellData.icon).then((iconAsset) => {
+
+                let spriteFrame = new SpriteFrame()
+                let tex = new Texture2D()
+                tex.image = iconAsset
+                spriteFrame.texture = tex
+                
+                spellNode.getComponent(Sprite).spriteFrame = spriteFrame
+
+            })
 
             spellNode.on(Node.EventType.MOUSE_LEAVE || Node.EventType.TOUCH_CANCEL, () => {
 
