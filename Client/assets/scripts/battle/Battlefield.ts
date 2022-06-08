@@ -42,6 +42,8 @@ export default class Battlefield extends Component {
     turnNoticeNode: Node
     @property(Camera)
     battlefieldCamera: Camera
+    @property(Node)
+    resultNode: Node
 
     animate: boolean = true
     offlineFight: boolean = true
@@ -76,6 +78,15 @@ export default class Battlefield extends Component {
 
     startBattle() {
         this.changeTurn()
+    }
+
+    setResult(){
+        this.resultNode.active = true
+        setTimeout(() => {
+            this.resultNode.getChildByName("bg").on(Node.EventType.MOUSE_UP || Node.EventType.TOUCH_END, () => {
+                director.loadScene("chapter")
+            })
+        }, 1000)
     }
 
     changeTurn() {
@@ -142,7 +153,6 @@ export default class Battlefield extends Component {
         this.selectedTile.tileObject.spellSlots.forEach((spellData: SpellData, index) => {
             index += 1
             let spellNode = spells.getChildByName("Spell" + index)
-            console.log(spells)
             if (!spellNode)
                 return
 
@@ -193,6 +203,9 @@ export default class Battlefield extends Component {
     }
 
     async start() {
+
+        this.turnNoticeNode.active = false
+        this.resultNode.active = false
 
         this.map = new Map(this.width, this.height)
 
@@ -426,6 +439,7 @@ export default class Battlefield extends Component {
 
                     break
                 case "ATTACK":
+                    this.setResult()
                     console.log("AttACK")
                     break
                 default:

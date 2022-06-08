@@ -30,6 +30,9 @@ export class TileObject extends Component {
     }
 
     async render(team: Team){
+        if(this.sprite == null){
+            this.sprite = this.node.addComponent(dragonBones.ArmatureDisplay);
+        }
         let dbAsset = await ResourceManager.Instance<ResourceManager>().loadAsset<dragonBones.DragonBonesAsset>("textures/characters/heroDB" + this.spriteId + "_ske")
         let dbAtlas = await ResourceManager.Instance<ResourceManager>().loadAsset<dragonBones.DragonBonesAtlasAsset>("textures/characters/heroDB" + this.spriteId)
         this.sprite.dragonAsset = dbAsset
