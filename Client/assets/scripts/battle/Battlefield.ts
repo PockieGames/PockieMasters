@@ -80,8 +80,19 @@ export default class Battlefield extends Component {
         this.changeTurn()
     }
 
-    setResult(){
+    setResult(win: boolean = false){
         this.resultNode.active = true
+        if(!win){
+            let resultContainer = this.resultNode.getChildByName("resultbg")
+            resultContainer.getChildByName("light").active = false
+            resultContainer.getChildByName("wingsleft").active = false
+            resultContainer.getChildByName("wingsright").active = false
+            resultContainer.getComponent(Sprite).grayscale = true
+            resultContainer.getChildByName("resultTitle").getComponent(Sprite).grayscale = true
+            resultContainer.getChildByName("resultTitle").getChildByName("bannerleft").getComponent(Sprite).grayscale = true
+            resultContainer.getChildByName("resultTitle").getChildByName("bannerright").getComponent(Sprite).grayscale = true
+            resultContainer.getChildByName("resultTitle").getChildByName("titleLable").getComponent(Label).string = "Lose"
+        }
         setTimeout(() => {
             this.resultNode.getChildByName("bg").on(Node.EventType.MOUSE_UP || Node.EventType.TOUCH_END, () => {
                 director.loadScene("chapter")
