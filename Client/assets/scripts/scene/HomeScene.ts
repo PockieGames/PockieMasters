@@ -5,8 +5,12 @@ const { ccclass, property } = _decorator;
 
 @ccclass('HomeScene')
 export class HomeScene extends Component {
-    start() {
-        UIManager.Instance<UIManager>().OpenUI(HomeUI)
+
+    @property(Node)
+    viewNode: Node
+
+    async start() {
+        //let homeUI = await UIManager.Instance<UIManager>().OpenUI(HomeUI)
     }
 
     update(deltaTime: number) {
