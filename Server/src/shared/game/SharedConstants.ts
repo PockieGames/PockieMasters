@@ -1,5 +1,6 @@
 import SpellData from "./data/SpellData"
 import TestSpell from "./data/Spells/TestSpell"
+import TestSpell2 from "./data/Spells/TestSpell2"
 import Dictionary from "./utils/Dictionary"
 
 export enum Team {
@@ -9,5 +10,6 @@ export enum Team {
 }
 
 export const spells: Dictionary<SpellData> = new Dictionary<SpellData>({
-    "d": new TestSpell()
+    "d": new TestSpell(),
+    "e": new TestSpell2()
 })

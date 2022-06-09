@@ -115,6 +115,7 @@ export default class Battlefield extends Component {
 
         this.unscheduleAllCallbacks()
         this.clearTiles()
+        this.hideActionBar()
         this.selectedTile = null
 
         this.turnNoticeNode.active = true
@@ -196,8 +197,6 @@ export default class Battlefield extends Component {
 
             })
 
-            this.setSpellTooltip(spellData)
-
             spellNode.on(Node.EventType.MOUSE_LEAVE || Node.EventType.TOUCH_CANCEL, () => {
 
                 let spriteComponent = spellNode.getComponent(Sprite)
@@ -215,6 +214,8 @@ export default class Battlefield extends Component {
                 hoverColor.a = 100
                 spellNode.getComponent(Sprite).color = hoverColor
 
+
+                this.setSpellTooltip(spellData, spellNode)
                 this.spellTooltipNode.active = true
 
             }, spellNode)
@@ -239,7 +240,13 @@ export default class Battlefield extends Component {
         this.actionBar.getChildByName("Name").getComponent(Label).string = (this.selectedTile.mapTile.mapObject as MapAttackableObject).heroData.name
     }
 
-    setSpellTooltip(spell: SpellData){
+    setSpellTooltip(spell: SpellData, node: Node){
+
+        let canvas = UIManager.Instance<UIManager>().getCanvas()
+        let vec3 = canvas.cameraComponent.convertToUINode(node.getWorldPosition(), canvas.node)
+        vec3.x += 50
+        vec3.y = -190
+        this.spellTooltipNode.position = vec3
         
         ResourceManager.Instance<ResourceManager>().loadAsset<ImageAsset>("textures/spells/" + spell.icon).then((iconAsset) => {
 
@@ -344,6 +351,7 @@ export default class Battlefield extends Component {
         tileObjectComponent.render(team)
 
         tileObjectComponent.spellSlots.push(spells.get("d"))
+        tileObjectComponent.spellSlots.push(spells.get("e"))
 
         this.units.push({ id: tileObjectComponent.id, team: team, unit: tileObjectComponent, moved: false, attacked: false, currentState: "NONE" })
 

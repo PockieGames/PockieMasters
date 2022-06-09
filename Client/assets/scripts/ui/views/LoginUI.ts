@@ -1,4 +1,4 @@
-import { Button, director, EditBox, EventHandler, sys, _decorator } from "cc";
+import { Button, director, EditBox, EventHandler, Node, sys, _decorator } from "cc";
 import NetworkManager from "../../manager/NetworkManager";
 import UserManager from "../../manager/UserManager";
 import { ResReg } from "../../shared/protocols/user/PtlReg";
@@ -22,15 +22,35 @@ export default class LoginUI extends UIBase{
     logoutBtn: Button
 
     @property(Button)
-    testBtn: Button
+    serverSelectBtn: Button
+
+    @property(Node)
+    serverSelectionNode: Node
+
+    serverList: [
+        {
+            "id": 1,
+            "name": "Test Server",
+            "ip": "127.0.0.1",
+            "port": 80,
+            "status": "normal"
+        }
+    ]
+
+    setupServerSelection(){
+        this.serverSelectionNode.getChildByName("bg").on(Node.EventType.MOUSE_DOWN || Node.EventType.TOUCH_START, () => {
+            this.serverSelectionNode.active = false
+        })
+    }
 
     start(){
 
         GameData.Instance<GameData>().loadData()
 
-        this.testBtn.node.on(Button.EventType.CLICK, async () => {
-            let res = await NetworkManager.Instance<NetworkManager>().callApi("Test", {})
-            console.log(res)
+        this.setupServerSelection()
+
+        this.serverSelectBtn.node.on(Button.EventType.CLICK, async () => {
+            this.serverSelectionNode.active = true
         })
 
         this.logoutBtn.node.on(Button.EventType.CLICK, async() => {
