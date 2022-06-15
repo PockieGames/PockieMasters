@@ -18,6 +18,10 @@ export class HomeScene extends Component {
     @property(Button)
     townBtn: Button
     @property(Prefab)
+    heroesPrefab: Prefab
+    @property(Button)
+    heroesBtn: Button
+    @property(Prefab)
     chapterPrefab: Prefab
     @property(Button)
     chapterBtn: Button
@@ -52,6 +56,10 @@ export class HomeScene extends Component {
         this.townBtn.node.on(Button.EventType.CLICK, () => {
             this.replaceView("Town")
         })
+
+        this.heroesBtn.node.on(Button.EventType.CLICK, () => {
+            this.replaceView("Heroes")
+        })
     }
 
     mapViews(){
@@ -66,6 +74,10 @@ export class HomeScene extends Component {
         this.viewDictionary.add("Town", {
             active: false,
             viewPrefab: this.townPrefab, button: this.townBtn, node: null
+        })
+        this.viewDictionary.add("Heroes", {
+            active: false,
+            viewPrefab: this.heroesPrefab, button: this.heroesBtn, node: null
         })
     }
 
@@ -99,8 +111,6 @@ export class HomeScene extends Component {
         viewObject.button.normalSprite = this.hoverButtonSprite
         viewObject.active = true
         viewObject.node = newNode
-
-        game.config.orientation = "portrait"
     }
 
     update(deltaTime: number) {

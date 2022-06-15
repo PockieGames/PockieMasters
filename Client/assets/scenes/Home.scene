@@ -97,6 +97,13 @@
     "townBtn": {
       "__id__": 13
     },
+    "heroesPrefab": {
+      "__uuid__": "5013d0ef-11f3-48e3-b755-9fa47fff2e5d",
+      "__expectedType__": "cc.Prefab"
+    },
+    "heroesBtn": {
+      "__id__": 86
+    },
     "chapterPrefab": {
       "__uuid__": "56c62ae7-8cbf-43e8-b467-ff722b1858c3",
       "__expectedType__": "cc.Prefab"
