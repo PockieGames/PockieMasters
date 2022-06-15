@@ -14,6 +14,10 @@ export class HomeScene extends Component {
     viewNode: Node
 
     @property(Prefab)
+    townPrefab: Prefab
+    @property(Button)
+    townBtn: Button
+    @property(Prefab)
     chapterPrefab: Prefab
     @property(Button)
     chapterBtn: Button
@@ -44,6 +48,10 @@ export class HomeScene extends Component {
         this.shopButton.node.on(Button.EventType.CLICK, () => {
             this.replaceView("Shop")
         })
+
+        this.townBtn.node.on(Button.EventType.CLICK, () => {
+            this.replaceView("Town")
+        })
     }
 
     mapViews(){
@@ -55,10 +63,18 @@ export class HomeScene extends Component {
             active: false,
             viewPrefab: this.chapterPrefab, button: this.chapterBtn, node: null
         })
+        this.viewDictionary.add("Town", {
+            active: false,
+            viewPrefab: this.townPrefab, button: this.townBtn, node: null
+        })
     }
 
     // In the View Node, instantiate the new view, delete the old one
     replaceView(view: string) {
+
+        if(this.viewNode.children.length > 0)
+            if(this.viewNode.children[0].name == view)
+                return
 
         let viewObject = this.viewDictionary.get(view)
         if(viewObject == undefined){
@@ -67,6 +83,7 @@ export class HomeScene extends Component {
         }
 
         let newNode = instantiate(viewObject.viewPrefab)
+        newNode.name = view
         newNode.setParent(this.viewNode)
 
         let activeView = this.viewDictionary.values().find(x => x.active == true)
