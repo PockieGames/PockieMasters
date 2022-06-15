@@ -1,4 +1,4 @@
-import { Canvas, find, instantiate, Prefab, Node } from "cc";
+import { Canvas, find, instantiate, Prefab, Node, game } from "cc";
 import ResourceManager from "../manager/ResourceManager";
 import Dictionary from "../shared/game/utils/Dictionary";
 import Logger from "../utils/Logger";
@@ -13,6 +13,26 @@ export default class UIManager extends Singleton{
 
     private uiDict: Dictionary<UIBase> = new Dictionary<UIBase>()
     private popupDict: Dictionary<UIBase> = new Dictionary<UIBase>()
+
+    private loadingCanvas: Node
+
+    async showLoad(){
+
+        if(this.loadingCanvas)
+            return this.loadingCanvas.active = true
+
+        let prefab = await ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("ui/NetLoadUI")
+        let loadNode = instantiate(prefab)
+        loadNode.name = "LoadingUI"
+        game.addPersistRootNode(loadNode)
+        this.loadingCanvas = loadNode
+        loadNode.active = true
+    }
+
+    hideLoad(){
+        if(this.loadingCanvas)
+            return this.loadingCanvas.active = false
+    }
 
     getCanvas(): Canvas{
         if(this._canvas == null){

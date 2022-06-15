@@ -1,4 +1,4 @@
-import { AnimationComponent, Camera, Color, Component, director, Enum, EventMouse, EventTouch, ImageAsset, input, Input, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, SpriteFrame, Texture2D, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
+import { AnimationComponent, Camera, Color, Component, director, Enum, EventMouse, EventTouch, find, ImageAsset, input, Input, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, SpriteFrame, Texture2D, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
 import TileColors from "../Constants";
 import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
@@ -18,6 +18,7 @@ import MapAttackableObject from "../shared/game/battle/MapAttackableObject";
 import MapTile from "../shared/game/battle/MapTile";
 import Spell from "../shared/game/battle/spells/Spell";
 import SpellData from "../shared/game/data/SpellData";
+import { HomeScene } from "../scene/HomeScene";
 
 const { ccclass, property } = _decorator;
 
@@ -106,7 +107,9 @@ export default class Battlefield extends Component {
             if(!this.resultNode)
                 return
             this.resultNode.getChildByName("bg").on(Node.EventType.MOUSE_UP || Node.EventType.TOUCH_END, () => {
-                director.loadScene("chapter")
+                director.loadScene("home", () => {
+                    find("Home").getComponent(HomeScene).sceneToLoad = "Story"
+                })
             })
         }, 1000)
     }
