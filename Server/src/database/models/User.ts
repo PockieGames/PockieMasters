@@ -13,6 +13,8 @@ interface UserFields {
     tutorialStep: number
     currencyFree: number
     currencyPremium: number
+    heroes: string
+    inventory: string
     createdAt?: Date
     updatedAt?: Date
     deletedAt?: Date
@@ -34,6 +36,8 @@ class User extends Model<UserFields, UserInput> implements UserFields{
     tutorialStep!: number
     currencyFree!: number
     currencyPremium!: number
+    heroes!: string
+    inventory!: string
 
     public readonly createdAt!: Date
     public readonly updatedAt!: Date
@@ -86,6 +90,14 @@ User.init({
     currencyPremium: {
       type: DataTypes.INTEGER,
       defaultValue: 0
+    },
+    heroes: {
+      type: DataTypes.STRING,
+      defaultValue: "{}"
+    },
+    inventory: {
+      type: DataTypes.STRING,
+      defaultValue: "{}"
     }
   }, {
     timestamps: true,

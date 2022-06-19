@@ -13,7 +13,6 @@ export default class GameData extends Singleton{
 
     async loadData(){
         this.heroData = (await ResourceManager.Instance<ResourceManager>().loadAsset<JsonAsset>("gdata/heroData")).json as HeroData[]
-        spells.get("d")
         this.initialized = true
     }
 

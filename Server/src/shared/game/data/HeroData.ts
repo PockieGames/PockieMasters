@@ -3,4 +3,5 @@ export default class HeroData{
     name: string
     sprite: string
     baseMovement: number
+    spells: string[]
 }

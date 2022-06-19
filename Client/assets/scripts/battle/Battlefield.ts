@@ -331,6 +331,10 @@ export default class Battlefield extends Component {
         myHero.name = "Maufeat"
         myHero.sprite = "24026"
         myHero.baseMovement = 5
+        myHero.spells = [
+            "TestSpell",
+            "TestSpell2"
+        ]
         this.placeCharacter(myHero, { x: 1, y: 2 }, Team.TEAM_BLUE)
 
         this.scheduleOnce(() => { this.startBattle() }, 1)
@@ -353,8 +357,10 @@ export default class Battlefield extends Component {
         tileObjectComponent.spriteId = object.sprite
         tileObjectComponent.render(team)
 
-        tileObjectComponent.spellSlots.push(spells.get("d"))
-        tileObjectComponent.spellSlots.push(spells.get("e"))
+        object.spells.forEach((spell: string) => {
+            let spellData = spells.get(spell)
+            tileObjectComponent.spellSlots.push(spellData)
+        })
 
         this.units.push({ id: tileObjectComponent.id, team: team, unit: tileObjectComponent, moved: false, attacked: false, currentState: "NONE" })
 
@@ -519,26 +525,6 @@ export default class Battlefield extends Component {
                     this.hideActionBar()
                     break
             }
-
-            /*if (this.coloredTiles.find(x => x == tile)) {
-                if (!unit.moved) {
-                    this.moveObject(this.selectedTile, tile)
-                    this.hideActionBar()
-                } else {
-                    console.log("Unit: " + unit.id + " already moved")
-                }
-            } else {
-
-                
-                if(this.selectedTile.tileObject){
-                    unit = this.units.find(x => x.unit == this.selectedTile.tileObject)
-                    unit.currentState == "NONE"
-                }
-        
-                this.selectedTile = null
-                this.clearTiles()
-                this.hideActionBar()
-            }*/
         }
     }
 

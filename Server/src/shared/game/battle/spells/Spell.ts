@@ -1,5 +1,7 @@
+import SpellData from "../../data/SpellData";
+
 export default class Spell {
     
-    spellData: any
+    spellData: SpellData
     
 }

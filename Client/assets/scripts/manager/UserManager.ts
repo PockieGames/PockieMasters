@@ -1,13 +1,24 @@
 import { sys } from "cc";
+import HeroData from "../shared/game/data/HeroData";
 import { User } from "../shared/types/User";
 import { UserSystemInfos } from "../shared/types/UserSystemInfos";
 import Singleton from "../utils/Singleton";
 import StorageUtils from "../utils/StorageUtils";
 import { generateUUID } from "../utils/UUID";
+import GameData from "./GameData";
 
 export default class UserManager extends Singleton{
 
     currentUser?: User
+    heroes: HeroData[] = []
+
+    populateHeroes(data){
+        data.forEach((hero) => {
+            let heroData = GameData.Instance<GameData>().heroData.find(x => x.id == hero.id)
+            if(heroData)
+                this.heroes.push(heroData)
+        })
+    }
 
     getIdentifier(): string{
         return StorageUtils.readData("sys.identifier")

@@ -1,8 +1,9 @@
 import MapObject from '../../shared/game/battle/MapTileObject'
 import { _decorator, Component, Node, dragonBones, Vec3, Color, Tween, tween, JsonAsset } from 'cc';
 import ResourceManager from '../../manager/ResourceManager';
-import Spell from '../../shared/game/battle/spells/Spell'
 import { Team } from '../../shared/game/SharedConstants';
+import SpellData from '../../shared/game/data/SpellData';
+import Spell from '../../shared/game/battle/spells/Spell';
 const { ccclass, property } = _decorator;
 
 @ccclass('TileObject')
@@ -11,7 +12,7 @@ export class TileObject extends Component {
     id: number 
     spriteId: string = "24026"
     sprite: dragonBones.ArmatureDisplay
-    spellSlots: Spell[] = []
+    spellSlots: SpellData[] = []
 
     constructor(){
         super()

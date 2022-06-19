@@ -1,4 +1,7 @@
 import { _decorator, Component, Node, Prefab, instantiate, Button, Sprite, SpriteFrame, director, game, Canvas } from 'cc';
+import NetworkManager from '../manager/NetworkManager';
+import UserManager from '../manager/UserManager';
+import HeroData from '../shared/game/data/HeroData';
 import Dictionary from '../shared/game/utils/Dictionary';
 import UIManager from '../ui/UIManager';
 import HomeUI from '../ui/views/HomeUI';
@@ -8,7 +11,7 @@ const { ccclass, property } = _decorator;
 @ccclass('HomeScene')
 export class HomeScene extends Component {
 
-    sceneToLoad: string = "Shop"
+    sceneToLoad: string = "Story"
 
     @property(Node)
     viewNode: Node
@@ -60,6 +63,16 @@ export class HomeScene extends Component {
         this.heroesBtn.node.on(Button.EventType.CLICK, () => {
             this.replaceView("Heroes")
         })
+
+        this.fetchData()
+    }
+
+    async fetchData(){
+        let heroRes = JSON.parse((await NetworkManager.Instance<NetworkManager>().callApi("user/Heroes")).res.heroes)
+        UserManager.Instance<UserManager>().populateHeroes(heroRes)
+        console.log("heroRes")
+        console.log(UserManager.Instance<UserManager>().heroes)
+
     }
 
     mapViews(){

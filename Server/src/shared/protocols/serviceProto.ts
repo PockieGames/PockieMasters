@@ -1,6 +1,7 @@
 import { ServiceProto } from 'tsrpc-proto';
 import { ReqTest, ResTest } from './PtlTest';
 import { ReqAuth, ResAuth } from './user/PtlAuth';
+import { ReqHeroes, ResHeroes } from './user/PtlHeroes';
 import { ReqLogout, ResLogout } from './user/PtlLogout';
 import { ReqReg, ResReg } from './user/PtlReg';
 import { ReqUser, ResUser } from './user/PtlUser';
@@ -14,6 +15,10 @@ export interface ServiceType {
         "user/Auth": {
             req: ReqAuth,
             res: ResAuth
+        },
+        "user/Heroes": {
+            req: ReqHeroes,
+            res: ResHeroes
         },
         "user/Logout": {
             req: ReqLogout,
@@ -34,7 +39,7 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 7,
+    "version": 8,
     "services": [
         {
             "id": 3,
@@ -50,6 +55,14 @@ export const serviceProto: ServiceProto<ServiceType> = {
             "type": "api",
             "conf": {
                 "needLogin": false
+            }
+        },
+        {
+            "id": 6,
+            "name": "user/Heroes",
+            "type": "api",
+            "conf": {
+                "needLogin": true
             }
         },
         {
@@ -172,6 +185,39 @@ export const serviceProto: ServiceProto<ServiceType> = {
                 {
                     "id": 1,
                     "name": "__ssoToken",
+                    "type": {
+                        "type": "String"
+                    }
+                }
+            ]
+        },
+        "user/PtlHeroes/ReqHeroes": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseRequest"
+                    }
+                }
+            ]
+        },
+        "user/PtlHeroes/ResHeroes": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseResponse"
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "heroes",
                     "type": {
                         "type": "String"
                     }

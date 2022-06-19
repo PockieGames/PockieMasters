@@ -10,6 +10,6 @@ export enum Team {
 }
 
 export const spells: Dictionary<SpellData> = new Dictionary<SpellData>({
-    "d": new TestSpell(),
-    "e": new TestSpell2()
+    "TestSpell": new TestSpell(),
+    "TestSpell2": new TestSpell2()
 })

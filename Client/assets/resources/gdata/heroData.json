@@ -3,6 +3,10 @@
         "id": 1,
         "name": "Test Hero",
         "sprite": "13046",
-        "baseMovement": 3
+        "baseMovement": 3,
+        "spells": [
+            "TestSpell",
+            "TestSpell2"
+        ]
     }
 ]

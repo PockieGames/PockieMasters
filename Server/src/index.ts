@@ -26,14 +26,11 @@ async function init() {
         exit();
     })
     
-    //User.sync({alter: true})
 };
 
 async function main() {
     await init()
     await server.start()
-    Database.connection.sync({force:true})
-    console.log(spells.get("d"))
 }
 
 main();
