@@ -48,7 +48,7 @@
         "frame": 2.4166666666666665,
         "func": "changeScene",
         "params": [
-          "home"
+          "story"
         ]
       }
     ]
