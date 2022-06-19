@@ -55,6 +55,9 @@ export default class LoginUI extends UIBase{
 
         this.logoutBtn.node.on(Button.EventType.CLICK, async() => {
             let res = await NetworkManager.Instance<NetworkManager>().callApi("user/Logout", {})
+            let userManager = UserManager.Instance<UserManager>()
+            userManager.reset();
+            console.log(userManager)
             console.log(res)
         })
 
@@ -62,34 +65,11 @@ export default class LoginUI extends UIBase{
 
             let userManager = UserManager.Instance<UserManager>()
 
-            if(userManager.getIdentifier() && userManager.getPassword()){
+            console.log(userManager);
+            console.log(userManager.getIdentifier());
+            console.log(userManager.getPassword());
 
-                let res = await NetworkManager.Instance<NetworkManager>().callApi("user/Auth", {
-                    uuid: userManager.getUUID(),
-                    identifier: userManager.getIdentifier(),
-                    password: userManager.getPassword()
-                })
-
-                if(res.isSucc){
-                    // Sucessfully logged in. Handle login.
-                    // Probably check if Tutorial is done, etc.
-
-                    // Get and Set User Infos
-                    let user = await NetworkManager.Instance<NetworkManager>().callApi("user/User")
-                    userManager.currentUser = user.res
-
-                    if(userManager.currentUser.tutorialStep > 10){
-                        director.loadScene("Home")
-                    } else {
-                        Logger.Info("Go-to-Tutorial")
-                        UIManager.Instance<UIManager>().OpenUI(TutorialUI).then(() => {
-                            UIManager.Instance<UIManager>().HideUI(this)
-                        })
-                    }
-                }
-
-            } else { // NO Identifier, register!
-
+            if(!userManager.getIdentifier() && !userManager.getPassword()){
                 let res = await NetworkManager.Instance<NetworkManager>().callApi("user/Reg", {
                     uuid: userManager.getUUID(),
                     osInfos: userManager.getSystemInfo(),
@@ -103,11 +83,33 @@ export default class LoginUI extends UIBase{
     
                 userManager.setIdentifier(res.res.identifier)
                 userManager.setPassword(res.res.password)
-    
-                UIManager.Instance<UIManager>().HideUI(this)
 
             }
+            
 
+            let res = await NetworkManager.Instance<NetworkManager>().callApi("user/Auth", {
+                uuid: userManager.getUUID(),
+                identifier: userManager.getIdentifier(),
+                password: userManager.getPassword()
+            })
+
+            if(res.isSucc){
+                // Sucessfully logged in. Handle login.
+                // Probably check if Tutorial is done, etc.
+
+                // Get and Set User Infos
+                let user = await NetworkManager.Instance<NetworkManager>().callApi("user/User")
+                userManager.currentUser = user.res
+
+                if(userManager.currentUser.tutorialStep > 10){
+                    director.loadScene("Home")
+                } else {
+                    Logger.Info("Go-to-Tutorial")
+                    UIManager.Instance<UIManager>().OpenUI(TutorialUI).then(() => {
+                        UIManager.Instance<UIManager>().HideUI(this)
+                    })
+                }
+            }
         }, this)
     }
 

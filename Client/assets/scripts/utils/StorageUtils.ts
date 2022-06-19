@@ -11,4 +11,8 @@ export default class StorageUtils {
         return sys.localStorage.getItem(dataKey)
     }
 
+    static deleteData(dataKey: string) {
+        return sys.localStorage.removeItem(dataKey);
+    }
+
 }

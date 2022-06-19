@@ -25,6 +25,11 @@ export default class UserManager extends Singleton{
         StorageUtils.saveData("sys.password", password)
     }
 
+    reset() {
+        StorageUtils.deleteData("sys.identifier");
+        StorageUtils.deleteData("sys.password");
+    }
+
     // Generate a UUID that persists
     getUUID(): string{
         var uuid = StorageUtils.readData("sys.uuid")
