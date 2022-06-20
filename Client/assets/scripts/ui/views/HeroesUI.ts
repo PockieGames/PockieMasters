@@ -1,6 +1,9 @@
-import { Component, dragonBones, instantiate, Node, Prefab, _decorator } from "cc";
+import { Component, dragonBones, instantiate, isValid, Node, Prefab, _decorator } from "cc";
+import ResourceManager from "../../manager/ResourceManager";
 import UserManager from "../../manager/UserManager";
 import HeroData from "../../shared/game/data/HeroData";
+import { HeroFrame } from "../HeroFrame";
+import { delay } from "../../Constants"
 
 const { ccclass, property } = _decorator;
 
@@ -9,6 +12,7 @@ export default class HeroesUI extends Component{
 
     @property(dragonBones.ArmatureDisplay)
     dragonBonesComponent: dragonBones.ArmatureDisplay
+    dragonBoneNode: Node
 
     @property(Node)
     scrollViewContent: Node
@@ -17,12 +21,34 @@ export default class HeroesUI extends Component{
     heroFramePrefab: Prefab
 
     start(){
+        this.dragonBoneNode = this.dragonBonesComponent.node
         UserManager.Instance<UserManager>().heroes.forEach((heroData: HeroData) => {
+
             let heroFrame = instantiate(this.heroFramePrefab)
             heroFrame.setParent(this.scrollViewContent)
-            heroFrame.on(Node.EventType.MOUSE_UP || Node.EventType.TOUCH_END, () => {
-                heroData.sprite
+
+            let heroFrameComp = heroFrame.getComponent(HeroFrame)
+            ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then((spriteFrame) => {
+                heroFrameComp.setIcon(spriteFrame)
             })
+
+            heroFrameComp.onClick = () => {
+
+                this.dragonBonesComponent.destroy()
+
+                ResourceManager.Instance<ResourceManager>().loadDragonBones("textures/characters/heroDB" + heroData.sprite + "_ske", "textures/characters/heroDB" + heroData.sprite).then(async (dragonBone) => {
+                    while(isValid(this.dragonBonesComponent)){
+                        // Wait for dragonBones Component to be destroyed
+                        await delay(1)
+                    }
+                    this.dragonBonesComponent = this.dragonBoneNode.addComponent(dragonBones.ArmatureDisplay)
+                    this.dragonBonesComponent.dragonAsset = dragonBone.dbAsset
+                    this.dragonBonesComponent.dragonAtlasAsset = dragonBone.dbAtlas
+                    this.dragonBonesComponent.armatureName = "armatureName"
+                    this.dragonBonesComponent.playAnimation('wait', 0)
+                })
+            }
+
         })
     }
 

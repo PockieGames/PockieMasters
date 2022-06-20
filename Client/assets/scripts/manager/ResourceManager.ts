@@ -1,4 +1,4 @@
-import { Asset, ImageAsset, JsonAsset, resources, SpriteFrame, Texture2D } from "cc"
+import { Asset, dragonBones, ImageAsset, JsonAsset, resources, SpriteFrame, Texture2D } from "cc"
 import Singleton from "../utils/Singleton"
 
 export default class ResourceManager extends Singleton{
@@ -8,6 +8,33 @@ export default class ResourceManager extends Singleton{
             resources.load<T>(path, (err, asset: T) => {
                 if(err) reject(err.message)
                 resolve(asset)
+            })
+        })
+    }
+
+    async loadSpriteFrame(path: string): Promise<SpriteFrame>{
+        return new Promise<SpriteFrame>((resolve, reject) => {
+            resources.load<ImageAsset>(path, (err, asset: ImageAsset) => {
+                if(err) reject(err.message)
+                let spriteFrame = new SpriteFrame()
+                let tex = new Texture2D()
+                tex.image = asset
+                spriteFrame.texture = tex
+                resolve(spriteFrame)
+            })
+        })
+    }
+
+    async loadDragonBones(dbAssetPath: string, dbAtlasPath: string): Promise<{dbAsset: dragonBones.DragonBonesAsset, dbAtlas: dragonBones.DragonBonesAtlasAsset}> {
+        return new Promise<{dbAsset: dragonBones.DragonBonesAsset, dbAtlas: dragonBones.DragonBonesAtlasAsset}>((resolve, reject) => {
+            resources.load<dragonBones.DragonBonesAsset>(dbAssetPath, (err, dbAsset) => {
+                if(err)
+                    reject(err)
+                resources.load<dragonBones.DragonBonesAtlasAsset>(dbAtlasPath, (err, dbAtlas) => {
+                    if(err)
+                        reject(err)
+                    resolve({dbAsset: dbAsset, dbAtlas: dbAtlas})
+                })
             })
         })
     }

@@ -8,5 +8,15 @@
             "TestSpell",
             "TestSpell2"
         ]
+    },
+    {
+        "id": 2,
+        "name": "Test Hero 2",
+        "sprite": "24026",
+        "baseMovement": 3,
+        "spells": [
+            "TestSpell",
+            "TestSpell2"
+        ]
     }
-]
+] 

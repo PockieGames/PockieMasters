@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Sprite, Label } from 'cc';
+import { _decorator, Component, Node, Sprite, Label, Button, SpriteFrame } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('HeroFrame')
@@ -11,8 +11,16 @@ export class HeroFrame extends Component {
     @property(Label)
     lvl: Label
 
-    populate(heroData){
-        
+    onClick: () => any = async () => {}
+
+    start(){
+        this.node.on(Node.EventType.MOUSE_UP || Node.EventType.TOUCH_END, () => {
+            this.onClick()
+        })
+    }
+
+    setIcon(spriteFrame: SpriteFrame){
+        this.icon.spriteFrame = spriteFrame
     }
 
 }

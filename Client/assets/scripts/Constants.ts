@@ -6,3 +6,7 @@ export default class TileColors {
     static readonly MOVEMENT_HOVER: number[] = [255, 155, 10 , 120];
     
 }
+
+export const delay = function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+}

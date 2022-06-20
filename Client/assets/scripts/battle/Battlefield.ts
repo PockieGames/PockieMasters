@@ -164,12 +164,8 @@ export default class Battlefield extends Component {
     }
 
     showActionBar() {
-        ResourceManager.Instance<ResourceManager>().loadAsset<ImageAsset>("textures/characters/icons/hero" + this.selectedTile.tileObject.spriteId)
-            .then((iconAsset) => {
-                let spriteFrame = new SpriteFrame()
-                let tex = new Texture2D()
-                tex.image = iconAsset
-                spriteFrame.texture = tex
+        ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + this.selectedTile.tileObject.spriteId)
+            .then((spriteFrame) => {
                 this.actionBar.getChildByName("Icon").getComponent(Sprite).spriteFrame = spriteFrame
                 this.actionBar.active = true
             }).catch(() => {
@@ -189,15 +185,8 @@ export default class Battlefield extends Component {
             spellNode.off(Node.EventType.TOUCH_START)
             spellNode.off(Node.EventType.TOUCH_CANCEL)
             
-            ResourceManager.Instance<ResourceManager>().loadAsset<ImageAsset>("textures/spells/" + spellData.icon).then((iconAsset) => {
-
-                let spriteFrame = new SpriteFrame()
-                let tex = new Texture2D()
-                tex.image = iconAsset
-                spriteFrame.texture = tex
-
+            ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/spells/" + spellData.icon).then((spriteFrame) => {
                 spellNode.getComponent(Sprite).spriteFrame = spriteFrame
-
             })
 
             spellNode.on(Node.EventType.MOUSE_LEAVE || Node.EventType.TOUCH_CANCEL, () => {
@@ -251,13 +240,7 @@ export default class Battlefield extends Component {
         vec3.y = -190
         this.spellTooltipNode.position = vec3
         
-        ResourceManager.Instance<ResourceManager>().loadAsset<ImageAsset>("textures/spells/" + spell.icon).then((iconAsset) => {
-
-            let spriteFrame = new SpriteFrame()
-            let tex = new Texture2D()
-            tex.image = iconAsset
-            spriteFrame.texture = tex
-            
+        ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/spells/" + spell.icon).then((spriteFrame) => {
             this.spellTooltipNode.getChildByName("SpellIcon").getComponent(Sprite).spriteFrame = spriteFrame
 
             this.spellTooltipNode.getChildByName("SpellName").getComponent(Label).string = spell.name

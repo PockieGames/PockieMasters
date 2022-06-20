@@ -12,6 +12,10 @@
     {
       "name": "LOAD",
       "value": 524288
+    },
+    {
+      "name": "CHEATUI",
+      "value": 262144
     }
   ]
 }

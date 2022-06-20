@@ -8,6 +8,7 @@ import User from "./database/models/User";
 import { enableAuthentication, parseCurrentUser } from "./models/UserUtil";
 import { spells } from "./shared/game/SharedConstants";
 import TestSpell from "./shared/game/data/Spells/TestSpell";
+import Heroes from "./database/models/Heroes";
 
 export const server = new HttpServer(serviceProto, {
     port: 3001,
@@ -22,10 +23,11 @@ async function init() {
 
     await Database.connect().catch(() => {
         Logger.error("Couldn't connect to Database")
-
-        exit();
+        exit()
     })
-    
+
+    //Database.setupDatabase()
+
 };
 
 async function main() {

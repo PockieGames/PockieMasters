@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import Database, { sequelize } from "../Database";
+import { DataTypes, Model, Optional, Sequelize } from "sequelize";
+import Database from "../Database";
 
 interface UserFields {
     id: number
@@ -101,7 +101,14 @@ User.init({
     }
   }, {
     timestamps: true,
-    sequelize: sequelize,
+    sequelize: new Sequelize({
+      dialect: 'mysql',
+      host: 'localhost',
+      username: 'root',
+      password: '',
+      database: 'pockie',
+      logging: false
+  }),
     paranoid: true
   })
 

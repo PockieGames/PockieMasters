@@ -1,6 +1,8 @@
 import MySQL from 'mysql'
 import { Sequelize } from 'sequelize'
 import Logger from '../logger'
+import Heroes from './models/Heroes'
+import User from './models/User'
 
 export default class Database {
 
@@ -34,13 +36,8 @@ export default class Database {
         Database.connection.query(queryString, options)
     }
     
+    static async setupDatabase(){
+        await User.sync({alter:true})
+        await Heroes.sync({force:true})
+    }
 }
-
-export const sequelize = new Sequelize({
-    dialect: 'mysql',
-    host: 'localhost',
-    username: 'root',
-    password: '',
-    database: 'pockie',
-    logging: false
-})
