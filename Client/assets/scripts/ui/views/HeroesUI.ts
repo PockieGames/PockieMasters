@@ -1,4 +1,4 @@
-import { Component, dragonBones, instantiate, isValid, Node, Prefab, _decorator } from "cc";
+import { Component, dragonBones, instantiate, isValid, Label, Node, Prefab, _decorator } from "cc";
 import ResourceManager from "../../manager/ResourceManager";
 import UserManager from "../../manager/UserManager";
 import HeroData from "../../shared/game/data/HeroData";
@@ -13,6 +13,9 @@ export default class HeroesUI extends Component{
     @property(dragonBones.ArmatureDisplay)
     dragonBonesComponent: dragonBones.ArmatureDisplay
     dragonBoneNode: Node
+
+    @property(Label)
+    heroNameLabel: Label
 
     @property(Node)
     scrollViewContent: Node
@@ -46,6 +49,7 @@ export default class HeroesUI extends Component{
                     this.dragonBonesComponent.dragonAtlasAsset = dragonBone.dbAtlas
                     this.dragonBonesComponent.armatureName = "armatureName"
                     this.dragonBonesComponent.playAnimation('wait', 0)
+                    this.heroNameLabel.string = heroData.name
                 })
             }
 
