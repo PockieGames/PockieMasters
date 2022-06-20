@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, input, Input, EventKeyboard, KeyCode, game, Prefab, Button, instantiate, Label, EditBox, EventHandler } from 'cc';
+import { _decorator, Component, Node, input, Input, EventKeyboard, KeyCode, game, Prefab, Button, instantiate, Label, EditBox, EventHandler, director } from 'cc';
 import NetworkManager from '../manager/NetworkManager';
 import Dictionary from '../shared/game/utils/Dictionary';
 const { ccclass, property } = _decorator;
@@ -35,17 +35,25 @@ export class CheatUI extends Component {
                 let cmdInfos = cmd.split(" ")
                 let apiName: any = cmdInfos[1]
                 let apiBody: any = cmdInfos[2] ?? {}
-                let response = await NetworkManager.Instance<NetworkManager>().callApi(apiName, apiBody)
                 this.printToConsole("[Request] >> " + apiName + " - " + JSON.stringify(apiBody))
+                let response = await NetworkManager.Instance<NetworkManager>().callApi(apiName, apiBody)
                 this.printToConsole("[Response] << " + JSON.stringify(response.res))
             }
         },
+        "/changeScene": {
+            help: "/changeScene {SCENENAME} : Changes Scene",
+            execute: async (cmd) => {
+                let cmdInfos = cmd.split(" ")
+                director.loadScene(cmdInfos[1])
+            }
+        }
     })
 
     start() {
         game.addPersistRootNode(this.node)
         this.node.active = false
         input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this)
+        input.on(Input.EventType.KEY_DOWN, this.onEnter, this)
         this.sendBtn.node.on(Button.EventType.CLICK, () => {
             this.parseCmd(this.editBox.string)
             this.editBox.string = ""
@@ -65,6 +73,13 @@ export class CheatUI extends Component {
         let prefab = instantiate(this.consoleItemPrefab)
         prefab.getComponent(Label).string = msg
         prefab.parent = this.consoleViewContainer
+    }
+
+    onEnter(event: EventKeyboard){
+        if(event.keyCode == KeyCode.ENTER){
+            this.parseCmd(this.editBox.string)
+            this.editBox.string = ""
+        }
     }
 
     onKeyDown (event: EventKeyboard) {
