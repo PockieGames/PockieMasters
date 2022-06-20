@@ -14,7 +14,7 @@ export default class UserManager extends Singleton{
 
     populateHeroes(data){
         data.forEach((hero) => {
-            let heroData = GameData.Instance<GameData>().heroData.find(x => x.id == hero.id)
+            let heroData = GameData.Instance<GameData>().heroData.find(x => x.id == hero.heroId)
             if(heroData)
                 this.heroes.push(heroData)
         })

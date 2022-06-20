@@ -39,7 +39,7 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 8,
+    "version": 9,
     "services": [
         {
             "id": 3,
@@ -219,7 +219,32 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "id": 0,
                     "name": "heroes",
                     "type": {
-                        "type": "String"
+                        "type": "Array",
+                        "elementType": {
+                            "type": "Reference",
+                            "target": "../types/Hero/Hero"
+                        }
+                    }
+                }
+            ]
+        },
+        "../types/Hero/Hero": {
+            "type": "Interface",
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "id",
+                    "type": {
+                        "type": "Number",
+                        "scalarType": "uint"
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "heroId",
+                    "type": {
+                        "type": "Number",
+                        "scalarType": "uint"
                     }
                 }
             ]

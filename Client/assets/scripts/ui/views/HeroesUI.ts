@@ -22,7 +22,7 @@ export default class HeroesUI extends Component{
 
     start(){
         this.dragonBoneNode = this.dragonBonesComponent.node
-        UserManager.Instance<UserManager>().heroes.forEach((heroData: HeroData) => {
+        UserManager.Instance<UserManager>().heroes.forEach((heroData: HeroData, index) => {
 
             let heroFrame = instantiate(this.heroFramePrefab)
             heroFrame.setParent(this.scrollViewContent)
@@ -47,6 +47,10 @@ export default class HeroesUI extends Component{
                     this.dragonBonesComponent.armatureName = "armatureName"
                     this.dragonBonesComponent.playAnimation('wait', 0)
                 })
+            }
+
+            if(index == 0){
+                heroFrameComp.onClick()
             }
 
         })
