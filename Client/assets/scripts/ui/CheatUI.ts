@@ -1,5 +1,6 @@
 import { _decorator, Component, Node, input, Input, EventKeyboard, KeyCode, game, Prefab, Button, instantiate, Label, EditBox, EventHandler } from 'cc';
 import NetworkManager from '../manager/NetworkManager';
+import Dictionary from '../shared/game/utils/Dictionary';
 const { ccclass, property } = _decorator;
 
 @ccclass('CheatUI')
@@ -17,6 +18,30 @@ export class CheatUI extends Component {
     @property(Button)
     sendBtn: Button
 
+    consoleCmds: Dictionary<{help: string, execute: (cmd: string) =>{}}> = new Dictionary<{help: string, execute: (cmd: string) =>{}}>({
+        "/help": {
+            help: "/help : Shows a list of available commands.",
+            execute: (cmd) => {
+                this.printToConsole("Available Commands: =============")
+                this.consoleCmds.values().forEach((cmd) => {
+                    this.printToConsole(cmd.help)
+                })
+                this.printToConsole("==============================")
+            }
+        },
+        "/callApi": {
+            help: "/callApi {ENDPOINT} {BODY} : Call an API on the Server.",
+            execute: async (cmd) => {
+                let cmdInfos = cmd.split(" ")
+                let apiName: any = cmdInfos[1]
+                let apiBody: any = cmdInfos[2] ?? {}
+                let response = await NetworkManager.Instance<NetworkManager>().callApi(apiName, apiBody)
+                this.printToConsole("[Request] >> " + apiName + " - " + JSON.stringify(apiBody))
+                this.printToConsole("[Response] << " + JSON.stringify(response.res))
+            }
+        },
+    })
+
     start() {
         game.addPersistRootNode(this.node)
         this.node.active = false
@@ -29,20 +54,11 @@ export class CheatUI extends Component {
 
     async parseCmd(cmd: string){
         let cmdInfos = cmd.split(" ")
-        switch(cmdInfos[0]){
-            case "/help":
-                this.printToConsole("Available Commands: NONE")
-                break
-            case "/callApi":
-                let apiName: any = cmdInfos[1]
-                let apiBody: any = cmdInfos[2] ?? {}
-                let response = await NetworkManager.Instance<NetworkManager>().callApi(apiName, apiBody)
-                this.printToConsole(JSON.stringify(response.res))
-                break
-            default:
-                this.printToConsole("CMD \""+ cmdInfos[0] +"\" not found.")
-                break
-        }
+        let cmdObject = this.consoleCmds.get(cmdInfos[0])
+        if(cmdObject)
+            cmdObject.execute(cmd)
+        else
+            this.printToConsole("CMD " + cmdInfos[0] + " not found")
     }
 
     printToConsole(msg: string){
