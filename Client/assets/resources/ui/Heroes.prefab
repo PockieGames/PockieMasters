@@ -4405,6 +4405,9 @@
     "heroNameLabel": {
       "__id__": 75
     },
+    "heroTypeIcon": {
+      "__id__": 68
+    },
     "scrollViewContent": {
       "__id__": 19
     },

@@ -4,7 +4,6 @@ import UserManager from '../manager/UserManager';
 import HeroData from '../shared/game/data/HeroData';
 import Dictionary from '../shared/game/utils/Dictionary';
 import UIManager from '../ui/UIManager';
-import HomeUI from '../ui/views/HomeUI';
 import MessageBox from '../ui/views/MessageBox';
 const { ccclass, property } = _decorator;
 
@@ -83,6 +82,8 @@ export class HomeScene extends Component {
 
     updateTopNode(){
         this.topUserInfo.getChildByName("username").getComponent(Label).string = UserManager.Instance<UserManager>().currentUser.username
+        this.topUserInfo.getChildByName("gold").getChildByName("goldLabel").getComponent(Label).string = UserManager.Instance<UserManager>().currentUser.currencyFree.toString()
+        this.topUserInfo.getChildByName("diamonds").getChildByName("diamondLabel").getComponent(Label).string = UserManager.Instance<UserManager>().currentUser.currencyPremium.toString()
     }
 
     mapViews(){

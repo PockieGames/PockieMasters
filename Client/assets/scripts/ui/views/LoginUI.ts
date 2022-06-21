@@ -101,7 +101,7 @@ export default class LoginUI extends UIBase {
 
                 // Get and Set User Infos
                 let user = await NetworkManager.Instance<NetworkManager>().callApi("user/User")
-                userManager.currentUser = user.res
+                userManager.currentUser = user.res.user
 
                 if (userManager.currentUser.tutorialStep > 10) {
                     director.loadScene("Home")
