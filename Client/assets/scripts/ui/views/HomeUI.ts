@@ -6,6 +6,8 @@ const { ccclass, property } = _decorator;
 @ccclass('HomeUI')
 export default class HomeUI extends UIBase {
 
+    prefabName = "HomeUI"
+
     @property(Button)
     chapterButton: Button
 

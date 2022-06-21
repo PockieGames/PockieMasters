@@ -12,6 +12,8 @@ const { ccclass, property } = _decorator;
 @ccclass("HeroesUI")
 export default class HeroesUI extends Component{
 
+    prefabName = "HeroesUI"
+
     @property(dragonBones.ArmatureDisplay)
     dragonBonesComponent: dragonBones.ArmatureDisplay
     dragonBoneNode: Node

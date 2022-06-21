@@ -6,6 +6,8 @@ const { ccclass, property } = _decorator;
 @ccclass("MessageBox")
 export default class MessageBox extends UIBase{
     
+    prefabName = "MessageBox"
+
     @property({type: Node})
     dialogue: Node
     @property({type: Label})

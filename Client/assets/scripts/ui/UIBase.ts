@@ -6,6 +6,8 @@ const { ccclass, property } = _decorator;
 @ccclass("UIBase")
 export default class UIBase extends Component{
 
+    public prefabName: string =  "PLEASE SET PREFAB NAME"
+
     protected uiData: any
 
     setUIData(data: any){

@@ -6,6 +6,8 @@ const { ccclass, property } = _decorator;
 @ccclass('StoryUI')
 export class StoryUI extends UIBase {
 
+    prefabName = "StoryUI"
+
     @property({type: AnimatedRichText})
     animatedDialogueText: AnimatedRichText
 
