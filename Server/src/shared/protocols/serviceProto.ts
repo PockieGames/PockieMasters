@@ -1,6 +1,7 @@
 import { ServiceProto } from 'tsrpc-proto';
 import { ReqTest, ResTest } from './PtlTest';
 import { ReqAuth, ResAuth } from './user/PtlAuth';
+import { ReqCreatePlayer, ResCreatePlayer } from './user/PtlCreatePlayer';
 import { ReqHeroes, ResHeroes } from './user/PtlHeroes';
 import { ReqLogout, ResLogout } from './user/PtlLogout';
 import { ReqReg, ResReg } from './user/PtlReg';
@@ -15,6 +16,10 @@ export interface ServiceType {
         "user/Auth": {
             req: ReqAuth,
             res: ResAuth
+        },
+        "user/CreatePlayer": {
+            req: ReqCreatePlayer,
+            res: ResCreatePlayer
         },
         "user/Heroes": {
             req: ReqHeroes,
@@ -55,6 +60,14 @@ export const serviceProto: ServiceProto<ServiceType> = {
             "type": "api",
             "conf": {
                 "needLogin": false
+            }
+        },
+        {
+            "id": 7,
+            "name": "user/CreatePlayer",
+            "type": "api",
+            "conf": {
+                "needLogin": true
             }
         },
         {
@@ -187,6 +200,46 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "name": "__ssoToken",
                     "type": {
                         "type": "String"
+                    }
+                }
+            ]
+        },
+        "user/PtlCreatePlayer/ReqCreatePlayer": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseRequest"
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "name",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "hero",
+                    "type": {
+                        "type": "Number"
+                    }
+                }
+            ]
+        },
+        "user/PtlCreatePlayer/ResCreatePlayer": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseResponse"
                     }
                 }
             ]

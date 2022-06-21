@@ -9,12 +9,13 @@ import UIManager from "../UIManager";
 import MessageBox from "./MessageBox";
 import { TutorialUI } from "./TutorialUI";
 import GameData from "../../manager/GameData";
+import CreatePlayerUI from "./CreatePlayerUI";
 
 const { ccclass, property } = _decorator;
 
 @ccclass("LoginUI")
-export default class LoginUI extends UIBase{
-    
+export default class LoginUI extends UIBase {
+
     prefabName = "LoginUI"
 
     @property(Button)
@@ -39,13 +40,13 @@ export default class LoginUI extends UIBase{
         }
     ]
 
-    setupServerSelection(){
+    setupServerSelection() {
         this.serverSelectionNode.getChildByName("bg").on(Node.EventType.TOUCH_START, () => {
             this.serverSelectionNode.active = false
         })
     }
 
-    start(){
+    start() {
 
         GameData.Instance<GameData>().loadData()
 
@@ -55,7 +56,7 @@ export default class LoginUI extends UIBase{
             this.serverSelectionNode.active = true
         })
 
-        this.logoutBtn.node.on(Button.EventType.CLICK, async() => {
+        this.logoutBtn.node.on(Button.EventType.CLICK, async () => {
             let res = await NetworkManager.Instance<NetworkManager>().callApi("user/Logout", {})
             let userManager = UserManager.Instance<UserManager>()
             userManager.reset();
@@ -71,22 +72,22 @@ export default class LoginUI extends UIBase{
             console.log(userManager.getIdentifier());
             console.log(userManager.getPassword());
 
-            if(!userManager.getIdentifier() && !userManager.getPassword()){
+            if (!userManager.getIdentifier() && !userManager.getPassword()) {
                 let res = await NetworkManager.Instance<NetworkManager>().callApi("user/Reg", {
                     uuid: userManager.getUUID(),
                     osInfos: userManager.getSystemInfo(),
                 })
-    
-                if(!res.isSucc)
+
+                if (!res.isSucc)
                     return
-    
+
                 Logger.Info("Registered. Identifier: " + res.res.identifier)
-    
+
                 userManager.setIdentifier(res.res.identifier)
                 userManager.setPassword(res.res.password)
 
             }
-            
+
 
             let res = await NetworkManager.Instance<NetworkManager>().callApi("user/Auth", {
                 uuid: userManager.getUUID(),
@@ -94,7 +95,7 @@ export default class LoginUI extends UIBase{
                 password: userManager.getPassword()
             })
 
-            if(res.isSucc){
+            if (res.isSucc) {
                 // Sucessfully logged in. Handle login.
                 // Probably check if Tutorial is done, etc.
 
@@ -102,19 +103,25 @@ export default class LoginUI extends UIBase{
                 let user = await NetworkManager.Instance<NetworkManager>().callApi("user/User")
                 userManager.currentUser = user.res
 
-                if(userManager.currentUser.tutorialStep > 10){
+                if (userManager.currentUser.tutorialStep > 10) {
                     director.loadScene("Home")
                 } else {
-                    Logger.Info("Go-to-Tutorial")
-                    UIManager.Instance<UIManager>().OpenUI(TutorialUI).then(() => {
-                        UIManager.Instance<UIManager>().HideUI(this)
-                    })
+                    if (userManager.currentUser.username == "" || userManager.currentUser.username == null) {
+                        UIManager.Instance<UIManager>().OpenUI(CreatePlayerUI).then(() => {
+                            UIManager.Instance<UIManager>().HideUI(this)
+                        })
+                    } else {
+                        Logger.Info("Go-to-Tutorial")
+                        UIManager.Instance<UIManager>().OpenUI(TutorialUI).then(() => {
+                            UIManager.Instance<UIManager>().HideUI(this)
+                        })
+                    }
                 }
             }
         }, this)
     }
 
-    onLogin(){
+    onLogin() {
 
     }
 

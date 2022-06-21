@@ -47,9 +47,7 @@ export async function ApiReg(call: ApiCall<ReqReg, ResReg>) {
         language: call.req.osInfos.language,
         tutorialStep: 0,
         currencyFree: 0,
-        currencyPremium: 0,
-        heroes: "{}",
-        inventory: "{}"
+        currencyPremium: 0
     })
 
     call.succ({ identifier: id, password: pass })

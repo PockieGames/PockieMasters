@@ -11,5 +11,5 @@ export const delay = function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
-export const SERVER_IP = "192.168.115.26"
+export const SERVER_IP = "127.0.0.1"
 export const SERVER_PORT = 3001
