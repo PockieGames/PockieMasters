@@ -234,8 +234,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 38.996,
-      "y": -27.607,
+      "x": 41.5,
+      "y": -29.542,
       "z": 0
     },
     "_lrot": {
@@ -274,8 +274,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 33.81,
-      "height": 37.5
+      "width": 35.81,
+      "height": 39.5
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -324,7 +324,7 @@
     "_isSystemFontUsed": true,
     "_spacingX": 0,
     "_isItalic": false,
-    "_isBold": false,
+    "_isBold": true,
     "_isUnderline": false,
     "_underlineHeight": 2,
     "_cacheMode": 0,
@@ -382,7 +382,7 @@
       "b": 0,
       "a": 255
     },
-    "_width": 1,
+    "_width": 2,
     "_id": ""
   },
   {
@@ -403,9 +403,9 @@
     "_alignFlags": 36,
     "_target": null,
     "_left": 0,
-    "_right": 3.503999999999998,
+    "_right": 1,
     "_top": 0,
-    "_bottom": -3.8569999999999958,
+    "_bottom": -6.792000000000002,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
@@ -459,8 +459,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -27,
-      "y": -27,
+      "x": -28.5,
+      "y": 28.5,
       "z": 0
     },
     "_lrot": {
@@ -499,8 +499,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 25,
-      "height": 25
+      "width": 30,
+      "height": 30
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -537,7 +537,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "91b34ed5-e2ac-45d2-969e-5774a1bdd464@f9941",
+      "__uuid__": "d37c287d-e390-441b-b226-c20a4e051fe9@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -570,11 +570,11 @@
     "__prefab": {
       "__id__": 26
     },
-    "_alignFlags": 12,
+    "_alignFlags": 9,
     "_target": null,
-    "_left": 3,
+    "_left": -1,
     "_right": 0,
-    "_top": 0,
+    "_top": -1,
     "_bottom": 3,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
@@ -585,7 +585,7 @@
     "_isAbsHorizontalCenter": true,
     "_isAbsVerticalCenter": true,
     "_originalWidth": 0,
-    "_originalHeight": 0,
+    "_originalHeight": 25,
     "_alignMode": 2,
     "_lockFlags": 0,
     "_id": ""
@@ -691,6 +691,9 @@
     },
     "icon": {
       "__id__": 5
+    },
+    "iconType": {
+      "__id__": 23
     },
     "frame": {
       "__id__": 30

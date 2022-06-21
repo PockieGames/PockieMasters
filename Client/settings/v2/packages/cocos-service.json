@@ -1,14 +1,18 @@
 {
   "__version__": "3.0.3",
   "game": {
-    "name": "UNKNOW GAME",
-    "app_id": "UNKNOW",
-    "c_id": "0"
+    "app_id": "624711689",
+    "c_id": "0",
+    "name": "Pockie Ninja Mobile"
   },
   "appConfigMaps": [
     {
       "app_id": "UNKNOW",
       "config_id": "330255"
+    },
+    {
+      "app_id": "624711689",
+      "config_id": "ee196d"
     }
   ],
   "configs": [
@@ -17,7 +21,65 @@
       "config_id": "330255",
       "config_name": "Default",
       "config_remarks": "",
-      "services": []
+      "services": [
+        {
+          "service_id": "278",
+          "enable": false,
+          "param": {}
+        }
+      ]
+    },
+    {
+      "app_id": "624711689",
+      "config_id": "ee196d",
+      "config_name": "Default",
+      "config_remarks": "",
+      "services": [
+        {
+          "service_id": "278",
+          "enable": false,
+          "param": {
+            "configId": "b7c710",
+            "plugin_version": "2.0.5_0.2.0"
+          }
+        }
+      ]
+    }
+  ],
+  "sdkHubConfigSet": [
+    {
+      "id": "ccc733",
+      "name": "HUAWEI  AppGallery Connect",
+      "platform": "3",
+      "channelID": "161221",
+      "channelName": "HUAWEI  AppGallery Connect",
+      "remarks": "HUAWEI  AppGallery Connect",
+      "plugins": [
+        {
+          "hasParam": false,
+          "pParam": {},
+          "pId": "2412",
+          "pName": "HUAWEI_HMS",
+          "packageName": "huawei-hms",
+          "pType": 30,
+          "pUseType": 30,
+          "hasLocal": true,
+          "hasUpdate": false,
+          "requireParam": true,
+          "pVersion": "2.0.3_6.3.0",
+          "isInstall": false,
+          "installProgress": true
+        }
+      ]
+    },
+    {
+      "id": "b7c710",
+      "name": "Android Cfg",
+      "remarks": "",
+      "channelID": "000000",
+      "channelName": "官网",
+      "platform": "1",
+      "plugins": []
     }
   ]
 }

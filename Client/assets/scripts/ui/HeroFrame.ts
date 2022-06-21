@@ -7,6 +7,8 @@ export class HeroFrame extends Component {
     @property(Sprite)
     icon: Sprite
     @property(Sprite)
+    iconType: Sprite
+    @property(Sprite)
     frame: Sprite
     @property(Label)
     lvl: Label
@@ -14,13 +16,17 @@ export class HeroFrame extends Component {
     onClick: () => any = async () => {}
 
     start(){
-        this.node.on(Node.EventType.MOUSE_UP || Node.EventType.TOUCH_END, () => {
+        this.node.on(Node.EventType.TOUCH_END, () => {
             this.onClick()
         })
     }
 
     setIcon(spriteFrame: SpriteFrame){
         this.icon.spriteFrame = spriteFrame
+    }
+
+    setIconType(spriteFrame: SpriteFrame){
+        this.iconType.spriteFrame = spriteFrame
     }
 
 }

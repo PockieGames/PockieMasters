@@ -10,3 +10,6 @@ export default class TileColors {
 export const delay = function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
 }
+
+export const SERVER_IP = "192.168.115.26"
+export const SERVER_PORT = 3001

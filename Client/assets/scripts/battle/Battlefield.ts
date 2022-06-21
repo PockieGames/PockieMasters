@@ -106,7 +106,7 @@ export default class Battlefield extends Component {
         setTimeout(() => {
             if(!this.resultNode)
                 return
-            this.resultNode.getChildByName("bg").on(Node.EventType.MOUSE_UP || Node.EventType.TOUCH_END, () => {
+            this.resultNode.getChildByName("bg").on(Node.EventType.TOUCH_END, () => {
                 director.loadScene("home", () => {
                     find("Home").getComponent(HomeScene).sceneToLoad = "Story"
                 })
@@ -178,9 +178,6 @@ export default class Battlefield extends Component {
             if (!spellNode)
                 return
 
-            spellNode.off(Node.EventType.MOUSE_DOWN)
-            spellNode.off(Node.EventType.MOUSE_LEAVE)
-            spellNode.off(Node.EventType.MOUSE_UP)
             spellNode.off(Node.EventType.TOUCH_END)
             spellNode.off(Node.EventType.TOUCH_START)
             spellNode.off(Node.EventType.TOUCH_CANCEL)
@@ -189,7 +186,7 @@ export default class Battlefield extends Component {
                 spellNode.getComponent(Sprite).spriteFrame = spriteFrame
             })
 
-            spellNode.on(Node.EventType.MOUSE_LEAVE || Node.EventType.TOUCH_CANCEL, () => {
+            spellNode.on(Node.EventType.TOUCH_CANCEL, () => {
 
                 let spriteComponent = spellNode.getComponent(Sprite)
                 let hoverColor = new Color(spriteComponent.color)
@@ -199,7 +196,7 @@ export default class Battlefield extends Component {
                 this.spellTooltipNode.active = false
 
             })
-            spellNode.on(Node.EventType.MOUSE_DOWN || Node.EventType.TOUCH_START, () => {
+            spellNode.on(Node.EventType.TOUCH_START, () => {
 
                 let spriteComponent = spellNode.getComponent(Sprite)
                 let hoverColor = new Color(spriteComponent.color)
@@ -211,7 +208,7 @@ export default class Battlefield extends Component {
                 this.spellTooltipNode.active = true
 
             }, spellNode)
-            spellNode.on(Node.EventType.MOUSE_UP || Node.EventType.TOUCH_END, (mouse) => {
+            spellNode.on(Node.EventType.TOUCH_END, (mouse) => {
 
                 let spriteComponent = spellNode.getComponent(Sprite)
                 let hoverColor = new Color(spriteComponent.color)
@@ -314,6 +311,7 @@ export default class Battlefield extends Component {
         myHero.name = "Maufeat"
         myHero.sprite = "24026"
         myHero.baseMovement = 5
+        myHero.heroType = 1
         myHero.spells = [
             "TestSpell",
             "TestSpell2"
@@ -593,7 +591,7 @@ export default class Battlefield extends Component {
                 tile.mapTile = this.map.tiles[x][y]
                 //tile.showDebugPos()
 
-                tileNode.on(Node.EventType.TOUCH_START || Node.EventType.MOUSE_DOWN, (event: EventTouch | EventMouse) => {
+                tileNode.on(Node.EventType.TOUCH_START, (event: EventTouch | EventMouse) => {
                     /*if(tile.mapTile.x >= 2){
                         this.battlefieldCamera.getComponent(OrthoCameraZoom).orthoZoom(tileNode.position, 280)
                     } else {

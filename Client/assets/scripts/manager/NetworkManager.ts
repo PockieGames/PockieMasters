@@ -6,6 +6,7 @@ import { serviceProto, ServiceType } from "../shared/protocols/serviceProto";
 import UIManager from "../ui/UIManager";
 import Singleton from "../utils/Singleton";
 import MessageBox from "../ui/views/MessageBox";
+import { SERVER_IP } from "../Constants";
 
 export default class NetworkManager extends Singleton {
 
@@ -18,7 +19,7 @@ export default class NetworkManager extends Singleton {
             if (!this.client) {
 
                 this.client = new HttpClient(serviceProto, {
-                    server: "http://127.0.0.1:3001",
+                    server: "http://"+SERVER_IP+":3001",
                     json: true
                 })
 

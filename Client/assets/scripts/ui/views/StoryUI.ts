@@ -19,7 +19,7 @@ export class StoryUI extends UIBase {
                 director.loadScene("home")
             }, 3)
         }
-        this.animatedDialogueText.node.on(Node.EventType.MOUSE_UP, () => {
+        this.animatedDialogueText.node.on(Node.EventType.TOUCH_END, () => {
             this.animatedDialogueText.finishNow()
         })
         this.skipBtn.node.on(Button.EventType.CLICK, async () => {

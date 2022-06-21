@@ -19,45 +19,9 @@ export class ElasticLimit extends ScrollView {
     paralaxNodes: Node[] = []
     paralaxOriginPositions: {node: Node, position: Vec3}[] = []
 
-    onLoad() {
-        this.node.on(Node.EventType.TOUCH_MOVE, this._onTouchMoved, this, true);
-    }
-
-    _onTouchMoved(event: any, captureListeners: any) {
-        if (!this.enabledInHierarchy) return;
-        if (this._hasNestedViewGroup(event, captureListeners)) return;
-        let touch = event.touch;
-        if (this.content) {
-            this._handleMoveLogic(touch);
-        }
-        if (!this.cancelInnerEvents) {
-            return;
-        }
-        let deltaMove = touch.getLocation().subtract(touch.getStartLocation());
-        if (deltaMove.length > 7) {
-            if (!this._touchMoved && event.target !== this.node) {
-                let cancelEvent = new EventTouch(event.getTouches(), event.bubbles, Node.EventType.TOUCH_CANCEL);
-                cancelEvent.type = Node.EventType.TOUCH_CANCEL;
-                cancelEvent.touch = event.touch;
-                cancelEvent.simulate = true;
-                event.target.dispatchEvent(cancelEvent);
-                this._touchMoved = true;
-            }
-        }
-        this._stopPropagationIfTargetIsMe(event);
-    }
-
-    _handleMoveLogic(touch: any) {
-        let deltaMove = touch.getDelta();
-        this._processDeltaMove(deltaMove);
-    }
-
-    _processDeltaMove(deltaMove: any) {
-        this._scrollChildren(deltaMove);
-        this._gatherTouchMove(deltaMove);
-    }
 
     _scrollChildren(deltaMove: Vec3) {
+        try{
         this._clampDelta(deltaMove);
         let realMove = deltaMove;
         let outOfBoundary;
@@ -109,6 +73,9 @@ export class ElasticLimit extends ScrollView {
         }
         if (scrollEventType !== -1) {
             this._dispatchEvent(scrollEventType);
+        }
+        } catch(e){
+            super._scrollChildren(deltaMove)
         }
     }
 

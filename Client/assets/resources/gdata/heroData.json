@@ -4,6 +4,7 @@
         "name": "Test Hero",
         "sprite": "13046",
         "baseMovement": 3,
+        "heroType": 1,
         "spells": [
             "TestSpell",
             "TestSpell2"
@@ -14,6 +15,7 @@
         "name": "Test Hero 2",
         "sprite": "24026",
         "baseMovement": 3,
+        "heroType": 2,
         "spells": [
             "TestSpell",
             "TestSpell2"

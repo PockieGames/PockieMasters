@@ -38,7 +38,7 @@ export default class LoginUI extends UIBase{
     ]
 
     setupServerSelection(){
-        this.serverSelectionNode.getChildByName("bg").on(Node.EventType.MOUSE_DOWN || Node.EventType.TOUCH_START, () => {
+        this.serverSelectionNode.getChildByName("bg").on(Node.EventType.TOUCH_START, () => {
             this.serverSelectionNode.active = false
         })
     }
@@ -74,7 +74,6 @@ export default class LoginUI extends UIBase{
                     uuid: userManager.getUUID(),
                     osInfos: userManager.getSystemInfo(),
                 })
-
     
                 if(!res.isSucc)
                     return

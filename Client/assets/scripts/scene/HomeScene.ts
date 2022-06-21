@@ -70,8 +70,6 @@ export class HomeScene extends Component {
     async fetchData(){
         let heroRes = (await NetworkManager.Instance<NetworkManager>().callApi("user/Heroes")).res.heroes
         UserManager.Instance<UserManager>().populateHeroes(heroRes)
-        console.log("heroRes")
-        console.log(UserManager.Instance<UserManager>().heroes)
 
     }
 

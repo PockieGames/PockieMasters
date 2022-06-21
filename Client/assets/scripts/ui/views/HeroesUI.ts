@@ -4,6 +4,8 @@ import UserManager from "../../manager/UserManager";
 import HeroData from "../../shared/game/data/HeroData";
 import { HeroFrame } from "../HeroFrame";
 import { delay } from "../../Constants"
+import NetworkManager from "../../manager/NetworkManager";
+import UIManager from "../UIManager";
 
 const { ccclass, property } = _decorator;
 
@@ -23,7 +25,13 @@ export default class HeroesUI extends Component{
     @property(Prefab)
     heroFramePrefab: Prefab
 
-    start(){
+    async start(){
+        
+        await UIManager.Instance<UIManager>().showLoad()
+        let heroRes = (await NetworkManager.Instance<NetworkManager>().callApi("user/Heroes")).res.heroes
+        UserManager.Instance<UserManager>().populateHeroes(heroRes)
+        UIManager.Instance<UIManager>().hideLoad()
+
         this.dragonBoneNode = this.dragonBonesComponent.node
         UserManager.Instance<UserManager>().heroes.forEach((heroData: HeroData, index) => {
 
@@ -31,8 +39,9 @@ export default class HeroesUI extends Component{
             heroFrame.setParent(this.scrollViewContent)
 
             let heroFrameComp = heroFrame.getComponent(HeroFrame)
-            ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then((spriteFrame) => {
+            ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then(async (spriteFrame) => {
                 heroFrameComp.setIcon(spriteFrame)
+                heroFrameComp.setIconType(await ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType))
             })
 
             heroFrameComp.onClick = () => {
