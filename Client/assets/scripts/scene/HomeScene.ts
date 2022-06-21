@@ -1,10 +1,9 @@
-import { _decorator, Component, Node, Prefab, instantiate, Button, Sprite, SpriteFrame, director, game, Canvas } from 'cc';
+import { _decorator, Component, Node, Prefab, instantiate, Button, Sprite, SpriteFrame, director, game, Canvas, Label } from 'cc';
 import NetworkManager from '../manager/NetworkManager';
 import UserManager from '../manager/UserManager';
 import HeroData from '../shared/game/data/HeroData';
 import Dictionary from '../shared/game/utils/Dictionary';
 import UIManager from '../ui/UIManager';
-import HomeUI from '../ui/views/HomeUI';
 import MessageBox from '../ui/views/MessageBox';
 const { ccclass, property } = _decorator;
 
@@ -15,6 +14,9 @@ export class HomeScene extends Component {
 
     @property(Node)
     viewNode: Node
+
+    @property(Node)
+    topUserInfo: Node
 
     @property(Prefab)
     townPrefab: Prefab
@@ -68,9 +70,20 @@ export class HomeScene extends Component {
     }
 
     async fetchData(){
-        let heroRes = (await NetworkManager.Instance<NetworkManager>().callApi("user/Heroes")).res.heroes
-        UserManager.Instance<UserManager>().populateHeroes(heroRes)
+        let userManager = UserManager.Instance<UserManager>()
+        let networkManager = NetworkManager.Instance<NetworkManager>()
 
+        let heroRes = (await networkManager.callApi("user/Heroes")).res.heroes
+        userManager.populateHeroes(heroRes)
+        userManager.currentUser = (await NetworkManager.Instance<NetworkManager>().callApi("user/User")).res.user
+
+        this.updateTopNode()
+    }
+
+    updateTopNode(){
+        this.topUserInfo.getChildByName("username").getComponent(Label).string = UserManager.Instance<UserManager>().currentUser.username
+        this.topUserInfo.getChildByName("gold").getChildByName("goldLabel").getComponent(Label).string = UserManager.Instance<UserManager>().currentUser.currencyFree.toString()
+        this.topUserInfo.getChildByName("diamonds").getChildByName("diamondLabel").getComponent(Label).string = UserManager.Instance<UserManager>().currentUser.currencyPremium.toString()
     }
 
     mapViews(){

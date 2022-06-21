@@ -6,6 +6,8 @@ const { ccclass, property } = _decorator;
 @ccclass("TownUI")
 export default class TownUI extends Component{
     
+    prefabName = "TownUI"
+
     @property(ElasticLimit)
     scrollView: ElasticLimit
 

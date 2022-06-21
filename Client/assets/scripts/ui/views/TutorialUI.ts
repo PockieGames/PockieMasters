@@ -7,6 +7,8 @@ const { ccclass, property } = _decorator;
 @ccclass('TutorialUI')
 export class TutorialUI extends UIBase {
     
+    prefabName = "TutorialUI"
+
     @property({type: Node})
     step1: Node
 

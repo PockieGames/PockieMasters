@@ -62,7 +62,7 @@ export default class UIManager extends Singleton{
     async OpenPopup<T extends UIBase>(c: { new(): T }, uiData: any = null): Promise<T>{
         return new Promise<T>(async (resolve, reject) => {
 
-            let name = (new c() as T).name
+            let name = (new c() as T).prefabName
             
             try{
                 let messageBox = await 
@@ -86,25 +86,26 @@ export default class UIManager extends Singleton{
 
     async OpenUI(uiBase: { new(): UIBase }, uiData: any = null): Promise<UIBase>{
         return new Promise<UIBase>(async (resolve, reject) => {
-            if(!this.uiDict.containsKey(uiBase.name)){
+            let name = (new uiBase()).prefabName
+            if(!this.uiDict.containsKey(name)){
                 try{
-                    let asset = await ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("ui/" + uiBase.name)
+                    let asset = await ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("ui/" + name)
 
                     let uiNode = instantiate(asset)
-                    uiNode.name = uiBase.name
+                    uiNode.name = name
                     uiNode.parent = this.getCanvas().node
                     let uiBaseComponent = uiNode.getComponent(UIBase);
-                    this.uiDict.add(uiBase.name, uiBaseComponent)
+                    this.uiDict.add(name, uiBaseComponent)
                     uiBaseComponent.setUIData(uiData)
 
-                    Logger.Info("Open UI: " + uiBase.name)
+                    Logger.Info("Open UI: " + name)
                     resolve(uiBaseComponent)
                  } catch(e){
-                    Logger.Error("Couldn't Open UI: " + uiBase.name)
+                    Logger.Error("Couldn't Open UI: " + name)
                     reject(e);
                 }
             }
-            resolve(this.uiDict.get(uiBase.name))
+            resolve(this.uiDict.get(name))
         })
     }
 
