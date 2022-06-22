@@ -32,8 +32,11 @@ export default class SceneManager extends Singleton {
                     // error handling
                     return
                 }
-                director.loadScene(name, onComplete)
-                this.loadNode.active = false
+                director.loadScene(name, (err, scene) => {
+                    if(onComplete)
+                        onComplete(err, scene)
+                    this.loadNode.active = false
+                })
             }
         )
 
