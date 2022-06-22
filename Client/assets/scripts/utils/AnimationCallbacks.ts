@@ -1,5 +1,6 @@
 import { _decorator, Component, Node, director } from 'cc';
 import AudioManager from '../manager/AudioManager';
+import SceneManager from '../manager/SceneManager';
 const { ccclass, property } = _decorator;
 
 @ccclass("AnimationCallbacks")
@@ -16,7 +17,7 @@ export class AnimationCallbacks extends Component {
     }
 
     changeScene(sceneName: string){
-        director.loadScene(sceneName)
+        SceneManager.Instance<SceneManager>().loadScene(sceneName)
     }
 
 }

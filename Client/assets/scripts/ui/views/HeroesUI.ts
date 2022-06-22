@@ -32,12 +32,12 @@ export default class HeroesUI extends Component{
 
     async start(){
         
+        this.dragonBoneNode = this.dragonBonesComponent.node
+        this.dragonBoneNode.active = false
+
         await UIManager.Instance<UIManager>().showLoad()
         let heroRes = (await NetworkManager.Instance<NetworkManager>().callApi("user/Heroes")).res.heroes
         UserManager.Instance<UserManager>().populateHeroes(heroRes)
-        UIManager.Instance<UIManager>().hideLoad()
-
-        this.dragonBoneNode = this.dragonBonesComponent.node
         UserManager.Instance<UserManager>().heroes.forEach((heroData: HeroData, index) => {
 
             let heroFrame = instantiate(this.heroFramePrefab)
@@ -69,6 +69,8 @@ export default class HeroesUI extends Component{
             }
 
             if(index == 0){
+                this.dragonBoneNode.active = true
+                UIManager.Instance<UIManager>().hideLoad()
                 heroFrameComp.onClick()
             }
 

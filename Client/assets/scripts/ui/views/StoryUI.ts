@@ -1,4 +1,5 @@
 import { _decorator, Component, Node, Button, director } from 'cc';
+import SceneManager from '../../manager/SceneManager';
 import { AnimatedRichText } from '../../utils/AnimatedRichText';
 import UIBase from '../UIBase';
 const { ccclass, property } = _decorator;
@@ -18,7 +19,7 @@ export class StoryUI extends UIBase {
         this.animatedDialogueText.onFinish = () => {
             // Wait 3 Seconds before loading
             this.scheduleOnce(() => {
-                director.loadScene("home")
+                SceneManager.Instance<SceneManager>().loadScene("home")
             }, 3)
         }
         this.animatedDialogueText.node.on(Node.EventType.TOUCH_END, () => {
@@ -26,7 +27,7 @@ export class StoryUI extends UIBase {
         })
         this.skipBtn.node.on(Button.EventType.CLICK, async () => {
             this.unscheduleAllCallbacks()
-            director.loadScene("home");
+            SceneManager.Instance<SceneManager>().loadScene("home");
         })
     }
 
