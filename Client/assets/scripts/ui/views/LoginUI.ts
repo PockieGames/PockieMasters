@@ -48,9 +48,6 @@ export default class LoginUI extends UIBase {
     }
 
     start() {
-
-        GameData.Instance<GameData>().loadData()
-
         this.setupServerSelection()
 
         this.serverSelectBtn.node.on(Button.EventType.CLICK, async () => {
@@ -103,6 +100,8 @@ export default class LoginUI extends UIBase {
                 // Get and Set User Infos
                 let user = await NetworkManager.Instance<NetworkManager>().callApi("user/User")
                 userManager.currentUser = user.res.user
+
+                await GameData.Instance<GameData>().fetchData()
 
                 if (userManager.currentUser.tutorialStep > 10) {
                     SceneManager.Instance<SceneManager>().loadScene("Home")

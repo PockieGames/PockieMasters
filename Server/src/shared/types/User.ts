@@ -5,5 +5,6 @@ export interface User {
     username?: string,
     currencyPremium: uint,
     currencyFree: uint,
-    tutorialStep: uint
+    tutorialStep: uint,
+    chapter: uint,
 }

@@ -46,6 +46,7 @@ export async function ApiReg(call: ApiCall<ReqReg, ResReg>) {
         osVersion: call.req.osInfos.osVersion,
         language: call.req.osInfos.language,
         tutorialStep: 0,
+        chapter: 1,
         currencyFree: 0,
         currencyPremium: 0
     })

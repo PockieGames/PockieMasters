@@ -19,6 +19,7 @@ import MapTile from "../shared/game/battle/MapTile";
 import Spell from "../shared/game/battle/spells/Spell";
 import SpellData from "../shared/game/data/SpellData";
 import { HomeScene } from "../scene/HomeScene";
+import SceneManager from "../manager/SceneManager";
 
 const { ccclass, property } = _decorator;
 
@@ -107,7 +108,7 @@ export default class Battlefield extends Component {
             if(!this.resultNode)
                 return
             this.resultNode.getChildByName("bg").on(Node.EventType.TOUCH_END, () => {
-                director.loadScene("home", () => {
+                SceneManager.Instance<SceneManager>().loadScene("home", () => {
                     find("Home").getComponent(HomeScene).sceneToLoad = "Story"
                 })
             })
@@ -294,7 +295,7 @@ export default class Battlefield extends Component {
                 title: "BattleMap Error",
                 message: "No Offline Map Data Initialized",
                 onClose: () => {
-                    director.loadScene("home")
+                    SceneManager.Instance<SceneManager>().loadScene("home")
                 }
             })
             return
