@@ -6,6 +6,8 @@ import { HeroFrame } from "../HeroFrame";
 import { delay } from "../../Constants"
 import NetworkManager from "../../manager/NetworkManager";
 import UIManager from "../UIManager";
+import GameData from "../../manager/GameData";
+import MessageBox from "./MessageBox";
 
 const { ccclass, property } = _decorator;
 
@@ -36,9 +38,13 @@ export default class HeroesUI extends Component{
         this.dragonBoneNode.active = false
 
         await UIManager.Instance<UIManager>().showLoad()
-        let heroRes = (await NetworkManager.Instance<NetworkManager>().callApi("user/Heroes")).res.heroes
-        UserManager.Instance<UserManager>().populateHeroes(heroRes)
-        UserManager.Instance<UserManager>().heroes.forEach((heroData: HeroData, index) => {
+
+        /*let heroRes = (await NetworkManager.Instance<NetworkManager>().callApi("user/Heroes")).res.heroes
+        UserManager.Instance<UserManager>().populateHeroes(heroRes)*/
+
+        let heroRes = GameData.Instance<GameData>().heroData
+
+        heroRes.forEach((heroData: HeroData, index) => {
 
             let heroFrame = instantiate(this.heroFramePrefab)
             heroFrame.setParent(this.scrollViewContent)
@@ -65,6 +71,12 @@ export default class HeroesUI extends Component{
                     this.dragonBonesComponent.playAnimation('wait', 0)
                     this.heroNameLabel.string = heroData.name
                     this.heroTypeIcon.spriteFrame = await ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType)
+                }).catch(() => {
+                    heroFrameComp.onClick = () => { UIManager.Instance<UIManager>().OpenPopup(MessageBox, {
+                        title: "DragonBones Error",
+                        message: "No DragonBones Data Found for " + heroData.sprite,
+                    })
+                    }
                 })
             }
 
