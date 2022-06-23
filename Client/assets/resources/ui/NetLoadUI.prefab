@@ -46,7 +46,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 480,
-      "y": 320,
+      "y": 319.99999999999994,
       "z": 0
     },
     "_lrot": {
@@ -131,7 +131,7 @@
     "_priority": 9999,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 320,
+    "_orthoHeight": 324.26419466975665,
     "_near": 1,
     "_far": 3000,
     "_color": {
@@ -274,7 +274,7 @@
       "r": 0,
       "g": 0,
       "b": 0,
-      "a": 45
+      "a": 100
     },
     "_spriteFrame": {
       "__uuid__": "20fd408c-2a57-42dc-b458-a065fb22473d@f9941",
@@ -585,8 +585,8 @@
     "_target": null,
     "_left": 0,
     "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
+    "_top": -5.684341886080802e-14,
+    "_bottom": -5.684341886080802e-14,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,

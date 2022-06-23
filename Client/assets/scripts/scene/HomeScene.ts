@@ -27,6 +27,10 @@ export class HomeScene extends Component {
     @property(Button)
     heroesBtn: Button
     @property(Prefab)
+    bagPrefab: Prefab
+    @property(Button)
+    bagBtn: Button
+    @property(Prefab)
     chapterPrefab: Prefab
     @property(Button)
     chapterBtn: Button
@@ -56,6 +60,10 @@ export class HomeScene extends Component {
 
         this.shopButton.node.on(Button.EventType.CLICK, () => {
             this.replaceView("Shop")
+        })
+
+        this.bagBtn.node.on(Button.EventType.CLICK, () => {
+            this.replaceView("Bag")
         })
 
         this.townBtn.node.on(Button.EventType.CLICK, () => {
@@ -102,6 +110,10 @@ export class HomeScene extends Component {
         this.viewDictionary.add("Heroes", {
             active: false,
             viewPrefab: this.heroesPrefab, button: this.heroesBtn, node: null
+        })
+        this.viewDictionary.add("Bag", {
+            active: false,
+            viewPrefab: this.bagPrefab, button: this.bagBtn, node: null
         })
     }
 
