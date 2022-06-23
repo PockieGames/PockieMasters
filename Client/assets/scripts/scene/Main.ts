@@ -1,5 +1,6 @@
 import { _decorator, Component, Node, sys, gfx } from 'cc';
 import AudioManager from '../manager/AudioManager';
+import SceneManager from '../manager/SceneManager';
 import UIManager from '../ui/UIManager';
 import LoginUI from '../ui/views/LoginUI';
 
@@ -11,8 +12,9 @@ export class Main extends Component {
     async start() {
 
         //let networkManager = new NetworkManager()
+        //SceneManager.Instance<SceneManager>().loadScene
 
-        let uiManager = UIManager.Instance<UIManager>().OpenUI(LoginUI)
+        UIManager.Instance<UIManager>().OpenUI(LoginUI)
 
     }
 

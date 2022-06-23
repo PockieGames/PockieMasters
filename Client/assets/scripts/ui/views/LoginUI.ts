@@ -10,6 +10,7 @@ import MessageBox from "./MessageBox";
 import { TutorialUI } from "./TutorialUI";
 import GameData from "../../manager/GameData";
 import CreatePlayerUI from "./CreatePlayerUI";
+import SceneManager from "../../manager/SceneManager";
 
 const { ccclass, property } = _decorator;
 
@@ -104,7 +105,7 @@ export default class LoginUI extends UIBase {
                 userManager.currentUser = user.res.user
 
                 if (userManager.currentUser.tutorialStep > 10) {
-                    director.loadScene("Home")
+                    SceneManager.Instance<SceneManager>().loadScene("Home")
                 } else {
                     if (userManager.currentUser.username == "" || userManager.currentUser.username == null) {
                         UIManager.Instance<UIManager>().OpenUI(CreatePlayerUI).then(() => {

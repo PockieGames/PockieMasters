@@ -1,7 +1,13 @@
-import { _decorator, Component, Node, UITransform, Layout, CCBoolean, CCInteger, CCFloat, Widget } from 'cc';
+import { _decorator, Component, Node, UITransform, Layout, CCBoolean, CCInteger, CCFloat, Widget, Enum } from 'cc';
 import { IgnoreContentSizeFitter } from './IgnoreContentSizeFitter';
 const { ccclass, property, executeInEditMode } = _decorator;
- 
+
+enum ContentSizeFitterType {
+    Horizontal,
+    Vertical,
+    Both
+}
+
 @ccclass('ContentSizeFitter')
 @executeInEditMode()
 export class ContentSizeFitter extends Component {
@@ -11,6 +17,9 @@ export class ContentSizeFitter extends Component {
     
     @property({type: CCFloat})
     widthDiff: number = 0
+
+    @property({type: Enum(ContentSizeFitterType)})
+    type: ContentSizeFitterType = ContentSizeFitterType.Both
 
     update () {
 
@@ -33,8 +42,14 @@ export class ContentSizeFitter extends Component {
             height += node.getComponent(UITransform).height
         })
 
-        this.node.getComponent(UITransform).width = width + this.widthDiff
-        this.node.getComponent(UITransform).height = height + this.heightDiff
+        if(this.type == ContentSizeFitterType.Horizontal){
+            this.node.getComponent(UITransform).width = width + this.widthDiff
+        } else if(this.type == ContentSizeFitterType.Vertical){
+            this.node.getComponent(UITransform).height = height + this.heightDiff
+        } else if(this.type == ContentSizeFitterType.Both){
+            this.node.getComponent(UITransform).width = width + this.widthDiff
+            this.node.getComponent(UITransform).height = height + this.heightDiff
+        }
         
     }
 }
