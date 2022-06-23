@@ -1,4 +1,4 @@
-import { Component, dragonBones, instantiate, isValid, Label, Node, Prefab, Sprite, SpriteFrame, _decorator } from "cc";
+import { CCBoolean, Component, dragonBones, instantiate, isValid, Label, Node, Prefab, Sprite, SpriteFrame, _decorator } from "cc";
 import ResourceManager from "../../manager/ResourceManager";
 import UserManager from "../../manager/UserManager";
 import HeroData from "../../shared/game/data/HeroData";
@@ -32,6 +32,9 @@ export default class HeroesUI extends Component{
     @property(Prefab)
     heroFramePrefab: Prefab
 
+    @property(CCBoolean)
+    showAllHeroesInstead: boolean = false
+
     async start(){
         
         this.dragonBoneNode = this.dragonBonesComponent.node
@@ -39,12 +42,18 @@ export default class HeroesUI extends Component{
 
         await UIManager.Instance<UIManager>().showLoad()
 
-        /*let heroRes = (await NetworkManager.Instance<NetworkManager>().callApi("user/Heroes")).res.heroes
-        UserManager.Instance<UserManager>().populateHeroes(heroRes)*/
+        let heroRes = (await NetworkManager.Instance<NetworkManager>().callApi("user/Heroes")).res.heroes
+        UserManager.Instance<UserManager>().populateHeroes(heroRes)
 
-        let heroRes = GameData.Instance<GameData>().heroData
+        let heroDatas: HeroData[] = []
+        if(this.showAllHeroesInstead){
+            await GameData.Instance<GameData>().loadData()
+            heroDatas = GameData.Instance<GameData>().heroData
+        } else {
+            heroDatas = UserManager.Instance<UserManager>().heroes
+        }
 
-        heroRes.forEach((heroData: HeroData, index) => {
+        heroDatas.forEach((heroData: HeroData, index) => {
 
             let heroFrame = instantiate(this.heroFramePrefab)
             heroFrame.setParent(this.scrollViewContent)
