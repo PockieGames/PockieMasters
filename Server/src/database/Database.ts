@@ -2,6 +2,7 @@ import MySQL from 'mysql'
 import { Sequelize } from 'sequelize'
 import Logger from '../logger'
 import Heroes from './models/Heroes'
+import StaticHeroes from './models/staticdata/StaticHeroes'
 import User from './models/User'
 
 export default class Database {
@@ -39,5 +40,8 @@ export default class Database {
     static async setupDatabase(){
         await User.sync({alter:true})
         await Heroes.sync({force:true})
+        
+        // Static Data
+        await StaticHeroes.sync({force:true})
     }
 }

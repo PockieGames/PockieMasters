@@ -1,17 +1,22 @@
 import { ServiceProto } from 'tsrpc-proto';
-import { ReqTest, ResTest } from './PtlTest';
+import { ReqChapters, ResChapters } from './gameData/PtlChapters';
+import { ReqHeroes, ResHeroes } from './gameData/PtlHeroes';
 import { ReqAuth, ResAuth } from './user/PtlAuth';
 import { ReqCreatePlayer, ResCreatePlayer } from './user/PtlCreatePlayer';
-import { ReqHeroes, ResHeroes } from './user/PtlHeroes';
+import { ReqHeroes as ReqHeroes_1, ResHeroes as ResHeroes_1 } from './user/PtlHeroes';
 import { ReqLogout, ResLogout } from './user/PtlLogout';
 import { ReqReg, ResReg } from './user/PtlReg';
 import { ReqUser, ResUser } from './user/PtlUser';
 
 export interface ServiceType {
     api: {
-        "Test": {
-            req: ReqTest,
-            res: ResTest
+        "gameData/Chapters": {
+            req: ReqChapters,
+            res: ResChapters
+        },
+        "gameData/Heroes": {
+            req: ReqHeroes,
+            res: ResHeroes
         },
         "user/Auth": {
             req: ReqAuth,
@@ -22,8 +27,8 @@ export interface ServiceType {
             res: ResCreatePlayer
         },
         "user/Heroes": {
-            req: ReqHeroes,
-            res: ResHeroes
+            req: ReqHeroes_1,
+            res: ResHeroes_1
         },
         "user/Logout": {
             req: ReqLogout,
@@ -44,11 +49,19 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 9,
+    "version": 12,
     "services": [
         {
-            "id": 3,
-            "name": "Test",
+            "id": 9,
+            "name": "gameData/Chapters",
+            "type": "api",
+            "conf": {
+                "needLogin": true
+            }
+        },
+        {
+            "id": 8,
+            "name": "gameData/Heroes",
             "type": "api",
             "conf": {
                 "needLogin": true
@@ -98,7 +111,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
         }
     ],
     "types": {
-        "PtlTest/ReqTest": {
+        "gameData/PtlChapters/ReqChapters": {
             "type": "Interface",
             "extends": [
                 {
@@ -123,7 +136,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                 }
             ]
         },
-        "PtlTest/ResTest": {
+        "gameData/PtlChapters/ResChapters": {
             "type": "Interface",
             "extends": [
                 {
@@ -131,6 +144,19 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "type": {
                         "type": "Reference",
                         "target": "base/BaseResponse"
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "chapters",
+                    "type": {
+                        "type": "Array",
+                        "elementType": {
+                            "type": "Reference",
+                            "target": "../types/StaticChapter/StaticChapter"
+                        }
                     }
                 }
             ]
@@ -145,6 +171,146 @@ export const serviceProto: ServiceProto<ServiceType> = {
                         "type": "String"
                     },
                     "optional": true
+                }
+            ]
+        },
+        "../types/StaticChapter/StaticChapter": {
+            "type": "Interface",
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "id",
+                    "type": {
+                        "type": "Number",
+                        "scalarType": "uint"
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "chapter",
+                    "type": {
+                        "type": "Number"
+                    }
+                },
+                {
+                    "id": 2,
+                    "name": "skin",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 3,
+                    "name": "chapterData",
+                    "type": {
+                        "type": "String"
+                    }
+                }
+            ]
+        },
+        "gameData/PtlHeroes/ReqHeroes": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseRequest"
+                    }
+                }
+            ]
+        },
+        "gameData/PtlHeroes/ResHeroes": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseResponse"
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "heroes",
+                    "type": {
+                        "type": "Array",
+                        "elementType": {
+                            "type": "Reference",
+                            "target": "../types/StaticHero/StaticHero"
+                        }
+                    }
+                }
+            ]
+        },
+        "../types/StaticHero/StaticHero": {
+            "type": "Interface",
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "id",
+                    "type": {
+                        "type": "Number",
+                        "scalarType": "uint"
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "name",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 2,
+                    "name": "sprite",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 3,
+                    "name": "type",
+                    "type": {
+                        "type": "Number",
+                        "scalarType": "uint"
+                    }
+                },
+                {
+                    "id": 4,
+                    "name": "rarity",
+                    "type": {
+                        "type": "Number",
+                        "scalarType": "uint"
+                    }
+                },
+                {
+                    "id": 5,
+                    "name": "spells",
+                    "type": {
+                        "type": "Array",
+                        "elementType": {
+                            "type": "String"
+                        }
+                    }
+                },
+                {
+                    "id": 6,
+                    "name": "attack",
+                    "type": {
+                        "type": "Number",
+                        "scalarType": "uint"
+                    }
+                },
+                {
+                    "id": 7,
+                    "name": "movement",
+                    "type": {
+                        "type": "Number",
+                        "scalarType": "uint"
+                    }
                 }
             ]
         },
@@ -480,6 +646,14 @@ export const serviceProto: ServiceProto<ServiceType> = {
                 {
                     "id": 4,
                     "name": "tutorialStep",
+                    "type": {
+                        "type": "Number",
+                        "scalarType": "uint"
+                    }
+                },
+                {
+                    "id": 5,
+                    "name": "chapter",
                     "type": {
                         "type": "Number",
                         "scalarType": "uint"

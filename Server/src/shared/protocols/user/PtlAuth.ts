@@ -1,4 +1,3 @@
-import { Account } from "../../types/Account"
 import { BaseConf, BaseRequest, BaseResponse } from "../base"
 
 export interface ReqAuth extends BaseRequest {

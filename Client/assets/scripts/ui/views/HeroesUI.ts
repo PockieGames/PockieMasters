@@ -12,7 +12,7 @@ import MessageBox from "./MessageBox";
 const { ccclass, property } = _decorator;
 
 @ccclass("HeroesUI")
-export default class HeroesUI extends Component{
+export default class HeroesUI extends Component {
 
     prefabName = "HeroesUI"
 
@@ -35,66 +35,84 @@ export default class HeroesUI extends Component{
     @property(CCBoolean)
     showAllHeroesInstead: boolean = false
 
-    async start(){
-        
+    async start() {
+
         this.dragonBoneNode = this.dragonBonesComponent.node
+        this.heroNameLabel.node.parent.active = false
         this.dragonBoneNode.active = false
 
         await UIManager.Instance<UIManager>().showLoad()
 
-        let heroRes = (await NetworkManager.Instance<NetworkManager>().callApi("user/Heroes")).res.heroes
-        UserManager.Instance<UserManager>().populateHeroes(heroRes)
+        NetworkManager.Instance<NetworkManager>().callApi("user/Heroes").then(async (heroReq) => {
 
-        let heroDatas: HeroData[] = []
-        if(this.showAllHeroesInstead){
-            await GameData.Instance<GameData>().loadData()
-            heroDatas = GameData.Instance<GameData>().heroData
-        } else {
-            heroDatas = UserManager.Instance<UserManager>().heroes
-        }
+            let heroRes = heroReq.res.heroes
+            UserManager.Instance<UserManager>().populateHeroes(heroRes)
+    
+            let heroDatas: HeroData[] = []
+            if (this.showAllHeroesInstead) {
+                await GameData.Instance<GameData>().fetchData()
+                heroDatas = GameData.Instance<GameData>().heroData
+            } else {
+                heroDatas = UserManager.Instance<UserManager>().heroes
+            }
+    
+            heroDatas.forEach((heroData: HeroData, index) => {
+    
+                let heroFrame = instantiate(this.heroFramePrefab)
+                heroFrame.setParent(this.scrollViewContent)
+    
+                let heroFrameComp = heroFrame.getComponent(HeroFrame)
+                ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then(async (spriteFrame) => {
+                    if (isValid(heroFrameComp)) {
+                        heroFrameComp.setIcon(spriteFrame)
+                        await ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType).then((spriteFrame) => {
+                            if (isValid(heroFrameComp)) {
+                                heroFrameComp.setIconType(spriteFrame)
+                            }
+                        })
+                    }
+                }) 
+    
+                heroFrameComp.onClick = () => {
 
-        heroDatas.forEach((heroData: HeroData, index) => {
-
-            let heroFrame = instantiate(this.heroFramePrefab)
-            heroFrame.setParent(this.scrollViewContent)
-
-            let heroFrameComp = heroFrame.getComponent(HeroFrame)
-            ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then(async (spriteFrame) => {
-                heroFrameComp.setIcon(spriteFrame)
-                heroFrameComp.setIconType(await ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType))
+                    this.heroNameLabel.node.parent.active = true
+    
+                    this.dragonBonesComponent.destroy()
+    
+                    ResourceManager.Instance<ResourceManager>().loadDragonBones("textures/characters/heroDB" + heroData.sprite + "_ske", "textures/characters/heroDB" + heroData.sprite).then(async (dragonBone) => {
+                        while (isValid(this.dragonBonesComponent)) {
+                            // Wait for dragonBones Component to be destroyed
+                            await delay(1)
+                        }
+                        this.dragonBonesComponent = this.dragonBoneNode.addComponent(dragonBones.ArmatureDisplay)
+                        this.dragonBonesComponent.dragonAsset = dragonBone.dbAsset
+                        this.dragonBonesComponent.dragonAtlasAsset = dragonBone.dbAtlas
+                        this.dragonBonesComponent.armatureName = "armatureName"
+                        this.dragonBonesComponent.playAnimation('wait', 0)
+                        this.heroNameLabel.string = heroData.name
+                        this.heroTypeIcon.spriteFrame = await ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType)
+                    }).catch(() => {
+                        heroFrameComp.onClick = () => {
+                            UIManager.Instance<UIManager>().OpenPopup(MessageBox, {
+                                title: "DragonBones Error",
+                                message: "No DragonBones Data Found for " + heroData.sprite,
+                            })
+                        }
+                    })
+                }
+    
+                if (index == 0) {
+                    this.dragonBoneNode.active = true
+                    heroFrameComp.onClick()
+                    UIManager.Instance<UIManager>().hideLoad()
+                }
             })
 
-            heroFrameComp.onClick = () => {
-
-                this.dragonBonesComponent.destroy()
-
-                ResourceManager.Instance<ResourceManager>().loadDragonBones("textures/characters/heroDB" + heroData.sprite + "_ske", "textures/characters/heroDB" + heroData.sprite).then(async (dragonBone) => {
-                    while(isValid(this.dragonBonesComponent)){
-                        // Wait for dragonBones Component to be destroyed
-                        await delay(1)
-                    }
-                    this.dragonBonesComponent = this.dragonBoneNode.addComponent(dragonBones.ArmatureDisplay)
-                    this.dragonBonesComponent.dragonAsset = dragonBone.dbAsset
-                    this.dragonBonesComponent.dragonAtlasAsset = dragonBone.dbAtlas
-                    this.dragonBonesComponent.armatureName = "armatureName"
-                    this.dragonBonesComponent.playAnimation('wait', 0)
-                    this.heroNameLabel.string = heroData.name
-                    this.heroTypeIcon.spriteFrame = await ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType)
-                }).catch(() => {
-                    heroFrameComp.onClick = () => { UIManager.Instance<UIManager>().OpenPopup(MessageBox, {
-                        title: "DragonBones Error",
-                        message: "No DragonBones Data Found for " + heroData.sprite,
-                    })
-                    }
-                })
-            }
-
-            if(index == 0){
-                this.dragonBoneNode.active = true
+            if(heroDatas.length <= 0)
                 UIManager.Instance<UIManager>().hideLoad()
-                heroFrameComp.onClick()
-            }
 
+        }).catch(() => {
+            UIManager.Instance<UIManager>().hideLoad()
         })
     }
 

@@ -14,7 +14,8 @@ export async function ApiUser(call: ApiCall<ReqUser, ResUser>) {
         username: user.username,
         currencyFree: user.currencyFree,
         currencyPremium: user.currencyPremium,
-        tutorialStep: user.tutorialStep
+        tutorialStep: user.tutorialStep,
+        chapter: user.chapter
     }})
 
 }

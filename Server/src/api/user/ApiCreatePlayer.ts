@@ -14,7 +14,15 @@ export async function ApiCreatePlayer(call: ApiCall<ReqCreatePlayer, ResCreatePl
     // insert hero to datase
     await Heroes.create({
         ownerId: user.id,
-        heroId: call.req.hero
+        heroId: call.req.hero,
+        lvl: 1,
+        exp: 0,
+        item1: 0,
+        item2: 0,
+        item3: 0,
+        item4: 0,
+        item5: 0,
+        item6: 0,
     })
 
     // update username from user

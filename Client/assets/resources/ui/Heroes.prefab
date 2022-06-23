@@ -667,8 +667,8 @@
     "_startAxis": 0,
     "_paddingLeft": 4,
     "_paddingRight": 4,
-    "_paddingTop": 0,
-    "_paddingBottom": 0,
+    "_paddingTop": 4,
+    "_paddingBottom": 4,
     "_spacingX": 5,
     "_spacingY": 5,
     "_verticalDirection": 1,
@@ -7309,7 +7309,7 @@
       "__uuid__": "5e89f4d9-7598-49ae-b511-54297a61d2c4",
       "__expectedType__": "cc.Prefab"
     },
-    "showAllHeroesInstead": true,
+    "showAllHeroesInstead": false,
     "_id": ""
   },
   {

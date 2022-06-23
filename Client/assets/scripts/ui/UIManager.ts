@@ -26,7 +26,7 @@ export default class UIManager extends Singleton{
         loadNode.name = "LoadingUI"
         game.addPersistRootNode(loadNode)
         this.loadingCanvas = loadNode
-        loadNode.active = true
+        return loadNode.active = true
     }
 
     hideLoad(){

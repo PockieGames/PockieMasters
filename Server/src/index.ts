@@ -9,6 +9,7 @@ import { enableAuthentication, parseCurrentUser } from "./models/UserUtil";
 import { spells } from "./shared/game/SharedConstants";
 import TestSpell from "./shared/game/data/Spells/TestSpell";
 import Heroes from "./database/models/Heroes";
+import StaticChapters from "./database/models/staticdata/StaticChapters";
 
 export const server = new HttpServer(serviceProto, {
     port: 3001,
