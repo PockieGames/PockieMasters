@@ -2,6 +2,7 @@ import MySQL from 'mysql'
 import { Sequelize } from 'sequelize'
 import Logger from '../logger'
 import Heroes from './models/Heroes'
+import StaticChapters from './models/staticdata/StaticChapters'
 import StaticHeroes from './models/staticdata/StaticHeroes'
 import User from './models/User'
 
@@ -43,5 +44,15 @@ export default class Database {
         
         // Static Data
         await StaticHeroes.sync({force:true})
+        await StaticChapters.sync({force: true})
+    }
+
+    static async alterTables(){
+        await User.sync({alter:true})
+        await Heroes.sync({alter:true})
+
+        // Static Data
+        await StaticHeroes.sync({alter:true})
+        await StaticChapters.sync({alter: true})
     }
 }

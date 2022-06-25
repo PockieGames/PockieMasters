@@ -28,6 +28,7 @@ async function init() {
     })
 
     //Database.setupDatabase()
+    Database.alterTables()
 
 };
 

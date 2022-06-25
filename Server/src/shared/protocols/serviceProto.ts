@@ -54,10 +54,10 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 11,
+    "version": 9,
     "services": [
         {
-            "id": 9,
+            "id": 7,
             "name": "gameData/Chapters",
             "type": "api",
             "conf": {
@@ -81,7 +81,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
             }
         },
         {
-            "id": 7,
+            "id": 9,
             "name": "user/CreatePlayer",
             "type": "api",
             "conf": {
@@ -107,7 +107,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
             "type": "api"
         },
         {
-            "id": 7,
+            "id": 10,
             "name": "user/Summon",
             "type": "api"
         },
