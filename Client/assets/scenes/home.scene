@@ -136,6 +136,9 @@
       "__uuid__": "887e7b6e-3820-4406-b303-dc6f4826c088@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
+    "avatarFrame": {
+      "__id__": 139
+    },
     "_id": "c1y7sm7VJKsqaqsrLgGGtd"
   },
   {

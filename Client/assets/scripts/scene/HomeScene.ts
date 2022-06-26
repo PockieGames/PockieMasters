@@ -5,6 +5,7 @@ import HeroData from '../shared/game/data/HeroData';
 import Dictionary from '../shared/game/utils/Dictionary';
 import UIManager from '../ui/UIManager';
 import MessageBox from '../ui/views/MessageBox';
+import OptionMenu from '../ui/views/OptionMenu';
 const { ccclass, property } = _decorator;
 
 @ccclass('HomeScene')
@@ -44,6 +45,9 @@ export class HomeScene extends Component {
     @property(SpriteFrame)
     hoverButtonSprite: SpriteFrame
 
+    @property(Node)
+    avatarFrame: Node
+
     // Map Views to Button
     viewDictionary = new Dictionary<{active: boolean, viewPrefab: Prefab, button: Button, node: Node}>()
 
@@ -72,6 +76,10 @@ export class HomeScene extends Component {
 
         this.heroesBtn.node.on(Button.EventType.CLICK, () => {
             this.replaceView("Heroes")
+        })
+
+        this.avatarFrame.on(Node.EventType.TOUCH_START, () => {
+            UIManager.Instance<UIManager>().OpenPopup(OptionMenu, {})
         })
 
         this.fetchData()
