@@ -620,13 +620,16 @@
     "__prefab": {
       "__id__": 29
     },
-    "levelToLoad": "test_1",
+    "level": "1",
     "unlocked": true,
     "button": {
       "__id__": 26
     },
     "sprite": {
       "__id__": 5
+    },
+    "levelIndicator": {
+      "__id__": 12
     },
     "_id": ""
   },

@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, ButtonComponent, SpriteComponent, Button, director, Vec2 } from 'cc';
+import { _decorator, Component, Node, ButtonComponent, SpriteComponent, Button, director, Vec2, Label } from 'cc';
 import Battlefield from '../battle/Battlefield';
 import SceneManager from '../manager/SceneManager';
 import UIManager from './UIManager';
@@ -22,9 +22,14 @@ export class LevelButton extends Component {
     @property(SpriteComponent)
     sprite: SpriteComponent;
 
+    @property(Label)
+    levelIndicator: Label
+
     start() {
         this.sprite.grayscale = !this.unlocked;
         this.button.node.on(Button.EventType.CLICK, () => {
+            if(!this.unlocked)
+                return
             let chapterData = this.chapterData
             console.log(chapterData)
             SceneManager.Instance<SceneManager>().loadScene('battle', () => {
@@ -41,6 +46,10 @@ export class LevelButton extends Component {
                 UIManager.Instance<UIManager>().getCanvas().node.getChildByName("Battlefield").getComponent(Battlefield).offlineMapData = mapData
             })
         })
+    }
+
+    setupLevelLbl(chapter: string){
+        this.levelIndicator.string = chapter + " - " + this.level
     }
 
     update(deltaTime: number) {

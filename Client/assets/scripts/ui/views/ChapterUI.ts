@@ -1,4 +1,4 @@
-import { CCBoolean, Component, dragonBones, instantiate, isValid, Label, Node, Prefab, Sprite, SpriteFrame, _decorator } from "cc";
+import { CCBoolean, CCInteger, Component, dragonBones, instantiate, isValid, Label, Node, Prefab, Sprite, SpriteFrame, _decorator } from "cc";
 import ResourceManager from "../../manager/ResourceManager";
 import UserManager from "../../manager/UserManager";
 import HeroData from "../../shared/game/data/HeroData";
@@ -19,6 +19,9 @@ export default class ChapterUI extends Component {
     @property(Node)
     levels: Node
 
+    @property(CCInteger)
+    chapter: number = 1
+
     async start() {
         await UIManager.Instance<UIManager>().showLoad()
         let currentChapter = UserManager.Instance<UserManager>().currentUser.chapter
@@ -37,6 +40,7 @@ export default class ChapterUI extends Component {
 
         this.levels.children.forEach((level: Node) => {
             let levelBtnComp = level.getComponent(LevelButton)
+            levelBtnComp.setupLevelLbl(this.chapter.toString())
             let levelData = chapterDataJson.find(x => x.level == levelBtnComp.level)
             if(!levelData)
                 return
