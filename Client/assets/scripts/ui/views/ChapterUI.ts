@@ -9,11 +9,15 @@ import UIManager from "../UIManager";
 import GameData from "../../manager/GameData";
 import MessageBox from "./MessageBox";
 import ChapterData from "../../shared/game/data/ChapterData";
+import { LevelButton } from "../LevelButton";
 
 const { ccclass, property } = _decorator;
 
 @ccclass("ChapterUI")
 export default class ChapterUI extends Component {
+
+    @property(Node)
+    levels: Node
 
     async start() {
         await UIManager.Instance<UIManager>().showLoad()
@@ -30,8 +34,14 @@ export default class ChapterUI extends Component {
        // let mapSkin = await ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("prefabs/chapters/" + chapterData.skin)
         
         let chapterDataJson = JSON.parse(chapterData.chapterData)
-        chapterDataJson.forEach((chapter: any) => {
-            console.log(chapter)
+
+        this.levels.children.forEach((level: Node) => {
+            let levelBtnComp = level.getComponent(LevelButton)
+            let levelData = chapterDataJson.find(x => x.level == levelBtnComp.level)
+            if(!levelData)
+                return
+            levelBtnComp.chapterData  = levelData
+            console.log("Added ChapterData to " + levelBtnComp.node.name)
         })
         
         UIManager.Instance<UIManager>().hideLoad()

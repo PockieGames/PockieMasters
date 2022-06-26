@@ -5,14 +5,13 @@ import Logger from "../utils/Logger";
 import Map from "../shared/game/battle/Map"
 import Tile from "./Tile";
 import UIManager from "../ui/UIManager";
-import MapData, { MapObjectType } from "./MapData";
+import { MapObjectType, MapData, MapObject } from "./MapData";
 import MessageBox from "../ui/views/MessageBox";
 import OrthoCameraZoom from "../utils/OrthoCameraZoom";
 import { spells, Team } from "../shared/game/SharedConstants";
 import { TileObject } from "./tileObjects/TileObject";
 import GameData from "../manager/GameData";
 import HeroData from "../shared/game/data/HeroData";
-import MapObject from "./MapData";
 import AttackableObject from "../shared/game/battle/MapAttackableObject";
 import MapAttackableObject from "../shared/game/battle/MapAttackableObject";
 import MapTile from "../shared/game/battle/MapTile";
@@ -84,10 +83,10 @@ export default class Battlefield extends Component {
         this.changeTurn()
     }
 
-    setResult(win: boolean = false){
+    setResult(win: boolean = false) {
         this.resultNode.active = true
         this.unscheduleAllCallbacks()
-        if(!win){
+        if (!win) {
             let resultContainer = this.resultNode.getChildByName("resultbg")
             resultContainer.getChildByName("light").active = false
             resultContainer.getChildByName("wingsleft").active = false
@@ -105,7 +104,7 @@ export default class Battlefield extends Component {
         }
 
         setTimeout(() => {
-            if(!this.resultNode)
+            if (!this.resultNode)
                 return
             this.resultNode.getChildByName("bg").on(Node.EventType.TOUCH_END, () => {
                 SceneManager.Instance<SceneManager>().loadScene("home", () => {
@@ -182,7 +181,7 @@ export default class Battlefield extends Component {
             spellNode.off(Node.EventType.TOUCH_END)
             spellNode.off(Node.EventType.TOUCH_START)
             spellNode.off(Node.EventType.TOUCH_CANCEL)
-            
+
             ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/spells/" + spellData.icon).then((spriteFrame) => {
                 spellNode.getComponent(Sprite).spriteFrame = spriteFrame
             })
@@ -193,7 +192,7 @@ export default class Battlefield extends Component {
                 let hoverColor = new Color(spriteComponent.color)
                 hoverColor.a = 255
                 spellNode.getComponent(Sprite).color = hoverColor
-                
+
                 this.spellTooltipNode.active = false
 
             })
@@ -230,14 +229,14 @@ export default class Battlefield extends Component {
         this.actionBar.getChildByName("Name").getComponent(Label).string = (this.selectedTile.mapTile.mapObject as MapAttackableObject).heroData.name
     }
 
-    setSpellTooltip(spell: SpellData, node: Node){
+    setSpellTooltip(spell: SpellData, node: Node) {
 
         let canvas = UIManager.Instance<UIManager>().getCanvas()
         let vec3 = canvas.cameraComponent.convertToUINode(node.getWorldPosition(), canvas.node)
         vec3.x += 50
         vec3.y = -190
         this.spellTooltipNode.position = vec3
-        
+
         ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/spells/" + spell.icon).then((spriteFrame) => {
             this.spellTooltipNode.getChildByName("SpellIcon").getComponent(Sprite).spriteFrame = spriteFrame
 
@@ -270,19 +269,11 @@ export default class Battlefield extends Component {
             // Connect to WS, listen to events, etc.
         } else {
 
-            let testHeroes = GameData.Instance<GameData>().heroData
-
-            this.offlineMapData = {
-                mapObjects: []
-            } as MapData
-
-            testHeroes.forEach((hero) => {
-                this.offlineMapData.mapObjects.push({
-                    objectData: hero,
-                    position: new Vec2(7, 2),
-                    type: MapObjectType.HERO
-                } as MapObject)
-            })
+            if (!this.offlineMapData) {
+                this.offlineMapData = {
+                    mapObjects: []
+                } as MapData
+            }
 
             this.initializeOfflineMapData()
         }

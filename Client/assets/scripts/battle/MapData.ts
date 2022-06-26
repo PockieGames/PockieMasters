@@ -9,13 +9,13 @@ export enum MapObjectType {
     ATTACKABLE,
 }
 
-export default interface MapObject {
+export interface MapObject {
     type: MapObjectType,
     objectData: HeroData,
     position: Vec2
 }
 
-export default interface MapData {
+export interface MapData {
 
     mapObjects: MapObject[]
 
