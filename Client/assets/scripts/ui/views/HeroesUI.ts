@@ -1,7 +1,7 @@
-import { Button, CCBoolean, Component, dragonBones, instantiate, isValid, Label, Node, Prefab, Sprite, SpriteFrame, _decorator } from "cc";
+import { Button, CCBoolean, Color, Component, dragonBones, instantiate, isValid, Label, Node, Prefab, Sprite, SpriteFrame, _decorator } from "cc";
 import ResourceManager from "../../manager/ResourceManager";
 import UserManager from "../../manager/UserManager";
-import HeroData from "../../shared/game/data/HeroData";
+import HeroData, { HeroType } from "../../shared/game/data/HeroData";
 import { HeroFrame } from "../HeroFrame";
 import { delay } from "../../Constants"
 import NetworkManager from "../../manager/NetworkManager";
@@ -41,6 +41,8 @@ export default class HeroesUI extends Component {
 
     allHeroesFromNetwork: HeroData[] = []
 
+    activeFilterButton: Node = null
+
     async start() {
 
         this.dragonBoneNode = this.dragonBonesComponent.node
@@ -72,6 +74,8 @@ export default class HeroesUI extends Component {
             UIManager.Instance<UIManager>().hideLoad()
         })
 
+        this.changeActiveFilter(this.filterNode.getChildByName("TypeAllBtn"))
+
         this.filterNode.children.forEach((filterNode: Node) => {
             let filterNodeComp = filterNode.getComponent(TypeFilterButton)
             filterNodeComp.getComponent(Button).node.on(Button.EventType.CLICK, () => {
@@ -81,23 +85,36 @@ export default class HeroesUI extends Component {
 
                 let heroDatas: HeroData[] = []
                 if (this.showAllHeroesInstead) {
-                    if (filterNodeComp.typeToFilter == -1) {
+                    if (filterNodeComp.typeToFilter == HeroType.ALL) {
                         heroDatas = this.allHeroesFromNetwork
+                        console.log("Showing all heroes")
                     } else {
                         heroDatas = this.allHeroesFromNetwork.filter(x => x.heroType == filterNodeComp.typeToFilter)
                     }
                 } else {
-                    if (filterNodeComp.typeToFilter == -1) {
+                    if (filterNodeComp.typeToFilter == HeroType.ALL) {
                         heroDatas = UserManager.Instance<UserManager>().heroes
+                        console.log("Showing all heroes")
                     } else {
                         heroDatas = UserManager.Instance<UserManager>().heroes.filter(x => x.heroType == filterNodeComp.typeToFilter)
                     }
                 }
 
+                this.changeActiveFilter(filterNode)
                 this.insertHeroFrames(heroDatas)
 
             })
         })
+    }
+
+    changeActiveFilter(newActiveBtn: Node){
+        if(this.activeFilterButton != null){
+            this.activeFilterButton.getComponent(Button).normalColor = new Color(214,214,214)
+            this.activeFilterButton.getComponent(Button).hoverColor = new Color(214,214,214)
+        }
+        newActiveBtn.getComponent(Button).normalColor = new Color(255,255,255)
+        newActiveBtn.getComponent(Button).hoverColor = new Color(255,255,255)
+        this.activeFilterButton = newActiveBtn
     }
 
     insertHeroFrames(heroDatas: HeroData[]) {
