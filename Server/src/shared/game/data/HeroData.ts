@@ -1,10 +1,11 @@
 export enum HeroType{
-    FIRE,
-    EARTH,
-    AIR,
-    WATER,
+    DEATH = 1,
+    PSYCH,
+    ANIMAL,
+    NATURE,
+    DARK,
     LIGHT,
-    DARK
+    ALL = -1
 }
 export enum HeroRarity {
     COMMON,
