@@ -80,9 +80,6 @@ export default class HeroesUI extends Component {
             let filterNodeComp = filterNode.getComponent(TypeFilterButton)
             filterNodeComp.getComponent(Button).node.on(Button.EventType.CLICK, () => {
 
-                // Clear all the children
-                this.scrollViewContent.removeAllChildren()
-
                 let heroDatas: HeroData[] = []
                 if (this.showAllHeroesInstead) {
                     if (filterNodeComp.typeToFilter == HeroType.ALL) {
@@ -107,36 +104,43 @@ export default class HeroesUI extends Component {
         })
     }
 
-    changeActiveFilter(newActiveBtn: Node){
-        if(this.activeFilterButton != null){
-            this.activeFilterButton.getComponent(Button).normalColor = new Color(214,214,214)
-            this.activeFilterButton.getComponent(Button).hoverColor = new Color(214,214,214)
+    changeActiveFilter(newActiveBtn: Node) {
+        if (this.activeFilterButton != null) {
+            this.activeFilterButton.getComponent(Button).normalColor = new Color(214, 214, 214)
+            this.activeFilterButton.getComponent(Button).hoverColor = new Color(214, 214, 214)
         }
-        newActiveBtn.getComponent(Button).normalColor = new Color(255,255,255)
-        newActiveBtn.getComponent(Button).hoverColor = new Color(255,255,255)
+        newActiveBtn.getComponent(Button).normalColor = new Color(255, 255, 255)
+        newActiveBtn.getComponent(Button).hoverColor = new Color(255, 255, 255)
         this.activeFilterButton = newActiveBtn
     }
 
     insertHeroFrames(heroDatas: HeroData[]) {
+
+        // Clear all the children
+        this.scrollViewContent.removeAllChildren()
+
         if (heroDatas.length <= 0) {
             this.heroNameLabel.node.parent.active = false
             return
         }
-        heroDatas.forEach(async (heroData: HeroData, index) => {
+        heroDatas.forEach((heroData: HeroData, index) => {
 
             let heroFrame = instantiate(this.heroFramePrefab)
             heroFrame.setParent(this.scrollViewContent)
 
             let heroFrameComp = heroFrame.getComponent(HeroFrame)
 
-            let iconSpriteFrame = await ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite)
-            let iconTypeFrame = await ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType)      
+            ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then((spriteFrame: SpriteFrame) => {
+                if (isValid(heroFrameComp)) {
+                    heroFrameComp.setIcon(spriteFrame)
+                }
+            })
 
-            if (isValid(heroFrameComp)) {
-                // TODO: FIGURE OUT WHY IT DOESN'T ALWAYS UPDATE THE SPRITES :C
-                heroFrameComp.setIcon(iconSpriteFrame)
-                heroFrameComp.setIconType(iconTypeFrame)
-            }
+            ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType).then((spriteFrame: SpriteFrame) => {
+                if (isValid(heroFrameComp)) {
+                    heroFrameComp.setIconType(spriteFrame)
+                }
+            })
 
             heroFrameComp.onClick = () => {
 
