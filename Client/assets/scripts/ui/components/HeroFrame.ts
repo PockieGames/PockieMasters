@@ -35,15 +35,18 @@ export class HeroFrame extends Component {
     setRarity(rarity: number){
         switch(rarity){
             case 1:
-                this.frame.color = RarityColors.NORMAL
+                this.frame.color = RarityColors.COMMON
                 break
             case 2:
-                this.frame.color = RarityColors.RARE
+                this.frame.color = RarityColors.UNCOMMON
                 break
             case 3:
-                this.frame.color = RarityColors.EPIC
+                this.frame.color = RarityColors.RARE
                 break
             case 4:
+                this.frame.color = RarityColors.EPIC
+                break
+            case 5:
                 this.frame.color = RarityColors.LEGENDARY
                 break
             case 5:

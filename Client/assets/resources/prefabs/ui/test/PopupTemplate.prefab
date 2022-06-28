@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "PopupName",
+    "_name": "PopupTemplate",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -233,7 +233,10 @@
       "b": 124,
       "a": 255
     },
-    "_normalSprite": null,
+    "_normalSprite": {
+      "__uuid__": "20fd408c-2a57-42dc-b458-a065fb22473d@f9941",
+      "__expectedType__": "cc.SpriteFrame"
+    },
     "_hoverSprite": null,
     "_pressedSprite": null,
     "_disabledSprite": null,

@@ -3,6 +3,7 @@ import Battlefield from '../../battle/Battlefield';
 import SceneManager from '../../manager/SceneManager';
 import UIManager from '../../manager/UIManager';
 import { MapData, MapObjectType } from "../../battle/MapData";
+import FormationSetup from '../popups/FormationSetup';
 const { ccclass, property } = _decorator;
 
 @ccclass('LevelButton')
@@ -32,7 +33,8 @@ export class LevelButton extends Component {
             if(!this.unlocked)
                 return
 
-            //UIManager.Instance<UIManager>().OpenPopup()
+            UIManager.Instance<UIManager>().OpenPopup(FormationSetup)
+            return
 
             let chapterData = this.chapterData
             SceneManager.Instance<SceneManager>().loadScene('battle', () => {

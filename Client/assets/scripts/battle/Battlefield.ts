@@ -1,5 +1,5 @@
 import { AnimationComponent, Camera, Color, Component, director, Enum, EventMouse, EventTouch, find, ImageAsset, input, Input, instantiate, Label, Layers, Node, Prefab, Scheduler, Sprite, SpriteFrame, Texture2D, tween, UITransform, Vec2, Vec3, _decorator } from "cc";
-import TileColors from "../Constants";
+import { TileColors } from "../Constants";
 import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
 import Map from "../shared/game/battle/Map"
