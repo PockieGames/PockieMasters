@@ -8,6 +8,7 @@ export default class FormationSetup extends UIBase{
     
     prefabName = "FormationSetup"
 
+    @property(Button)
     backdropBtn: Button
 
     start(){
