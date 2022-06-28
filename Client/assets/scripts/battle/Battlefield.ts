@@ -4,7 +4,7 @@ import ResourceManager from "../manager/ResourceManager";
 import Logger from "../utils/Logger";
 import Map from "../shared/game/battle/Map"
 import Tile from "./Tile";
-import UIManager from "../ui/UIManager";
+import UIManager from "../manager/UIManager";
 import { MapObjectType, MapData, MapObject } from "./MapData";
 import MessageBox from "../ui/views/MessageBox";
 import OrthoCameraZoom from "../utils/OrthoCameraZoom";

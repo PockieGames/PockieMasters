@@ -8,8 +8,8 @@ class ParalaxNode extends Component{
     scrollMultiplier: number
 }
 
-@ccclass('ElasticLimit')
-export class ElasticLimit extends ScrollView {
+@ccclass('BetterScrollView')
+export class BetterScrollView extends ScrollView {
     @property
     public elasticValueX = 0.5;
     @property

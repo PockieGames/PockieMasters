@@ -1,5 +1,5 @@
 import { game, Node } from "cc"
-import UIManager from "../ui/UIManager"
+import UIManager from "../manager/UIManager"
 
 export default class SingletonNode extends Node{
 

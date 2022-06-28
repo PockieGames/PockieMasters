@@ -1101,7 +1101,7 @@
         "__id__": 63
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 76
@@ -2435,7 +2435,7 @@
         "__id__": 84
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 90
@@ -5136,7 +5136,7 @@
         "__id__": 176
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 180
@@ -5814,6 +5814,7 @@
     "__prefab": null,
     "heightDiff": 0,
     "widthDiff": 0,
+    "type": 2,
     "_id": "afvXVbOddLiqdVXZHR6viR"
   },
   {

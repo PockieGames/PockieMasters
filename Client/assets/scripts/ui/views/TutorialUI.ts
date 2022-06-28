@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, AnimationClip, Animation } from 'cc';
 import UIBase from '../UIBase';
-import UIManager from '../UIManager';
+import UIManager from '../../manager/UIManager';
 import { StoryUI } from './StoryUI';
 const { ccclass, property } = _decorator;
 

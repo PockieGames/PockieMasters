@@ -3,7 +3,7 @@ import { ApiReturn, HttpClient, WsClient } from "tsrpc-browser";
 import { resolve } from "../../../extensions/i18n/@types/editor/utils/source/path";
 import { BaseResponse } from "../shared/protocols/base";
 import { serviceProto, ServiceType } from "../shared/protocols/serviceProto";
-import UIManager from "../ui/UIManager";
+import UIManager from "./UIManager";
 import Singleton from "../utils/Singleton";
 import MessageBox from "../ui/views/MessageBox";
 import { SERVER_IP } from "../Constants";

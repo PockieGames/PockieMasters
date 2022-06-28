@@ -2,10 +2,10 @@ import { Button, CCBoolean, Color, Component, dragonBones, instantiate, isValid,
 import ResourceManager from "../../manager/ResourceManager";
 import UserManager from "../../manager/UserManager";
 import HeroData, { HeroType } from "../../shared/game/data/HeroData";
-import { HeroFrame } from "../HeroFrame";
+import { HeroFrame } from "../components/HeroFrame";
 import { delay } from "../../Constants"
 import NetworkManager from "../../manager/NetworkManager";
-import UIManager from "../UIManager";
+import UIManager from "../../manager/UIManager";
 import GameData from "../../manager/GameData";
 import MessageBox from "./MessageBox";
 import { TypeFilterButton } from "../TypeFilterButton";

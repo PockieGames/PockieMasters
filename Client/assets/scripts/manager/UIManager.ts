@@ -1,11 +1,11 @@
 import { Canvas, find, instantiate, Prefab, Node, game } from "cc";
-import ResourceManager from "../manager/ResourceManager";
+import ResourceManager from "./ResourceManager";
 import Dictionary from "../shared/game/utils/Dictionary";
 import Logger from "../utils/Logger";
 import Singleton from "../utils/Singleton";
-import UIBase from "./UIBase";
-import MessageBox from "./views/MessageBox";
-import TestUI from "./views/TestUI";
+import UIBase from "../ui/UIBase";
+import MessageBox from "../ui/views/MessageBox";
+import TestUI from "../ui/views/TestUI";
 
 export default class UIManager extends Singleton{
 
@@ -21,7 +21,7 @@ export default class UIManager extends Singleton{
         if(this.loadingCanvas)
             return this.loadingCanvas.active = true
 
-        let prefab = await ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("ui/NetLoadUI")
+        let prefab = await ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("prefabs/ui/NetLoadUI")
         let loadNode = instantiate(prefab)
         loadNode.name = "LoadingUI"
         game.addPersistRootNode(loadNode)
@@ -48,6 +48,9 @@ export default class UIManager extends Singleton{
     }
 
     HideUI(uiBase: UIBase): boolean{
+        if(!uiBase.node){
+            return false
+        }
         if(this.uiDict.containsKey(uiBase.node.name)){
             Logger.Info("Deleted UI: " + uiBase.node.name)
             let uiNode = this.uiDict.get(uiBase.node.name)
@@ -66,7 +69,7 @@ export default class UIManager extends Singleton{
             
             try{
                 let messageBox = await 
-                ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("ui/" + name)
+                ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("prefabs/ui/" + name)
 
                 let uiNode = instantiate(messageBox)
                 uiNode.name = messageBox.name
@@ -89,7 +92,7 @@ export default class UIManager extends Singleton{
             let name = (new uiBase()).prefabName
             if(!this.uiDict.containsKey(name)){
                 try{
-                    let asset = await ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("ui/" + name)
+                    let asset = await ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("prefabs/ui/" + name)
 
                     let uiNode = instantiate(asset)
                     uiNode.name = name

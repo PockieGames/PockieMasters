@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, sys, gfx } from 'cc';
 import AudioManager from '../manager/AudioManager';
 import SceneManager from '../manager/SceneManager';
-import UIManager from '../ui/UIManager';
+import UIManager from '../manager/UIManager';
 import LoginUI from '../ui/views/LoginUI';
 
 const { ccclass, property } = _decorator;

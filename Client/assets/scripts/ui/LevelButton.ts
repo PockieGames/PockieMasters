@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, ButtonComponent, SpriteComponent, Button, director, Vec2, Label } from 'cc';
 import Battlefield from '../battle/Battlefield';
 import SceneManager from '../manager/SceneManager';
-import UIManager from './UIManager';
+import UIManager from '../manager/UIManager';
 import { MapData, MapObjectType } from "../battle/MapData";
 const { ccclass, property } = _decorator;
 
@@ -28,10 +28,13 @@ export class LevelButton extends Component {
     start() {
         this.sprite.grayscale = !this.unlocked;
         this.button.node.on(Button.EventType.CLICK, () => {
+
             if(!this.unlocked)
                 return
+
+            //UIManager.Instance<UIManager>().OpenPopup()
+
             let chapterData = this.chapterData
-            console.log(chapterData)
             SceneManager.Instance<SceneManager>().loadScene('battle', () => {
                 let mapData = {} as MapData
                 mapData.mapObjects = []

@@ -1,5 +1,5 @@
 import { _decorator, Component } from "cc";
-import UIManager from "./UIManager";
+import UIManager from "../manager/UIManager";
 
 const { ccclass, property } = _decorator;
 

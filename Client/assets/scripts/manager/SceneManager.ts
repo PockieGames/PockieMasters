@@ -10,7 +10,7 @@ export default class SceneManager extends Singleton {
     async loadScene(name: string, onComplete: (err, scene) => void = null) {
 
         if(!this.loadNode){
-            let prefab = await ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("ui/SceneLoadUI")
+            let prefab = await ResourceManager.Instance<ResourceManager>().loadAsset<Prefab>("prefabs/ui/SceneLoadUI")
             let loadNode = instantiate(prefab)
             loadNode.name = "SceneLoadUI"
             game.addPersistRootNode(loadNode)

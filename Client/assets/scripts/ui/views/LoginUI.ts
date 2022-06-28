@@ -5,7 +5,7 @@ import { ResReg } from "../../shared/protocols/user/PtlReg";
 import { ServiceType } from "../../shared/protocols/serviceProto";
 import Logger from "../../utils/Logger";
 import UIBase from "../UIBase";
-import UIManager from "../UIManager";
+import UIManager from "../../manager/UIManager";
 import MessageBox from "./MessageBox";
 import { TutorialUI } from "./TutorialUI";
 import GameData from "../../manager/GameData";

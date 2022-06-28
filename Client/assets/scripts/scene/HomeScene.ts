@@ -3,7 +3,7 @@ import NetworkManager from '../manager/NetworkManager';
 import UserManager from '../manager/UserManager';
 import HeroData from '../shared/game/data/HeroData';
 import Dictionary from '../shared/game/utils/Dictionary';
-import UIManager from '../ui/UIManager';
+import UIManager from '../manager/UIManager';
 import MessageBox from '../ui/views/MessageBox';
 import OptionMenu from '../ui/views/OptionMenu';
 const { ccclass, property } = _decorator;

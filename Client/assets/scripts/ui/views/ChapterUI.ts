@@ -2,10 +2,10 @@ import { CCBoolean, CCInteger, Component, dragonBones, instantiate, isValid, Lab
 import ResourceManager from "../../manager/ResourceManager";
 import UserManager from "../../manager/UserManager";
 import HeroData from "../../shared/game/data/HeroData";
-import { HeroFrame } from "../HeroFrame";
+import { HeroFrame } from "../components/HeroFrame";
 import { delay } from "../../Constants"
 import NetworkManager from "../../manager/NetworkManager";
-import UIManager from "../UIManager";
+import UIManager from "../../manager/UIManager";
 import GameData from "../../manager/GameData";
 import MessageBox from "./MessageBox";
 import ChapterData from "../../shared/game/data/ChapterData";
@@ -39,6 +39,8 @@ export default class ChapterUI extends Component {
         let chapterDataJson = JSON.parse(chapterData.chapterData)
 
         this.levels.children.forEach((level: Node) => {
+            if(level.name == "playerIndicator")
+                return
             let levelBtnComp = level.getComponent(LevelButton)
             levelBtnComp.setupLevelLbl(this.chapter.toString())
             let levelData = chapterDataJson.find(x => x.level == levelBtnComp.level)
