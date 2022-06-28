@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, Button, director } from 'cc';
 import SceneManager from '../../manager/SceneManager';
-import { AnimatedRichText } from '../../utils/AnimatedRichText';
+import { AnimatedRichText } from '../components/AnimatedRichText';
 import UIBase from '../UIBase';
 const { ccclass, property } = _decorator;
 
