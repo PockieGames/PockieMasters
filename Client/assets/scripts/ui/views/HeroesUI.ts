@@ -135,30 +135,14 @@ export default class HeroesUI extends Component {
             /** FIX THIS DUMB SHIT SOMETIMES */
             ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then(async (spriteFrame: SpriteFrame) => {
                 if (isValid(heroFrameComp)) {
-                    while (heroFrameComp.loadingNode.active == true) {
-                        await delay(1)
-                        ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then(async (spriteFrame: SpriteFrame) => {
-                            if (isValid(heroFrameComp)) {
-                                heroFrameComp.setIcon(spriteFrame)
-                            }
-                        })
-                        heroFrameComp.setIcon(spriteFrame)
-                    }
+                    heroFrameComp.setIcon(spriteFrame)
                 }
             })
 
             /** FIX THIS DUMB SHIT SOMETIMES */
             ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType).then(async (spriteFrame: SpriteFrame) => {
                 if (isValid(heroFrameComp)) {
-                    while (heroFrameComp.loadingNode.active == true) {
-                        await delay(1)
-                        ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType).then((spriteFrame: SpriteFrame) => {
-                            if (isValid(heroFrameComp)) {
-                                heroFrameComp.setIconType(spriteFrame)
-                            }
-                        })
-                        heroFrameComp.setIconType(spriteFrame)
-                    }
+                    heroFrameComp.setIconType(spriteFrame)
                 }
             })
 

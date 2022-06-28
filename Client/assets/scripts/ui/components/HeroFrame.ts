@@ -20,11 +20,11 @@ export class HeroFrame extends Component {
 
     start(){
 
-        this.icon.node.active = false
-        this.iconType.node.active = false
-        this.lvl.node.active = false
-        
-        this.loadingNode.active = true
+        if(this.loadingNode.active){
+            this.icon.node.active = false
+            this.iconType.node.active = false
+            this.lvl.node.active = false
+        }
 
         this.node.on(Node.EventType.TOUCH_END, () => {
             this.onClick()
@@ -64,11 +64,13 @@ export class HeroFrame extends Component {
     setLevel(lvl: number){
         this.lvl.string = `${lvl}`
         this.lvl.node.active = true
+        this.loadingNode.active = false
     }
 
     setIconType(spriteFrame: SpriteFrame){
         this.iconType.spriteFrame = spriteFrame
         this.iconType.node.active = true
+        this.loadingNode.active = false
     }
 
 }
