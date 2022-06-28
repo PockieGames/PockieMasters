@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, ButtonComponent, SpriteComponent, Button, director, Vec2, Label } from 'cc';
+import { _decorator, Component, Node, ButtonComponent, SpriteComponent, Button, director, Vec2, Label, CCBoolean, CCString } from 'cc';
 import Battlefield from '../../battle/Battlefield';
 import SceneManager from '../../manager/SceneManager';
 import UIManager from '../../manager/UIManager';
@@ -8,12 +8,12 @@ const { ccclass, property } = _decorator;
 @ccclass('LevelButton')
 export class LevelButton extends Component {
 
-    @property(String)
+    @property(CCString)
     level: string = '1'
 
     chapterData: any
 
-    @property(Boolean)
+    @property(CCBoolean)
     unlocked: Boolean;
 
     @property(ButtonComponent)
