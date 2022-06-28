@@ -65,6 +65,10 @@ export default class HeroesUI extends Component {
                 heroDatas = UserManager.Instance<UserManager>().heroes
             }
 
+            heroDatas.sort((a, b) => {
+                return a.rarity - b.rarity
+            }).reverse()
+
             this.insertHeroFrames(heroDatas)
 
             if (heroDatas.length <= 0)
@@ -98,6 +102,9 @@ export default class HeroesUI extends Component {
                 }
 
                 this.changeActiveFilter(filterNode)
+                heroDatas.sort((a, b) => {
+                    return a.rarity - b.rarity
+                }).reverse()
                 this.insertHeroFrames(heroDatas)
 
             })
@@ -132,14 +139,12 @@ export default class HeroesUI extends Component {
 
             let heroFrameComp = heroFrame.getComponent(HeroFrame)
 
-            /** FIX THIS DUMB SHIT SOMETIMES */
             ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then(async (spriteFrame: SpriteFrame) => {
                 if (isValid(heroFrameComp)) {
                     heroFrameComp.setIcon(spriteFrame)
                 }
             })
 
-            /** FIX THIS DUMB SHIT SOMETIMES */
             ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType).then(async (spriteFrame: SpriteFrame) => {
                 if (isValid(heroFrameComp)) {
                     heroFrameComp.setIconType(spriteFrame)
