@@ -119,26 +119,46 @@ export default class HeroesUI extends Component {
         // Clear all the children
         this.scrollViewContent.removeAllChildren()
 
+        let clearFlag = false
+
         if (heroDatas.length <= 0) {
             this.heroNameLabel.node.parent.active = false
             return
         }
-        heroDatas.forEach((heroData: HeroData, index) => {
+        heroDatas.forEach(async (heroData: HeroData, index) => {
 
             let heroFrame = instantiate(this.heroFramePrefab)
             heroFrame.setParent(this.scrollViewContent)
 
             let heroFrameComp = heroFrame.getComponent(HeroFrame)
 
-            ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then((spriteFrame: SpriteFrame) => {
+            /** FIX THIS DUMB SHIT SOMETIMES */
+            ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then(async (spriteFrame: SpriteFrame) => {
                 if (isValid(heroFrameComp)) {
-                    heroFrameComp.setIcon(spriteFrame)
+                    while (heroFrameComp.loadingNode.active == true) {
+                        await delay(1)
+                        ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/characters/icons/hero" + heroData.sprite).then(async (spriteFrame: SpriteFrame) => {
+                            if (isValid(heroFrameComp)) {
+                                heroFrameComp.setIcon(spriteFrame)
+                            }
+                        })
+                        heroFrameComp.setIcon(spriteFrame)
+                    }
                 }
             })
 
-            ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType).then((spriteFrame: SpriteFrame) => {
+            /** FIX THIS DUMB SHIT SOMETIMES */
+            ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType).then(async (spriteFrame: SpriteFrame) => {
                 if (isValid(heroFrameComp)) {
-                    heroFrameComp.setIconType(spriteFrame)
+                    while (heroFrameComp.loadingNode.active == true) {
+                        await delay(1)
+                        ResourceManager.Instance<ResourceManager>().loadSpriteFrame("textures/UI/Common/typeicons/" + heroData.heroType).then((spriteFrame: SpriteFrame) => {
+                            if (isValid(heroFrameComp)) {
+                                heroFrameComp.setIconType(spriteFrame)
+                            }
+                        })
+                        heroFrameComp.setIconType(spriteFrame)
+                    }
                 }
             })
 
