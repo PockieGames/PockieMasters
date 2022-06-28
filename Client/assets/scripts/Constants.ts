@@ -1,10 +1,18 @@
-export default class TileColors {
+import { Color } from "cc";
 
+export class TileColors {
     static readonly NORMAL: number[] = [255, 255, 255, 80];
     static readonly ATTACK: number[] = [255, 0, 0, 120];
     static readonly MOVEMENT: number[] = [10, 155, 255 , 120];
     static readonly MOVEMENT_HOVER: number[] = [255, 155, 10 , 120];
-    
+}
+
+export class RarityColors {
+    static readonly NORMAL: Color = new Color(255, 255, 255, 255);
+    static readonly RARE: Color = new Color(255, 255, 0, 255);
+    static readonly EPIC: Color = new Color(255, 0, 255, 255);
+    static readonly LEGENDARY: Color = new Color(0, 255, 255, 255);
+    static readonly IMMORTAL: Color = new Color(0, 0, 255, 255);
 }
 
 export const delay = function delay(ms: number) {

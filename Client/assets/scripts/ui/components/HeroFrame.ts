@@ -1,4 +1,5 @@
 import { _decorator, Component, Node, Sprite, Label, Button, SpriteFrame } from 'cc';
+import { RarityColors } from '../../Constants';
 const { ccclass, property } = _decorator;
 
 @ccclass('HeroFrame')
@@ -29,6 +30,26 @@ export class HeroFrame extends Component {
             this.onClick()
         })
 
+    }
+
+    setRarity(rarity: number){
+        switch(rarity){
+            case 1:
+                this.frame.color = RarityColors.NORMAL
+                break
+            case 2:
+                this.frame.color = RarityColors.RARE
+                break
+            case 3:
+                this.frame.color = RarityColors.EPIC
+                break
+            case 4:
+                this.frame.color = RarityColors.LEGENDARY
+                break
+            case 5:
+                this.frame.color = RarityColors.IMMORTAL
+                break
+        }
     }
 
     setIcon(spriteFrame: SpriteFrame){

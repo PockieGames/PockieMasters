@@ -142,6 +142,8 @@ export default class HeroesUI extends Component {
                 }
             })
 
+            heroFrameComp.setRarity(heroData.rarity)
+
             heroFrameComp.onClick = () => {
 
                 this.heroNameLabel.node.parent.active = true
