@@ -131,7 +131,7 @@
     "_priority": 999999999999,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 324.26419466975665,
+    "_orthoHeight": 320,
     "_near": 1,
     "_far": 3000,
     "_color": {
@@ -271,9 +271,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 30,
-      "g": 33,
-      "b": 39,
+      "r": 35,
+      "g": 36,
+      "b": 36,
       "a": 255
     },
     "_spriteFrame": {
@@ -396,7 +396,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
+      "x": 1,
       "y": -212.5,
       "z": 0
     },
@@ -410,7 +410,7 @@
     "_lscale": {
       "__type__": "cc.Vec3",
       "x": 1,
-      "y": 1,
+      "y": 1.2,
       "z": 1
     },
     "_layer": 524288,
@@ -447,7 +447,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -380,
+      "x": -375,
       "y": 0,
       "z": 0
     },
@@ -486,8 +486,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 76,
-      "height": 30
+      "width": 750,
+      "height": 20
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -517,13 +517,13 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
+      "r": 0,
       "g": 255,
-      "b": 255,
+      "b": 20,
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "24a704da-2867-446d-8d1a-5e920c75e09d@f9941",
+      "__uuid__": "dc665706-2759-48e8-8965-e67df5e3073b@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 1,
@@ -640,7 +640,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "9fd900dd-221b-4f89-8f2c-fba34243c835@f9941",
+      "__uuid__": "b2093823-2abe-425e-82ef-5d944e6a6307@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 1,
@@ -677,8 +677,8 @@
       "__id__": 20
     },
     "_mode": 0,
-    "_totalLength": 760,
-    "_progress": 0.1,
+    "_totalLength": 750,
+    "_progress": 1,
     "_reverse": false,
     "_id": ""
   },
@@ -732,6 +732,7 @@
     "__prefab": {
       "__id__": 34
     },
+    "offset": 10,
     "_id": ""
   },
   {
