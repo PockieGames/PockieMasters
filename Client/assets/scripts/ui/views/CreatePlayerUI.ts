@@ -2,7 +2,7 @@ import { Button, EditBox, EventHandler, _decorator } from "cc";
 import NetworkManager from "../../manager/NetworkManager";
 import UIBase from "../UIBase";
 import UIManager from "../../manager/UIManager";
-import MessageBox from "./MessageBox";
+import MessageBox from "../popups/MessageBox";
 import { TutorialUI } from "./TutorialUI";
 
 const { ccclass, property } = _decorator;

@@ -7,8 +7,8 @@ import { delay } from "../../Constants"
 import NetworkManager from "../../manager/NetworkManager";
 import UIManager from "../../manager/UIManager";
 import GameData from "../../manager/GameData";
-import MessageBox from "./MessageBox";
-import { TypeFilterButton } from "../TypeFilterButton";
+import MessageBox from "../popups/MessageBox";
+import { TypeFilterButton } from "../components/TypeFilterButton";
 
 const { ccclass, property } = _decorator;
 

@@ -4,8 +4,8 @@ import UserManager from '../manager/UserManager';
 import HeroData from '../shared/game/data/HeroData';
 import Dictionary from '../shared/game/utils/Dictionary';
 import UIManager from '../manager/UIManager';
-import MessageBox from '../ui/views/MessageBox';
-import OptionMenu from '../ui/views/OptionMenu';
+import MessageBox from '../ui/popups/MessageBox';
+import OptionMenu from '../ui/popups/OptionMenu';
 const { ccclass, property } = _decorator;
 
 @ccclass('HomeScene')

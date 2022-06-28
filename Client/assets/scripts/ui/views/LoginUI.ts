@@ -6,7 +6,7 @@ import { ServiceType } from "../../shared/protocols/serviceProto";
 import Logger from "../../utils/Logger";
 import UIBase from "../UIBase";
 import UIManager from "../../manager/UIManager";
-import MessageBox from "./MessageBox";
+import MessageBox from "../popups/MessageBox";
 import { TutorialUI } from "./TutorialUI";
 import GameData from "../../manager/GameData";
 import CreatePlayerUI from "./CreatePlayerUI";

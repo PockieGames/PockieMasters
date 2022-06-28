@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, ButtonComponent, SpriteComponent, Button, director, CCInteger, Enum } from 'cc';
-import SceneManager from '../manager/SceneManager';
-import { HeroType } from '../shared/game/data/HeroData';
+import SceneManager from '../../manager/SceneManager';
+import { HeroType } from '../../shared/game/data/HeroData';
 const { ccclass, property } = _decorator;
 
 @ccclass('TypeFilterButton')

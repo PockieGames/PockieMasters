@@ -5,7 +5,7 @@ import { BaseResponse } from "../shared/protocols/base";
 import { serviceProto, ServiceType } from "../shared/protocols/serviceProto";
 import UIManager from "./UIManager";
 import Singleton from "../utils/Singleton";
-import MessageBox from "../ui/views/MessageBox";
+import MessageBox from "../ui/popups/MessageBox";
 import { SERVER_IP } from "../Constants";
 
 export default class NetworkManager extends Singleton {

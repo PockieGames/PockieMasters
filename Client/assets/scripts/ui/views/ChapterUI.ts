@@ -7,9 +7,9 @@ import { delay } from "../../Constants"
 import NetworkManager from "../../manager/NetworkManager";
 import UIManager from "../../manager/UIManager";
 import GameData from "../../manager/GameData";
-import MessageBox from "./MessageBox";
+import MessageBox from "../popups/MessageBox";
 import ChapterData from "../../shared/game/data/ChapterData";
-import { LevelButton } from "../LevelButton";
+import { LevelButton } from "../components/LevelButton";
 
 const { ccclass, property } = _decorator;
 

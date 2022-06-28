@@ -1,7 +1,7 @@
 import { Button, EventHandler, _decorator } from "cc";
 import UIBase from "../UIBase";
 import UIManager from "../../manager/UIManager";
-import MessageBox from "./MessageBox";
+import MessageBox from "../popups/MessageBox";
 
 const { ccclass, property } = _decorator;
 

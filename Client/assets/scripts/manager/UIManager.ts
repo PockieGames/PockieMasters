@@ -4,7 +4,7 @@ import Dictionary from "../shared/game/utils/Dictionary";
 import Logger from "../utils/Logger";
 import Singleton from "../utils/Singleton";
 import UIBase from "../ui/UIBase";
-import MessageBox from "../ui/views/MessageBox";
+import MessageBox from "../ui/popups/MessageBox";
 import TestUI from "../ui/views/TestUI";
 
 export default class UIManager extends Singleton{

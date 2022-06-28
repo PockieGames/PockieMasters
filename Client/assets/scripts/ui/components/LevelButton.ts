@@ -1,8 +1,8 @@
 import { _decorator, Component, Node, ButtonComponent, SpriteComponent, Button, director, Vec2, Label } from 'cc';
-import Battlefield from '../battle/Battlefield';
-import SceneManager from '../manager/SceneManager';
-import UIManager from '../manager/UIManager';
-import { MapData, MapObjectType } from "../battle/MapData";
+import Battlefield from '../../battle/Battlefield';
+import SceneManager from '../../manager/SceneManager';
+import UIManager from '../../manager/UIManager';
+import { MapData, MapObjectType } from "../../battle/MapData";
 const { ccclass, property } = _decorator;
 
 @ccclass('LevelButton')

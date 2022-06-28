@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, input, Input, EventKeyboard, KeyCode, game, Prefab, Button, instantiate, Label, EditBox, EventHandler, director } from 'cc';
-import NetworkManager from '../manager/NetworkManager';
-import SceneManager from '../manager/SceneManager';
-import Dictionary from '../shared/game/utils/Dictionary';
+import NetworkManager from '../../manager/NetworkManager';
+import SceneManager from '../../manager/SceneManager';
+import Dictionary from '../../shared/game/utils/Dictionary';
 const { ccclass, property } = _decorator;
 
 @ccclass('CheatUI')

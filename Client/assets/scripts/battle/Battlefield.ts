@@ -6,7 +6,7 @@ import Map from "../shared/game/battle/Map"
 import Tile from "./Tile";
 import UIManager from "../manager/UIManager";
 import { MapObjectType, MapData, MapObject } from "./MapData";
-import MessageBox from "../ui/views/MessageBox";
+import MessageBox from "../ui/popups/MessageBox";
 import OrthoCameraZoom from "../utils/OrthoCameraZoom";
 import { spells, Team } from "../shared/game/SharedConstants";
 import { TileObject } from "./tileObjects/TileObject";
